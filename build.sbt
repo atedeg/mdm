@@ -42,6 +42,9 @@ ThisBuild / scalafixDependencies ++= Seq(
   "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
 )
 
+ThisBuild / coverageReport := true
+ThisBuild / semanticdbEnabled := true
+
 lazy val startupTransition: State => State = "conventionalCommits" :: _
 Global / onLoad := { startupTransition compose (Global / onLoad).value }
 
