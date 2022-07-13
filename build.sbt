@@ -1,4 +1,3 @@
-
 val scala3Version = "3.2.0-RC2"
 val scalaTestVersion = "3.2.12"
 
@@ -58,6 +57,7 @@ val commonSettings = Seq(
 
 lazy val root = project
   .in(file("."))
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "mdm",
     sonatypeCredentialHost := "s01.oss.sonatype.org",
