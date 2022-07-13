@@ -1,3 +1,4 @@
+
 val scala3Version = "3.2.0-RC2"
 val scalaTestVersion = "3.2.12"
 
@@ -61,4 +62,5 @@ lazy val root = project
     name := "mdm",
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
+    ScalaUnidoc / unidoc / target := file("target/site"),
   )
