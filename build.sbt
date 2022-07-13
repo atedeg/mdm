@@ -63,4 +63,16 @@ lazy val root = project
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
     ScalaUnidoc / unidoc / target := file("target/site"),
+    Compile / doc / scalacOptions := Seq(
+      "-project",
+      "MDM - Mambelli Domain Model",
+      "-project-version",
+      version.value,
+      "-project-footer",
+      "Made with ❤ by Giacomo, Nicolas, Nicolò, Linda",
+      "-siteroot",
+      "docs/",
+      "-doc-root-content",
+      "docs/api.md"
+    ),
   )
