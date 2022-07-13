@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy site
         if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.3.4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
