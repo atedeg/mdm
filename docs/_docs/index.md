@@ -1,0 +1,1 @@
+# Mdm - Mambelli Domain Model
