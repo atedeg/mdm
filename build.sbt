@@ -37,15 +37,20 @@ ThisBuild / scalacOptions += "-language:strictEquality"
 
 ThisBuild / wartremoverErrors ++= Warts.all
 
+ThisBuild / scalafixDependencies ++= Seq(
+  "com.github.liancheng" %% "organize-imports" % "0.6.0",
+  "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
+)
+
 val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.scalactic" %% "scalactic" % scalaTestVersion,
     "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
-  )
+  ),
 )
 
 lazy val root = project
   .in(file("."))
   .settings(
-    name := "mdm"
+    name := "mdm",
   )
