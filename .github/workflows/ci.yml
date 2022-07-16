@@ -1,0 +1,58 @@
+name: Build test and deploy
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and test
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+        java: ['17']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: actions/setup-java@v3.4.1
+        with:
+          distribution: 'adopt'
+          java-version: ${{ matrix.java }}
+          cache: 'sbt'
+
+      - name: Scalafmt
+        run: sbt scalafmtCheckAll
+
+      - name: Scalafix
+        run: sbt 'scalafixAll --check'
+
+      - name: WartRemover
+        run: sbt wartremoverInspect
+
+      - name: Test
+        run: sbt test
+
+  publish:
+    name: Publish
+    needs: [build]
+    runs-on: ubuntu-22.04
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta')
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Release
+        uses: atedeg/scala-release@v1.0.1
+        with:
+          java-version: "adopt@1.17"
+          pgp-secret: ${{ secrets.PGP_SECRET }}
+          pgp-passphrase: ${{ secrets.PGP_PASSPHRASE }}
+          sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
+          sonatype-password: ${{ secrets.SONATYPE_PASSWORD }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
