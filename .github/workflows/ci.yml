@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        java: ['17']
+        java: ['17.0.3']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch
@@ -55,7 +55,7 @@ jobs:
       - name: Release
         uses: atedeg/scala-release@v1.0.2
         with:
-          java-version: "adopt@1.17"
+          java-version: "17.0.3"
           pgp-secret: ${{ secrets.PGP_SECRET }}
           pgp-passphrase: ${{ secrets.PGP_PASSPHRASE }}
           sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
