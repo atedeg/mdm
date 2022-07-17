@@ -53,7 +53,7 @@ jobs:
           fetch-depth: 0
 
       - name: Release
-        uses: atedeg/scala-release@v1.0.1
+        uses: atedeg/scala-release@v1.0.2
         with:
           java-version: "adopt@1.17"
           pgp-secret: ${{ secrets.PGP_SECRET }}
