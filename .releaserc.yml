@@ -16,5 +16,6 @@ plugins:
         export CI_COMMIT_TAG="true"
         sbt ci-release
   - - '@semantic-release/git'
-      - CHANGELOG.md
+    - assets:
+        - CHANGELOG.md
   - '@semantic-release/github'
