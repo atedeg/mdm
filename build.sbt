@@ -6,6 +6,9 @@ ThisBuild / organization := "dev.atedeg"
 ThisBuild / homepage := Some(url("https://github.com/atedeg/mdm"))
 ThisBuild / licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 
+ThisBuild / ubidoc / targetDirectory := baseDirectory.value / "_includes"
+ThisBuild / ubidoc / lookupDirectory := target.value / "site"
+
 ThisBuild / developers := List(
   Developer(
     "giacomocavalieri",
