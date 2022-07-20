@@ -58,6 +58,18 @@ val commonSettings = Seq(
   ),
 )
 
+lazy val ubiunidoc = taskKey[Unit]("ubiunidoc")
+
+Compile / ubiunidoc := Def
+  .sequential(
+    Compile / clean,
+    Compile / unidoc,
+    Compile / ubidoc,
+    Compile / clean,
+    Compile / unidoc,
+  )
+  .value
+
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
