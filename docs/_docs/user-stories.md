@@ -18,7 +18,7 @@ title: "User stories"
 1. **As** a customer  
    **I want to** place an order   
    **so that** I can buy cheese
-2. **As** an operator
+2. **As** an operator  
    **I want** the system to automatically price incoming orders  
    **so that** I don't have to do it manually flipping through the price list
 3. **As** an operator  
@@ -30,6 +30,20 @@ title: "User stories"
 5. **As** an operator  
    **I want to** automatically generate a transport document for an order ready to be shipped  
    **so that** I don't have to do it manually
+
+## Restocking
+1. **As** Raffaella  
+   **I want to** place orders for raw materials  
+   **so that** I won't run out of crucial ingredients for the cheese-making process
+
+## Production
+1. **As** a dairyman  
+   **I want to** choose a recipe to start the production process  
+   **so that** I can start the production process  
+2. **As** a dairyman  
+   **I want to** know when the cheeses are ready to go in the refrigerating room  
+   **so that** I can put them in the refrigeration room  
+
 
 ---
 template
