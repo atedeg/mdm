@@ -1,8 +1,9 @@
 package dev.atedeg.mdm.milkplanning.types
 
-import dev.atedeg.mdm.utils.{ NumberInClosedRange, PositiveDecimal, PositiveNumber }
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
+
+import dev.atedeg.mdm.utils.{ NumberInClosedRange, PositiveDecimal, PositiveNumber }
 
 /**
  * A type of cheese.
@@ -33,15 +34,15 @@ type CaciottaSizeInGrams = 1200
 /**
  * Milk processed in order to produce cheese.
  */
-final case class ProcessedMilk(quantity: WeightInQuintals)
+final case class ProcessedMilk(quantity: QuintalsOfMilk)
 
 /**
- * A weight expressed in quintals.
+ * A quantity of milk expressed in quintals.
  * @note it must be a [[PositiveDecimal positive decimal number]].
- * @example `WeightInQuintals(1.1)` is a valid weight of 110 kg.
- * @example `WeightInQuintals(-20.5)` is not a valid weight.
+ * @example `QuintalsOfMilk(1.1)` is a valid weight of 110 kg.
+ * @example `QuintalsOfMilk(-20.5)` is not a valid weight.
  */
-final case class WeightInQuintals(n: PositiveDecimal)
+final case class QuintalsOfMilk(n: PositiveDecimal)
 
 /**
  * A [[Week week]] of a given [[Year year]].
