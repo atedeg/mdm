@@ -55,5 +55,5 @@ project/target/
 hs_err_pid*
 
 node_modules/
-
 _includes/
+*.semanticdb
