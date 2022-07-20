@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build Site
-        run: sbt unidoc
+        run: sbt 'unidoc; ubidoc; clean; unidoc'
 
       - name: Deploy site
         if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
