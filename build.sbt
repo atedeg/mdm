@@ -85,7 +85,11 @@ lazy val root = project
     ),
     publish / skip := true,
   )
-  .aggregate(utils, `milk-planning`)
+  .aggregate(
+    stocking,
+    utils,
+    `milk-planning`
+  )
 
 lazy val utils = project
   .in(file("utils"))
@@ -103,3 +107,7 @@ lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
   .settings(commonSettings)
   .dependsOn(utils)
+
+lazy val stocking = project
+  .in(file("stocking"))
+  .settings(commonSettings)
