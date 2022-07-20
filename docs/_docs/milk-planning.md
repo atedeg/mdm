@@ -9,7 +9,7 @@ for the following week.
 She makes this estimate by taking into account the following factors:
 
 - the quintals of milk processed in the same period of the previous year
-- the quintals of milk needed by the incoming orders that have to be processed in the following week (this is made reading from a recipe book the the quintals of milk needed to produce a quintal of a given product)
+- the quintals of milk needed by the products that have to be produced in the following week (this is made reading from a recipe book the the quintals of milk needed to produce a quintal of a given product)
 - the current stock
 
 > 💡 A domain event will be sent to the restocking B.C. so that it can make a milk order
