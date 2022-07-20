@@ -2,8 +2,7 @@ package dev.atedeg.mdm.milkplanning.types
 
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
-
-import dev.atedeg.mdm.utils.{ NumberInClosedRange, PositiveDecimal, PositiveNumber }
+import dev.atedeg.mdm.utils.{ NonNegativeNumber, NumberInClosedRange, PositiveDecimal, PositiveNumber }
 
 /**
  * A type of cheese.
@@ -64,3 +63,22 @@ final case class Week(n: NumberInClosedRange[1, 52])
  * @example `Year(-1000)` is not a valid year.
  */
 final case class Year(n: PositiveNumber)
+
+/**
+ * It defines the how many [[QuintalsOfMilk quintals of milk]] are needed to produce a quintal of a given
+ * [[CheeseType cheese type]].
+ */
+type RecipeBook = CheeseType => QuintalsOfMilk
+
+/**
+ * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].
+ */
+type Stock = Product => StockedQuantity
+
+/**
+ * A quantity of a stocked [[Product product]], it may also be zero.
+ * @note it must be a [[NonNegativeNumber non-negative number]].
+ * @example `StockedQuantity(0)` is valid.
+ * @example `StockedQuantity(-1)` is invalid.
+ */
+final case class StockedQuantity(n: NonNegativeNumber)
