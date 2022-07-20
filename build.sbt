@@ -87,8 +87,8 @@ lazy val root = project
   )
   .aggregate(utils)
 
-lazy val utils = project
-  .in(file("utils"))
+lazy val `milk-planning` = project
+  .in(file("milk-planning"))
   .settings(commonSettings)
 
 lazy val `products-shared-kernel` = project
