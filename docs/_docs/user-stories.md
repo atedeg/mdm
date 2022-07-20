@@ -4,6 +4,9 @@ title: "User stories"
 
 # User stories
 
+During our event storming session we discussed with the domain experts and Raffaella (the factory owner).
+After sketching out the main subdomains, we came up with this set of user stories:
+
 ## Milk Planning
 1. **As** Raffaella  
    **I want to** estimate the milk needed to sustain the following week’s production  
@@ -44,12 +47,13 @@ title: "User stories"
    **I want to** know when the cheeses are ready to go in the refrigerating room  
    **so that** I can put them in the refrigeration room  
 
-
----
-template
-1. **As**   
-   **I want to**   
-   **so that** 
- 
-
-
+## Stocking
+1. **As** a worker  
+   **I want to** know which cheeses are ready to be wrapped  
+   **so that** I can wrap them and put them in the refrigeration room
+2. **As** a worker  
+   **I want to** report the result of quality assurance on a batch of cheeses  
+   **so that** I can know which cheeses to pull off from the market
+3. **As** a worker  
+   **I want to** I want to weigh a cheese    
+   **so that** I can print an appropriate label for it
