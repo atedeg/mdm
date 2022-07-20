@@ -85,6 +85,7 @@ lazy val root = project
       formats = Seq(JacocoReportFormats.XML),
     ),
   )
+  .aggregate(stocking)
   .aggregate(utils)
 
 lazy val utils = project
@@ -95,3 +96,7 @@ lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
   .settings(commonSettings)
   .dependsOn(utils)
+
+lazy val stocking = project
+  .in(file("stocking"))
+  .settings(commonSettings)
