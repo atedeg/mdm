@@ -7,4 +7,4 @@ addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.5.10")
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.9")
 addSbtPlugin("com.github.sbt" % "sbt-unidoc" % "0.5.0")
 resolvers += "jitpack" at "https://jitpack.io"
-addSbtPlugin("dev.atedeg" % "sbt-ubiquitous-scaladoc" % "1.0.0-beta.2")
+addSbtPlugin("dev.atedeg" % "sbt-ubiquitous-scaladoc" % "1.0.0-beta.3")
