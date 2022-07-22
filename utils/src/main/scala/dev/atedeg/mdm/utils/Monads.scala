@@ -2,6 +2,7 @@ package dev.atedeg.mdm.utils
 
 import cats.data.NonEmptyList
 import cats.mtl.{Raise, Tell}
+import cats.syntax.all.*
 import cats.Monad
 
 /**
@@ -11,8 +12,8 @@ type CanEmit[Emitted] = [M[_]] =>> Tell[M, List[Emitted]]
 
 /**
  * Signals that a method will always emit one or more elements of a given type which are accumulated in a list.
- * @note this check is not imposed neither at compile-time not at run-time. This is just used to
- *       better document the behaviour of methods.
+ * @note this check is not imposed neither at compile-time nor at run-time. This is just used to
+ *       better document the behaviour of methods but does not guarantee any invariant.
  */
 type Emits[Emitted] = [M[_]] =>> Tell[M, List[Emitted]]
 
@@ -30,6 +31,13 @@ def emit[M[_], E](e: E)(using T: Tell[M, List[E]]): M[Unit] = T.tell(List(e))
  * Raises an error of type `E` in a context `M[_]` where the computation can be aborted.
  */
 def raise[M[_], E, A](e: E)(using R: Raise[M, E]): M[A] = R.raise(e)
+
+extension(condition: Boolean)
+  /**
+   * `cond.otherwiseRaise(err)` [[raise() raises]] the error `err` if the condition `cond` is true.
+   */
+  def otherwiseRaise[M[_], E](error: => E)(using R: Raise[M, E], M: Monad[M]): M[Boolean] =
+    unless[M, Boolean](condition)(raise(error)).map(_ => condition)
 
 /**
  * `unless(cond)(a)` performs the monadic action `a` if the condition `cond` is false.
