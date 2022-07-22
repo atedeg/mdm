@@ -54,6 +54,8 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.scalactic" %% "scalactic" % scalaTestVersion,
     "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
+    "org.typelevel" %% "cats-core" % "2.7.0",
+    "org.typelevel" %% "cats-mtl" % "1.2.1",
   ),
 )
 
@@ -78,3 +80,7 @@ lazy val root = project
       "docs/api.md",
     ),
   )
+
+lazy val utils = project
+  .in(file("utils"))
+  .settings(commonSettings)
