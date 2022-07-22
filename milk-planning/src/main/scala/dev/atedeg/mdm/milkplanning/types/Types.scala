@@ -2,6 +2,7 @@ package dev.atedeg.mdm.milkplanning.types
 
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
+
 import dev.atedeg.mdm.utils.{ NonNegativeNumber, NumberInClosedRange, PositiveDecimal, PositiveNumber }
 
 /**
