@@ -1,7 +1,7 @@
 package dev.atedeg.mdm.stocking
 
-import java.util.UUID
 import java.time.LocalDateTime
+import java.util.UUID
 
 import cats.data.NonEmptyList
 
@@ -24,7 +24,7 @@ enum Batch:
   /**
    * A batch that is ready for quality assurance.
    */
-  case ReadyForQualityAssurance(batchID: BatchID, cheeseType: CheeseType)
+  case ReadyForQualityAssurance(id: BatchID, cheeseType: CheeseType)
 
 /**
  * A batch of products of a certain [[CheeseType type]] uniquely identified by an [[BatchID ID]],
