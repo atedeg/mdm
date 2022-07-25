@@ -2,7 +2,8 @@ package dev.atedeg.mdm.production
 
 import java.util.UUID
 
-type Product = Int // TODO: shared kernel
+final case class Product(cheeseType: CheeseType, weight: WeightInGrams) // TODO: shared kernel
+type WeightInGrams = Int 
 type CheeseType = Int // TODO: shared kernel
 type Quantity = Int // TODO: maybe is in utils
 type WeightInQuintals = Int // TODO: maybe is in utils
@@ -13,19 +14,19 @@ enum Production:
    * A [[Production production]] that needs to be started, it specifies the [[Product product]] to produce
    * and the [[Quantity quantity]] in which it needs to be produced.
    */
-  case ToStart(ID: ProductionID, productToProduce: Product, quantityToProduce: Quantity)
+  case ToStart(ID: ProductionID, productToProduce: Product, unitsToProduce: Quantity)
 
   /**
    * A [[Production production]] that has already started, it specifies the [[Product product]] that is being produced
    * and the [[Quantity quantity]] in which it is being produced.
    */
-  case InProgress(ID: ProductionID, productInProduction: Product, quantityInProduction: Quantity)
+  case InProgress(ID: ProductionID, productInProduction: Product, unitsInProduction: Quantity)
 
   /**
    * A [[Production production]] that ended, it has a [[LotNumber lot number]] and specified the [[Product product]]
    * that was produced and in which [[Quantity quantity]] it was produced.
    */
-  case Ended(ID: ProductionID, lotNumber: LotNumber, producedProduct: Product, producedQuantity: Quantity)
+  case Ended(ID: ProductionID, lotNumber: LotNumber, producedProduct: Product, producedUnits: Quantity)
 
 /**
  * A lot number. TODO: ask domain experts how it can be obtained.
@@ -56,4 +57,4 @@ enum Ingredient:
 /**
  * Associates to each [[CheeseType cheese type]] the [[Recipe recipe]] to produce a quintal of it.
  */
-type RecipeBook = CheeseType => Recipe
+type RecipeBook = CheeseType => Option[Recipe]
