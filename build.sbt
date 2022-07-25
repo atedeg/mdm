@@ -112,3 +112,4 @@ lazy val `products-shared-kernel` = project
 lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
+  .dependsOn(utils)
