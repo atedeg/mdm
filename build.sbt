@@ -88,10 +88,15 @@ lazy val root = project
       fileEncoding = "utf-8",
     ),
   )
-  .aggregate(utils)
+  .aggregate(utils, production, `products-shared-kernel`)
 
 lazy val utils = project
   .in(file("utils"))
+  .settings(commonSettings)
+
+lazy val production = project
+  .in(file("production"))
+  .dependsOn(utils)
   .settings(commonSettings)
 
 lazy val `products-shared-kernel` = project
