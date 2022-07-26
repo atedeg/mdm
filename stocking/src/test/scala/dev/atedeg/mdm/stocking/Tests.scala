@@ -3,10 +3,13 @@ package dev.atedeg.mdm.stocking
 import java.util.UUID
 
 import cats.data.{ Writer, WriterT }
+import org.scalatest.EitherValues.*
 import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
+import dev.atedeg.mdm.stocking.OutgoingEvent.*
+import dev.atedeg.mdm.stocking.grams
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
 
@@ -40,30 +43,26 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
     Scenario("An operator tries to print a label for a cheese within weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
-      val cheeseTypeWeight = WeightInGrams(1)
+      val weight = 1.grams
       When("the operator prints a label for a product within weight range")
-      val labelledMonad: Action[WeightNotInRange, OutgoingEvent.ProductStocked, LabelledProduct] =
-        labelProduct(passed, cheeseTypeWeight)
+      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, weight)
       Then("the label should be printed with the correct information")
-      val (events, result) = labelledMonad.execute
+      val (events, result) = labelAction.execute
       val expectedLabelledProduct = LabelledProduct(passed.cheeseType, 1, passed.id)
-      result.isRight shouldBe true
-      result.toOption shouldEqual Some(expectedLabelledProduct)
+      result.value shouldEqual expectedLabelledProduct
       And("an event should be emitted")
-      events should contain(OutgoingEvent.ProductStocked(expectedLabelledProduct))
+      events should contain(ProductStocked(expectedLabelledProduct))
     }
     Scenario("An operator tries to print a label for a cheese outside weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
-      val cheeseTypeWeight = WeightInGrams(100)
+      val weight = 100.grams
       When("the operator prints a label for a cheese outside weight range")
-      val labelledMonad: Action[WeightNotInRange, OutgoingEvent.ProductStocked, LabelledProduct] =
-        labelProduct(passed, cheeseTypeWeight)
+      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, weight)
       Then("the label should not be printed")
-      val (events, result) = labelledMonad.execute
-      result.isLeft shouldBe true
+      val (events, result) = labelAction.execute
       And("an error should be raised")
-      result.left.toOption shouldEqual Some(WeightNotInRange(WeightInGrams(3), WeightInGrams(100)))
+      result.left.value shouldEqual WeightNotInRange(3.grams, 100.grams)
       And("no events should be emitted")
       events shouldBe empty
     }

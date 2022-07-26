@@ -55,3 +55,5 @@ final case class LabelledProduct(cheeseType: CheeseType, quantity: Quantity, bat
  * A weight in grams reported by a scale.
  */
 final case class WeightInGrams(grams: PositiveDecimal)
+
+extension (n: PositiveDecimal) def grams: WeightInGrams = WeightInGrams(n)
