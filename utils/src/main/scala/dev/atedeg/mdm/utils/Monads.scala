@@ -64,7 +64,7 @@ extension [M[_]: Monad, A](ma: M[A])
 extension (condition: Boolean)
 
   /**
-   * `cond.otherwiseRaise(err)` [[raise() raises]] the error `err` if the condition `cond` is true.
+   * `cond.otherwiseRaise(err)` [[raise() raises]] the error `err` if the condition `cond` is false.
    */
   def otherwiseRaise[M[_], E](error: => E)(using R: Raise[M, E], M: Monad[M]): M[Boolean] =
     unless[M, Boolean](condition)(raise(error)).map(_ => condition)
