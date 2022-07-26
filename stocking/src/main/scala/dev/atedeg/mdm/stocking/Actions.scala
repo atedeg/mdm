@@ -2,8 +2,10 @@ package dev.atedeg.mdm.stocking
 
 import cats.Monad
 import cats.data.{ NonEmptyList, NonEmptySet }
+import cats.implicits.toReducibleOps
 
-import dev.atedeg.mdm.stocking.OutgoingEvent.ProductStocked
+import dev.atedeg.mdm.stocking.OutgoingEvent.*
+import dev.atedeg.mdm.stocking.grams
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
 
@@ -22,15 +24,12 @@ def rejectBatch(batch: Batch.ReadyForQualityAssurance): QualityAssuredBatch.Fail
 /**
  * Labels a product given the [[QualityAssuredBatch.Passed batch]] it comes from and its [[WeightInGrams actual weight]]
  * as given by the scale.
- *
- * @note it can raise a [[WeightNotInRange weight-not-in-range]] error.
- * @note it emits a [[ProductStocked "product stocked"]] event.
  */
 def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked]](
     batch: QualityAssuredBatch.Passed,
     actualWeight: WeightInGrams,
 ): M[LabelledProduct] =
-  val weights = NonEmptyList.of(WeightInGrams(1), WeightInGrams(2), WeightInGrams(3))
+  val weights = NonEmptyList.of(1.grams, 2.grams, 3.grams) // FIXME: get available weights
   val candidate = nearestWeight(weights)(actualWeight)
   val labelledProduct = LabelledProduct(batch.cheeseType, 1, batch.id)
   actualWeight.grams
@@ -39,7 +38,6 @@ def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked
     .andThen(emit(ProductStocked(labelledProduct): ProductStocked))
     .thenReturn(labelledProduct)
 
-private def nearestWeight(expectedWeights: NonEmptyList[WeightInGrams])(actualWeight: WeightInGrams): WeightInGrams =
-  expectedWeights.reduceLeft((acc, elem) =>
-    if math.abs(actualWeight.grams - elem.grams) < math.abs(actualWeight.grams - acc.grams) then elem else acc,
-  )
+private def nearestWeight(weights: NonEmptyList[WeightInGrams])(actualWeight: WeightInGrams): WeightInGrams =
+  def distanceFromActualWeight(weight: WeightInGrams) = math.abs(weight.grams - actualWeight.grams)
+  weights.minimumBy(distanceFromActualWeight)
