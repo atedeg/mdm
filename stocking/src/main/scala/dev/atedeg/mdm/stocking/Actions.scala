@@ -1,7 +1,7 @@
 package dev.atedeg.mdm.stocking
 
 import cats.Monad
-import cats.data.NonEmptySet
+import cats.data.{ NonEmptyList, NonEmptySet }
 
 import dev.atedeg.mdm.stocking.OutgoingEvent.ProductStocked
 import dev.atedeg.mdm.utils.*
@@ -25,27 +25,20 @@ def rejectBatch(batch: Batch.ReadyForQualityAssurance): QualityAssuredBatch.Fail
  * @note it can raise a [[WeightNotInRange weight-not-in-range]] error.
  * @note it emits a [[ProductStocked "product stocked"]] event.
  */
-def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: Emits[ProductStocked]](
+def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked]](
     batch: QualityAssuredBatch.Passed,
     actualWeight: WeightInGrams,
 ): M[LabelledProduct] =
-  val weights = NonEmptySet.of(WeightInGrams(1), WeightInGrams(2), WeightInGrams(3))
-  val nearestWeight = getNearestWeight(weights)(actualWeight)
+  val weights = NonEmptyList.of(WeightInGrams(1), WeightInGrams(2), WeightInGrams(3))
+  val candidate = nearestWeight(weights)(actualWeight)
   val labelledProduct = LabelledProduct(batch.cheeseType, 1, batch.id)
-  isWeightInRange(weights, 0.05)(actualWeight)
-    .otherwiseRaise(WeightNotInRange(nearestWeight, actualWeight))
-    .andThen(emit(ProductStocked(labelledProduct)))
+  actualWeight.grams
+    .isInRange(candidate.grams +- 5.percent)
+    .otherwiseRaise(WeightNotInRange(candidate, actualWeight))
+    .andThen(emit(ProductStocked(labelledProduct): ProductStocked))
     .thenReturn(labelledProduct)
 
-private def getNearestWeight(expectedWeights: NonEmptySet[WeightInGrams])(actualWeight: WeightInGrams): WeightInGrams =
+private def nearestWeight(expectedWeights: NonEmptyList[WeightInGrams])(actualWeight: WeightInGrams): WeightInGrams =
   expectedWeights.reduceLeft((acc, elem) =>
-    if math.abs(actualWeight.grams - acc.grams) < math.abs(actualWeight.grams - elem.grams) then acc else elem,
+    if math.abs(actualWeight.grams - elem.grams) < math.abs(actualWeight.grams - acc.grams) then elem else acc,
   )
-
-private def isWeightInRange(
-    expectedWeights: NonEmptySet[WeightInGrams],
-    tolerancePercentage: Double,
-)(actualWeight: WeightInGrams): Boolean =
-  val nearestWeight = getNearestWeight(expectedWeights)(actualWeight)
-  actualWeight.grams >= nearestWeight.grams * (1 - tolerancePercentage)
-  && actualWeight.grams <= nearestWeight.grams * (1 + tolerancePercentage)
