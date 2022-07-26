@@ -1,6 +1,5 @@
 package dev.atedeg.mdm.production
 
-
 final case class Product(cheeseType: CheeseType, weight: WeightInGrams) // TODO: shared kernel
 type CheeseType = Int // TODO: shared kernel
 type Quantity = Int // TODO: maybe is in utils
