@@ -12,6 +12,6 @@ def estimateQuintalsOfMilk[M[_]: Emits[OrderMilk]: Monad](
     currentStock: Stock,
     stockedMilk: QuintalsOfMilk,
 ): M[QuintalsOfMilk] = {
-  val res = milkOfThePreviousYear + milkNeededByProducts
-  emit[M, OrderMilk](OrderMilk(res)) thenReturn res
+  val estimation = milkOfThePreviousYear + milkNeededByProducts - stockedMilk
+  emit[M, OrderMilk](OrderMilk(estimation)) thenReturn estimation
 }

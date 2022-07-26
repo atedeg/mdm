@@ -28,7 +28,7 @@ class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers {
       val (events, qom) = estimationMonad.run
       events should have length 1
       events.headOption match {
-        case Some(e) => e.n should equal(qom.n)
+        case Some(e) => e.n should equal(qom)
         case _ => fail("The events list must have at least one element")
       }
     }
