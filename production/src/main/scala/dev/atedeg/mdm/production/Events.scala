@@ -5,10 +5,11 @@ package dev.atedeg.mdm.production
  */
 enum OutgoingEvent:
   /**
-   * Fired when an [[Ingredient ingredient]] is used to [[startProduction() start a production]].
-   * It specifies the [[Ingredient ingredient]] used and the [[WeightInQuintals quintals]] consumed.
+   * Fired when a [[Production.ToStart production]] needs to be started, specifies the
+   * [[QuintalsOfIngredient needed ingredients and the quantity]] necessary to sustain the
+   * production.
    */
-  case IngredientUsed(ingredient: Ingredient, weight: WeightInQuintals)
+  case StartProduction(neededIngredient: List[QuintalsOfIngredient])
 
   /**
    * Fired when a [[Production.InProgress production]] is terminated, given a

@@ -1,13 +1,10 @@
 package dev.atedeg.mdm.production
 
-import java.util.UUID
 
 final case class Product(cheeseType: CheeseType, weight: WeightInGrams) // TODO: shared kernel
-type WeightInGrams = Int 
 type CheeseType = Int // TODO: shared kernel
 type Quantity = Int // TODO: maybe is in utils
-type WeightInQuintals = Int // TODO: maybe is in utils
-type ProductionID = UUID // TODO: make me a case class
+type ProductionID = java.util.UUID // TODO: make me a case class
 
 enum Production:
   /**
@@ -34,15 +31,14 @@ enum Production:
 final case class LotNumber()
 
 /**
- * A list of [[RecipeLine ingredients and the respective quantity]] needed to produce a quintal of a product.
+ * A list of [[QuintalsOfIngredient ingredients and the respective quintals]] needed to produce a quintal of a product.
  */
-final case class Recipe(lines: List[RecipeLine])
+final case class Recipe(lines: List[QuintalsOfIngredient])
 
 /**
- * A line of a [[Recipe recipe]] containing an [[Ingredient ingredient]] and the [[WeightInQuintals weight in quintals]]
- * of it needed by the recipe.
+ * An [[Ingredient ingredient]] and a [[WeightInQuintals weight in quintals]].
  */
-final case class RecipeLine(ingredient: Ingredient, quintalsNeeded: WeightInQuintals)
+final case class QuintalsOfIngredient(quintals: WeightInQuintals, ingredient: Ingredient)
 
 /**
  * An ingredient that may be needed by a [[Recipe recipe]].
