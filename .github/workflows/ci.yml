@@ -29,6 +29,12 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'sbt'
 
+      - name: Bump scala version
+        id: bump
+        run: |
+          export SCALA_VERSION=`sbt --no-colors --error 'set aggregate := false; print scalaVersion'`
+          echo "::set-output name=scala-version::$SCALA_VERSION"          
+
       - name: Scalafmt
         run: sbt scalafmtCheckAll
 
@@ -39,7 +45,18 @@ jobs:
         run: sbt wartremoverInspect
 
       - name: Test
-        run: sbt test
+        run: sbt coverage test
+
+      - name: Generate coverage report
+        run: sbt coverageAggregate
+
+      - name: Publish coverage report
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/scala-${{steps.bump.outputs.scala-version}}/scoverage-report/scoverage.xml
+          verbose: true
 
   publish:
     name: Publish
