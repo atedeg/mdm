@@ -20,6 +20,7 @@ extension (q: Quantity)
   @targetName("multiplyQuintals") def *(weight: WeightInQuintals): WeightInQuintals = weight.map(_ * q)
 
 extension (q: QuintalsOfIngredient)
+
   def map(f: PositiveDouble => PositiveDouble): QuintalsOfIngredient =
     QuintalsOfIngredient(q.quintals.map(f), q.ingredient)
 
