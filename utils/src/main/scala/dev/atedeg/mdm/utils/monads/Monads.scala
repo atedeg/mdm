@@ -1,4 +1,4 @@
-package dev.atedeg.mdm.utils
+package dev.atedeg.mdm.utils.monads
 
 import cats.data.NonEmptyList
 import cats.mtl.{ Raise, Tell }
