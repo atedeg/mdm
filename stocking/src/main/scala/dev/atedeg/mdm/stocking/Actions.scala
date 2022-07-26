@@ -5,6 +5,7 @@ import cats.data.{ NonEmptyList, NonEmptySet }
 
 import dev.atedeg.mdm.stocking.OutgoingEvent.ProductStocked
 import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.monads.*
 
 /**
  * Approves a batch after quality assurance.
