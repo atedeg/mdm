@@ -13,11 +13,9 @@ extension [T: Numeric](x: T)
   def percent: RangePercentage = RangePercentage(x.toDouble / 100)
 
   @targetName("plusMinus")
-  @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   def +-(y: T): Range[T] = Range(x - y, x + y)
 
   @targetName("plusMinusPercent")
-  @SuppressWarnings(Array("org.wartremover.warts.Overloading"))
   def +-(y: RangePercentage): Range[Double] =
     Range(x.toDouble * (1.0 - y.percentage), x.toDouble * (1.0 + y.percentage))
 
