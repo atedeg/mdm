@@ -1,5 +1,7 @@
 package dev.atedeg.mdm.milkplanning.types
 
+import java.time.LocalDateTime
+
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
 
@@ -89,3 +91,6 @@ type Stock = Product => StockedQuantity
  * @example `StockedQuantity(-1)` is invalid.
  */
 final case class StockedQuantity(n: NonNegativeNumber)
+
+final case class Quantity(q: PositiveNumber)
+final case class RequestedProduct(product: Product, quantity: Quantity, requiredBy: LocalDateTime)
