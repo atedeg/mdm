@@ -6,7 +6,7 @@ import cats.kernel.Order
 import eu.timepit.refined.predicates.all.NonNegative
 import eu.timepit.refined.refineV
 
-import dev.atedeg.mdm.milkplanning.types.QuintalsOfMilk
+import dev.atedeg.mdm.milkplanning.types.{ Quantity, QuintalsOfMilk, StockedQuantity }
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
@@ -19,8 +19,11 @@ object QuintalsOfMilkOps:
 
   extension (qom1: QuintalsOfMilk)
 
-    @targetName("plus")
+    @targetName("plusQuintals")
     def +(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.quintals plus qom2.quintals)
 
-    @targetName("minus")
+    @targetName("minusQuintals")
     def -(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.quintals minus qom2.quintals)
+
+    @targetName("timesQuintals")
+    def **(nn: NonNegativeNumber): QuintalsOfMilk = QuintalsOfMilk(qom1.quintals * nn.toNonNegativeDecimal)
