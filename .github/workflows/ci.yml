@@ -51,7 +51,7 @@ jobs:
         run: sbt coverageAggregate
 
       - name: Publish coverage report
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: matrix.os == 'ubuntu-22.04' && matrix.java-version == '17.0.3' # Find a better solution instead hardcoded versions
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
