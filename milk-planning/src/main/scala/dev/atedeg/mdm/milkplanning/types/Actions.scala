@@ -18,7 +18,7 @@ def estimateQuintalsOfMilk[M[_]: Emits[OrderMilk]: Monad](
 ): M[QuintalsOfMilk] =
   val milkNeeded = milkNeededForProducts(requestedProductsForWeek, currentStock, recipeBook)
   val estimatedMilk = magicAiEstimator(milkOfPreviousYear, milkNeeded, stockedMilk)
-  when(estimatedMilk > 0.quintalsOfMilk)(emit(OrderMilk(estimatedMilk): OrderMilk)).thenReturn(estimatedMilk)
+  when(estimatedMilk.quintals > 0)(emit(OrderMilk(estimatedMilk): OrderMilk)).thenReturn(estimatedMilk)
 
 private def milkNeededForProducts(value: List[RequestedProduct], stock: Stock, book: RecipeBook): QuintalsOfMilk = ???
 
