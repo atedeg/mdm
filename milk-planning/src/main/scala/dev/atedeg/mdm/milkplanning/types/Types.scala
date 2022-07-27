@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
 
+import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.{
   NonNegativeDecimal,
   NonNegativeNumber,
@@ -97,7 +98,9 @@ final case class StockedQuantity(quantity: NonNegativeNumber)
  * @example `Quantity(-2)` is not a valid quantity.
  * @example `Quantity(20)` is a valida quantity.
  */
-final case class Quantity(n: PositiveNumber)
+final case class Quantity(n: PositiveNumber) {
+  def -(p: StockedQuantity): NonNegativeNumber = this.n.toNonNegativeNumber - p.quantity
+}
 
 /**
  * A [[Product product]] requested in a given [[Quantity quantity]] that has to be produced by the given
