@@ -93,6 +93,7 @@ lazy val root = project
     utils,
     production,
     `milk-planning`,
+    `production-planning`,
     `products-shared-kernel`,
     restocking,
   )
@@ -132,3 +133,8 @@ lazy val restocking = project
   .in(file("restocking"))
   .settings(commonSettings)
   .dependsOn(utils, `products-shared-kernel`)
+
+lazy val `production-planning` = project
+  .in(file("production-planning"))
+  .settings(commonSettings)
+  .dependsOn(utils)
