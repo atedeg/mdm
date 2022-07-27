@@ -38,7 +38,7 @@ ThisBuild / developers := List(
 
 ThisBuild / scalacOptions += "-language:strictEquality"
 
-ThisBuild / wartremoverErrors ++= Warts.all
+ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading)
 
 ThisBuild / scalafixDependencies ++= Seq(
   "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
@@ -54,6 +54,7 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.scalactic" %% "scalactic" % scalaTestVersion,
     "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
+    "eu.timepit" %% "refined" % "0.10.1",
     "org.typelevel" %% "cats-core" % "2.8.0",
     "org.typelevel" %% "cats-mtl" % "1.3.0",
   ),
