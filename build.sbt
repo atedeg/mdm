@@ -84,3 +84,7 @@ lazy val root = project
 lazy val utils = project
   .in(file("utils"))
   .settings(commonSettings)
+
+lazy val `products-shared-kernel` = project
+  .in(file("products-shared-kernel"))
+  .settings(commonSettings)
