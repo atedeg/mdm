@@ -2,29 +2,28 @@ package dev.atedeg.mdm.milkplanning.utils
 
 import scala.annotation.targetName
 
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.numeric.{ NonNegative, Positive }
+import cats.kernel.Order
+import eu.timepit.refined.predicates.all.NonNegative
 import eu.timepit.refined.refineV
 
 import dev.atedeg.mdm.milkplanning.types.QuintalsOfMilk
 import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.{ NonNegativeDecimal, PositiveDecimal }
 import dev.atedeg.mdm.utils.given
 
-extension (qom1: QuintalsOfMilk)
+object QuintalsOfMilkOps:
 
-  @targetName("plus")
-  def +(qom2: QuintalsOfMilk): QuintalsOfMilk = {
-    val result: Option[NonNegativeDecimal] = qom1.n.value + qom2.n.value
-    result match
-      case Some(value) => QuintalsOfMilk(value)
-      case _ => ??? // TODO: how can we handle this case?
-  }
+  given Order[QuintalsOfMilk] with
+    override def compare(x: QuintalsOfMilk, y: QuintalsOfMilk): Int = Order[NonNegativeDecimal].compare(x.n, y.n)
 
-  @targetName("minus")
-  def -(qom2: QuintalsOfMilk): QuintalsOfMilk = {
-    val result: Option[NonNegativeDecimal] = qom1.n.value - qom2.n.value
-    result match
-      case Some(value) => QuintalsOfMilk(value)
-      case _ => QuintalsOfMilk(0.0.nonNegativeDecimal)
-  }
+  extension (qom1: QuintalsOfMilk)
+
+    @targetName("plus")
+    def +(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.n plus qom2.n)
+
+    @targetName("minus")
+    def -(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.n minus qom2.n)
+
+  extension (d: Double)
+
+    @SuppressWarnings(Array("org.wartremover.warts.OptionPartial")) // FIXME: try with a macro
+    def quintalsOfMilk: QuintalsOfMilk = QuintalsOfMilk(refineV[NonNegative](d).toOption.get)
