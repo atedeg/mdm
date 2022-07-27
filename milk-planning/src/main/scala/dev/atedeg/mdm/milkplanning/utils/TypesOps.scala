@@ -13,17 +13,14 @@ import dev.atedeg.mdm.utils.given
 object QuintalsOfMilkOps:
 
   given Order[QuintalsOfMilk] with
-    override def compare(x: QuintalsOfMilk, y: QuintalsOfMilk): Int = Order[NonNegativeDecimal].compare(x.n, y.n)
+
+    override def compare(x: QuintalsOfMilk, y: QuintalsOfMilk): Int =
+      Order[NonNegativeDecimal].compare(x.quintals, y.quintals)
 
   extension (qom1: QuintalsOfMilk)
 
     @targetName("plus")
-    def +(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.n plus qom2.n)
+    def +(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.quintals plus qom2.quintals)
 
     @targetName("minus")
-    def -(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.n minus qom2.n)
-
-  extension (d: Double)
-
-    @SuppressWarnings(Array("org.wartremover.warts.OptionPartial")) // FIXME: try with a macro
-    def quintalsOfMilk: QuintalsOfMilk = QuintalsOfMilk(refineV[NonNegative](d).toOption.get)
+    def -(qom2: QuintalsOfMilk): QuintalsOfMilk = QuintalsOfMilk(qom1.quintals minus qom2.quintals)
