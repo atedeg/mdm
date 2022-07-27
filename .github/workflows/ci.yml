@@ -29,8 +29,8 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'sbt'
 
-      - name: Bump scala version
-        id: bump
+      - name: Get scala version
+        id: get-scala-version
         run: |
           export SCALA_VERSION=`sbt --no-colors --error 'set aggregate := false; print scalaVersion'`
           echo "::set-output name=scala-version::$SCALA_VERSION"          
@@ -42,6 +42,7 @@ jobs:
         run: sbt 'scalafixAll --check'
 
       - name: WartRemover
+        if: ${{ false }} # Temporarily disable wartremover since it doesn't support scala 3.2.0-RC2 https://github.com/wartremover/wartremover/issues/673
         run: sbt wartremoverInspect
 
       - name: Test
@@ -55,7 +56,7 @@ jobs:
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/scala-${{steps.bump.outputs.scala-version}}/scoverage-report/scoverage.xml
+          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/scoverage-report/scoverage.xml
           verbose: true
 
   publish:
