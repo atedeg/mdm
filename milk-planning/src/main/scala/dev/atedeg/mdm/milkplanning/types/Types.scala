@@ -50,7 +50,7 @@ final case class ProcessedMilk(quantity: QuintalsOfMilk)
  * @example `QuintalsOfMilk(1.1)` is a valid weight of 110 kg.
  * @example `QuintalsOfMilk(-20.5)` is not a valid weight.
  */
-final case class QuintalsOfMilk(n: NonNegativeDecimal)
+final case class QuintalsOfMilk(quintals: NonNegativeDecimal)
 
 /**
  * A [[Week week]] of a given [[Year year]].
@@ -90,7 +90,17 @@ type Stock = Product => StockedQuantity
  * @example `StockedQuantity(0)` is valid.
  * @example `StockedQuantity(-1)` is invalid.
  */
-final case class StockedQuantity(n: NonNegativeNumber)
+final case class StockedQuantity(quantity: NonNegativeNumber)
 
-final case class Quantity(q: PositiveNumber)
+/**
+ * A quantity of something.
+ * @example `Quantity(-2)` is not a valid quantity.
+ * @example `Quantity(20)` is a valida quantity.
+ */
+final case class Quantity(n: PositiveNumber)
+
+/**
+ * A [[Product product]] requested in a given [[Quantity quantity]] that has to be produced by the given
+ * [[LocalDateTime date]].
+ */
 final case class RequestedProduct(product: Product, quantity: Quantity, requiredBy: LocalDateTime)
