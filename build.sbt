@@ -97,3 +97,4 @@ lazy val utils = project
 lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
   .settings(commonSettings)
+  .dependsOn(utils)
