@@ -46,18 +46,17 @@ jobs:
         run: sbt wartremoverInspect
 
       - name: Test
-        run: sbt coverage test
+        run: sbt test
 
       - name: Generate coverage report
-        if: ${{ false }} # Temporary disable since fail due to shapeless macro
-        run: sbt coverageAggregate
+        run: sbt jacocoAggregate
 
       - name: Publish coverage report
-        if: matrix.os == 'ubuntu-22.04' && matrix.java-version == '17.0.3' # Find a better solution instead hardcoded versions
+        if: ${{ matrix.os }} == 'ubuntu-22.04' && ${{ matrix.java-version }} == '17.0.3' # Find a better solution instead hardcoded versions
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/scoverage-report/scoverage.xml
+          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/jacoco.xml
           verbose: true
 
   publish:
