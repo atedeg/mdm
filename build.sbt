@@ -57,6 +57,7 @@ val commonSettings = Seq(
     "eu.timepit" %% "refined" % "0.10.1",
     "org.typelevel" %% "cats-core" % "2.8.0",
     "org.typelevel" %% "cats-mtl" % "1.3.0",
+    "org.typelevel" %% "shapeless3-deriving" % "3.1.0",
   ),
 )
 
