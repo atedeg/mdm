@@ -94,7 +94,7 @@ lazy val utils = project
 lazy val `milk-planning` = project
   .in(file("milk-planning"))
   .settings(commonSettings)
-  .dependsOn(utils)
+  .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))

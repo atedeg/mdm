@@ -5,40 +5,9 @@ import java.time.LocalDateTime
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric.Interval
 
+import dev.atedeg.mdm.products.{ CheeseType, Product }
 import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.{
-  NonNegativeDecimal,
-  NonNegativeNumber,
-  NumberInClosedRange,
-  PositiveDecimal,
-  PositiveNumber,
-}
-
-/**
- * A type of cheese.
- */
-enum CheeseType:
-  case Squacquerone
-  case Casatella
-  case Ricotta
-  case Stracchino
-  case Caciotta
-
-/**
- * A [[CheeseType type of cheese]] with its respective [[Size size]].
- */
-enum Product(val cheeseType: CheeseType):
-  case Squacquerone(size: SquacqueroneSizeInGrams) extends Product(CheeseType.Squacquerone)
-  case Casatella(size: CasatellaSizeInGrams) extends Product(CheeseType.Casatella)
-  case Ricotta(size: RicottaSizeInGrams) extends Product(CheeseType.Ricotta)
-  case Stracchino(size: StracchinoSizeInGrams) extends Product(CheeseType.Stracchino)
-  case Caciotta(size: CaciottaSizeInGrams) extends Product(CheeseType.Caciotta)
-
-type SquacqueroneSizeInGrams = 100 | 250 | 350 | 800 | 1000 | 1500
-type CasatellaSizeInGrams = 300 | 350 | 800 | 1000
-type RicottaSizeInGrams = 350 | 1800
-type StracchinoSizeInGrams = 250 | 1000
-type CaciottaSizeInGrams = 1200
+import dev.atedeg.mdm.utils.given
 
 /**
  * Milk processed in order to produce cheese.
@@ -51,7 +20,7 @@ final case class ProcessedMilk(quantity: QuintalsOfMilk)
  * @example `QuintalsOfMilk(1.1)` is a valid weight of 110 kg.
  * @example `QuintalsOfMilk(-20.5)` is not a valid weight.
  */
-final case class QuintalsOfMilk(quintals: NonNegativeDecimal)
+final case class QuintalsOfMilk(quintals: NonNegativeNumber) derives Plus, Times, Minus
 
 /**
  * A [[Week week]] of a given [[Year year]].
@@ -98,9 +67,7 @@ final case class StockedQuantity(quantity: NonNegativeNumber)
  * @example `Quantity(-2)` is not a valid quantity.
  * @example `Quantity(20)` is a valida quantity.
  */
-final case class Quantity(n: PositiveNumber) {
-  def -(p: StockedQuantity): NonNegativeNumber = this.n.toNonNegativeNumber - p.quantity
-}
+final case class Quantity(n: NonNegativeNumber) derives Plus, Times, Minus
 
 /**
  * A [[Product product]] requested in a given [[Quantity quantity]] that has to be produced by the given
