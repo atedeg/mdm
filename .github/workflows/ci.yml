@@ -49,6 +49,7 @@ jobs:
         run: sbt coverage test
 
       - name: Generate coverage report
+        if: ${{ false }} # Temporary disable since fail due to shapeless macro
         run: sbt coverageAggregate
 
       - name: Publish coverage report
