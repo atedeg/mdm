@@ -14,7 +14,6 @@ type PositiveDecimal = Double Refined Positive
 type NumberInClosedRange[L, U] = Int Refined Interval.Closed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
-private type ValidFor[N] = [P] =>> Validate[N, P]
 
 // `T Refined P` has an order relation if `T` has an order relation
 given refinedOrd[N: Order, P]: Order[N Refined P] with
@@ -28,16 +27,23 @@ given refinedEq[N: Eq, P]: Eq[N Refined P] with
 @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
 private def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
 
+private type ValidFor[N] = [P] =>> Validate[N, P]
+
 given refinedPlus[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Plus[N]): Plus[N Refined P] with
   override def plus(x: N Refined P, y: N Refined P): N Refined P = coerce(Op.plus(x.value, y.value))
 
 given refinedTimes[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Times[N]): Times[N Refined P] with
   override def times(x: N Refined P, y: N Refined P): N Refined P = coerce(Op.times(x.value, y.value))
 
-given refinedDiv[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Div[N]): Div[N Refined P] with
+given refinedDivFloat[P <: Positive | NonNegative: ValidFor[Double]]: Div[Double Refined P] with
 
-  override def div(x: N Refined P, y: N Refined P): N Refined P =
-    coerce(if y.value > x.value then Numeric[N].zero else Op.div(x.value, y.value))
+  override def div(x: Double Refined P, y: Double Refined P): Double Refined P =
+    coerce(summon[Div[Double]].div(x.value, y.value))
+
+given refinedDivInt[P <: NonNegative: ValidFor[Int]]: Div[Int Refined P] with
+
+  override def div(x: Int Refined P, y: Int Refined P): Int Refined P =
+    coerce(if y.value > x.value then 0 else summon[Div[Int]].div(x.value, y.value))
 
 given refinedMinus[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Minus[N]): Minus[N Refined P] with
 
