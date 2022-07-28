@@ -1,14 +1,16 @@
 package dev.atedeg.mdm.milkplanning.types
 
-import cats.{ Monad, Order }
+import cats.Monad
 import cats.data.NonEmptyList
-import cats.syntax.all.*
 import eu.timepit.refined.auto.autoUnwrap
 
 import dev.atedeg.mdm.milkplanning.types.OutgoingEvent.*
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.*
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.given
-import dev.atedeg.mdm.utils.{ emit, max, thenReturn, when, Emits, given }
+import dev.atedeg.mdm.milkplanning.utils.given
+import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.given
+import dev.atedeg.mdm.utils.monads.{ emit, thenReturn, when, Emits }
 
 def estimateQuintalsOfMilk[M[_]: Emits[OrderMilk]: Monad](
     milkOfPreviousYear: QuintalsOfMilk,
@@ -28,8 +30,9 @@ private def milkNeededForProducts(
 ): QuintalsOfMilk =
   requestedProducts
     .map(p => (p.product, p.quantity))
-    .map { case (prod, quantity) => (prod, quantity - stock(prod)) }
-    .map { case (prod, quantity) => book(prod.cheeseType) ** quantity }
+    .map { case (prod, quantity) => (prod, quantity.n - stock(prod).quantity) }
+    .map { case (prod, quantity) => book(prod.cheeseType).quintals * quantity }
+    .map(_.toQuintalsOfMilk)
     .reduce(_ + _)
 
 private def magicAiEstimator(
