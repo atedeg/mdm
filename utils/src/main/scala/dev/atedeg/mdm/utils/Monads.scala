@@ -1,9 +1,9 @@
 package dev.atedeg.mdm.utils
 
-import cats.data.NonEmptyList
-import cats.mtl.{Raise, Tell}
-import cats.syntax.all.*
 import cats.Monad
+import cats.data.NonEmptyList
+import cats.mtl.{ Raise, Tell }
+import cats.syntax.all.*
 
 /**
  * Signals that a method could emit elements of a given type which are accumulated in a list.
@@ -42,14 +42,15 @@ def unless[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Uni
  */
 def when[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Unit] = M.whenA(cond)(action)
 
-extension(condition: Boolean)
+extension (condition: Boolean)
+
   /**
    * `cond.otherwiseRaise(err)` [[raise() raises]] the error `err` if the condition `cond` is true.
    */
   def otherwiseRaise[M[_], E](error: => E)(using R: Raise[M, E], M: Monad[M]): M[Boolean] =
     unless[M, Boolean](condition)(raise(error)).map(_ => condition)
 
-extension[M[_]: Monad, A] (ma: M[A])
+extension [M[_]: Monad, A](ma: M[A])
   /**
    * `ma.thenReturn(b)` performs the monadic action `ma`, ignores its return value
    * and then returns the value `b` in the context `M[_]`.

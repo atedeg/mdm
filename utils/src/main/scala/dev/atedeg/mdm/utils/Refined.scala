@@ -1,13 +1,14 @@
 package dev.atedeg.mdm.utils
 
 import scala.annotation.targetName
-import cats.kernel.{Eq, Order}
-import cats.syntax.all.*
-import math.Ordering.Implicits.infixOrderingOps
-import eu.timepit.refined.refineV
-import eu.timepit.refined.api.{Refined, Validate}
-import eu.timepit.refined.numeric.{Interval, NonNegative, Positive}
+
 import Coercion.*
+import cats.kernel.{ Eq, Order }
+import cats.syntax.all.*
+import eu.timepit.refined.api.{ Refined, Validate }
+import eu.timepit.refined.numeric.{ Interval, NonNegative, Positive }
+import eu.timepit.refined.refineV
+import math.Ordering.Implicits.infixOrderingOps
 
 type PositiveNumber = Int Refined Positive
 type PositiveDecimal = Double Refined Positive
@@ -17,7 +18,9 @@ type NonNegativeDecimal = Double Refined NonNegative
 private type ValidFor[N] = [P] =>> Validate[N, P]
 
 private object Coercion:
+
   extension [A](a: A)
+
     @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
     def coerceTo[P](using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
 
@@ -37,9 +40,11 @@ given refinedTimes[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Times[
   override def times(x: N Refined P, y: N Refined P): N Refined P = Op.times(x.value, y.value).coerceTo[P]
 
 given refinedDiv[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Div[N]): Div[N Refined P] with
+
   override def div(x: N Refined P, y: N Refined P): N Refined P =
     (if y.value > x.value then Numeric[N].zero else Op.div(x.value, y.value)).coerceTo[P]
 
 given refinedMinus[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Minus[N]): Minus[N Refined P] with
+
   override def minus(x: N Refined P, y: N Refined P): N Refined P =
     (if y.value > x.value then Numeric[N].zero else Op.minus(x.value, y.value)).coerceTo[P]

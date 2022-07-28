@@ -10,8 +10,8 @@ import eu.timepit.refined.refineV
 
 @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion", "org.wartremover.warts.OptionPartial"))
 inline implicit def intToNumberInRange[L <: Int & Singleton, U <: Int & Singleton](
-                                                                                    inline i: Int,
-                                                                                  ): NumberInClosedRange[L, U] =
+    inline i: Int,
+): NumberInClosedRange[L, U] =
   inline if constValue[L] <= i && i <= constValue[U]
   then refineV[Interval.Closed[L, U]](i).toOption.get
   else compiletime.error("Not in the desired range")
