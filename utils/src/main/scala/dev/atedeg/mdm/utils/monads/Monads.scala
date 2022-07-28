@@ -1,9 +1,9 @@
 package dev.atedeg.mdm.utils.monads
 
+import cats.{ Monad, Traverse }
 import cats.data.NonEmptyList
 import cats.mtl.{ Raise, Tell }
 import cats.syntax.all.*
-import cats.{ Monad, Traverse }
 
 /**
  * Signals that a method could emit elements of a given type which are accumulated in a list.
