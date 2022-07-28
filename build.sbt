@@ -82,6 +82,7 @@ lazy val root = project
       "docs/api.md",
     ),
   )
+  .aggregate(utils)
 
 lazy val utils = project
   .in(file("utils"))
