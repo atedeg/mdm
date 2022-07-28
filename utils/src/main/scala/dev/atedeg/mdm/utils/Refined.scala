@@ -19,13 +19,16 @@ type NonNegativeDecimal = Double Refined NonNegative
 given refinedOrd[N: Order, P]: Order[N Refined P] with
   override def compare(x: N Refined P, y: N Refined P): Int = Order[N].compare(x.value, y.value)
 
+given refinedOrdering[N: Ordering, P]: Ordering[N Refined P] with
+  override def compare(x: N Refined P, y: N Refined P): Int = Ordering[N].compare(x.value, y.value)
+
 // `T Refined P` has an equality operation if `T` has an equality operation
 given refinedEq[N: Eq, P]: Eq[N Refined P] with
   override def eqv(x: N Refined P, y: N Refined P): Boolean = Eq[N].eqv(x.value, y.value)
 
 // Instances for the various numeric ops
 @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-private def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
+def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
 
 private type ValidFor[N] = [P] =>> Validate[N, P]
 
