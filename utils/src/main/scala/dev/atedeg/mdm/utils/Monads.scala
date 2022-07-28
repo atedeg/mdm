@@ -67,4 +67,4 @@ extension [M[_]: Monad, A](ma: M[A])
    * `ma.void` performs the monadic action `ma` then discards its return value returning
    * `Unit` in the context `M[_]`.
    */
-  def void = ma thenReturn ()
+  def ignore: M[Unit] = ma *> ().pure
