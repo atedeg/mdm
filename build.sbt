@@ -44,7 +44,6 @@ ThisBuild / scalafixDependencies ++= Seq(
   "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
 )
 
-ThisBuild / coverageReport := true
 ThisBuild / semanticdbEnabled := true
 
 lazy val startupTransition: State => State = "conventionalCommits" :: _
@@ -80,6 +79,13 @@ lazy val root = project
       "docs/",
       "-doc-root-content",
       "docs/api.md",
+    ),
+    jacocoReportSettings := JacocoReportSettings(
+      title = "mdm coverage report",
+      subDirectory = None,
+      thresholds = JacocoThresholds(),
+      formats = Seq(JacocoReportFormats.HTML, JacocoReportFormats.XML),
+      fileEncoding = "utf-8",
     ),
   )
   .aggregate(utils)
