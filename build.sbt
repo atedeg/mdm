@@ -88,7 +88,8 @@ lazy val root = project
   .aggregate(
     stocking,
     utils,
-    `milk-planning`
+    `milk-planning`,
+    `products-shared-kernel`,
   )
 
 lazy val utils = project
@@ -112,3 +113,4 @@ lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
   .dependsOn(utils)
+  .dependsOn(`products-shared-kernel`)
