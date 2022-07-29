@@ -1,0 +1,21 @@
+tables:
+  - name: "stocking-ul"
+    rows:
+      - type: "AvailableStock"
+      - type: "DesiredStock"
+      - class: "AvailableQuantity"
+      - class: "DesiredQuantity"
+      - class: "MissingQuantity"
+      - enum: "Batch"
+      - enum: "QualityAssuredBatch"
+      - class: "BatchID"
+      - class: "LabelledProduct"
+  - name: "stocking-incoming"
+    rows:
+      - case: "ProductStocked"
+  - name: "stocking-outgoing"
+    rows:
+      - case: "BatchReadyForQualityAssurance"
+      - case: "ProductRemovedFromStock"
+      - case: "NewBatch"
+ignored: []
