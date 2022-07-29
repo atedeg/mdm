@@ -12,4 +12,16 @@ tables:
       - class: "Quantity"
       - class: "RequestedProduct"
 
+  - name: "milk-planning-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "ReceivedOrder"
+
+  - name: "milk-planning-outgoing"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "OrderMilk"
+
 ignored: []
