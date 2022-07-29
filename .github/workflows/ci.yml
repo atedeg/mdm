@@ -42,7 +42,6 @@ jobs:
         run: sbt 'scalafixAll --check'
 
       - name: WartRemover
-        if: ${{ false }} # Temporarily disable wartremover since it doesn't support scala 3.2.0-RC2 https://github.com/wartremover/wartremover/issues/673
         run: sbt wartremoverInspect
 
       - name: Test
