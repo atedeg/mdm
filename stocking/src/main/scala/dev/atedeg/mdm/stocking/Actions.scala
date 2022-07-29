@@ -54,19 +54,19 @@ def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked
   val (candidate: Int, product: Product) = batch.cheeseType match
     case CheeseType.Squacquerone =>
       val w: SquacqueroneWeightInGrams = nearestWeight(allSquacqueroneWeights)(actualWeight)
-      (w, Product.Squacquerone(w))
+      (w: Int, Product.Squacquerone(w): Product)
     case CheeseType.Casatella =>
       val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
-      (w, Product.Casatella(w))
+      (w: Int, Product.Casatella(w): Product)
     case CheeseType.Ricotta =>
       val w: RicottaWeightInGrams = nearestWeight(allRicottaWeights)(actualWeight)
-      (w, Product.Ricotta(w))
+      (w: Int, Product.Ricotta(w): Product)
     case CheeseType.Stracchino =>
       val w: StracchinoWeightInGrams = nearestWeight(allStracchinoWeights)(actualWeight)
-      (w, Product.Stracchino(w))
+      (w: Int, Product.Stracchino(w): Product)
     case CheeseType.Caciotta =>
       val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
-      (w, Product.Casatella(w))
+      (w: Int, Product.Casatella(w): Product)
   val labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
   actualWeight.n.value.toDouble
     .isInRange(candidate.toDouble +- 5.percent)
