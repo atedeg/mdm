@@ -2,6 +2,8 @@ package dev.atedeg.mdm.utils
 
 import scala.annotation.targetName
 
+import eu.timepit.refined.api.Refined
+import eu.timepit.refined.numeric.{ NonNegative, Positive }
 import shapeless3.deriving.K0
 
 trait Plus[N]:
@@ -19,6 +21,10 @@ trait Minus[N]:
 trait Div[N]:
   def div(x: N, y: N): N
   extension (x: N) @targetName("divOperator") def /(y: N) = div(x, y)
+
+trait Ceil[N]:
+  def ceil(n: N): N
+  extension (n: N) def toCeil: N = ceil(n)
 
 object Plus:
 
@@ -59,3 +65,15 @@ object Div:
 
   inline given divGen[N](using inst: K0.ProductInstances[Div, N]): Div[N] with
     def div(n1: N, n2: N): N = inst.map2(n1, n2)([n] => (d: Div[n], n1: n, n2: n) => d.div(n1, n2))
+
+given [N, P <: Positive | NonNegative: ValidFor[N]](using C: Ceil[N]): Ceil[N Refined P] with
+  override def ceil(n: N Refined P): N Refined P = coerce(C.ceil(n.value))
+
+given Ceil[Double] with
+  override def ceil(n: Double): Double = math.ceil(n)
+
+object Ceil:
+  inline def derived[A](using gen: K0.ProductGeneric[A]): Ceil[A] = ceilGen
+
+  inline given ceilGen[N](using inst: K0.ProductInstances[Ceil, N]): Ceil[N] with
+    override def ceil(n: N): N = inst.map(n)([n] => (c: Ceil[n], n: n) => c.ceil(n))
