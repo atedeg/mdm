@@ -137,4 +137,4 @@ lazy val restocking = project
 lazy val `production-planning` = project
   .in(file("production-planning"))
   .settings(commonSettings)
-  .dependsOn(utils)
+  .dependsOn(utils, `products-shared-kernel`)
