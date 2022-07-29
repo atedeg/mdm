@@ -1,6 +1,6 @@
 package dev.atedeg.mdm.utils.monads
 
-import cats.data.{ EitherT, Reader, WriterT }
+import cats.data.{ EitherT, Reader, Writer, WriterT }
 
 private type Reading[State] = [A] =>> Reader[State, A]
 private type EmittingT[M[_], Event] = [A] =>> WriterT[M, List[Event], A]
@@ -15,6 +15,13 @@ type ActionWithState[Error, Event, Result, State] = EitherT[EmittingT[Reading[St
  * The same as an [[ActionWithState action with state]] but does not read an immutable state.
  */
 type Action[Error, Event, Result] = ActionWithState[Error, Event, Result, Unit]
+
+/**
+ * The same as an [[Action action]] but does not fail.
+ */
+type SafeAction[Event, Result] = Writer[List[Event], Result]
+
+extension [Event, Result](action: SafeAction[Event, Result]) def execute: (List[Event], Result) = action.run
 
 extension [Error, Event, Result, State](action: ActionWithState[Error, Event, Result, State])
   /**
