@@ -11,8 +11,16 @@ type OneOf[T <: Tuple] = T match
   case (t *: ts) => t | OneOf[ts]
 
 inline def all[T <: Tuple]: NonEmptyList[OneOf[T]] = inline erasedValue[T] match
-  case _:(Grams[n] *: EmptyTuple) => NonEmptyList.one(Grams(constValue[n])).asInstanceOf[NonEmptyList[OneOf[T]]]
-  case _:(Grams[n] *: gs) => NonEmptyList(Grams(constValue[n]), all[gs].toList).asInstanceOf[NonEmptyList[OneOf[T]]]
+  case _:(n *: EmptyTuple) =>
+    val v = checkInt[n](constValue[n])
+    NonEmptyList.one(toGrams(v)).asInstanceOf[NonEmptyList[OneOf[T]]]
+  case _:(n *: gs) =>
+    val v = checkInt[n](constValue[n])
+    NonEmptyList(toGrams(v), all[gs].toList).asInstanceOf[NonEmptyList[OneOf[T]]]
   case _ => compiletime.error("Cannot work on a tuple with elements that are not Grams")
 
-def toGrams(g: Grams[_ <: Int]): Grams[PositiveNumber] = g.map(coerce[Int, Positive](_))
+private inline def checkInt[T](inline n: T): Int = inline erasedValue[T] match
+  case _: Int => n.asInstanceOf[Int]
+  case _ => compiletime.error(codeOf(n) + " is not an int")
+
+private[products] def toGrams(n: Int): Grams = Grams(coerce[Int, Positive](n))
