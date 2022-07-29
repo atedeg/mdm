@@ -23,27 +23,6 @@ final case class ProcessedMilk(quantity: QuintalsOfMilk)
 final case class QuintalsOfMilk(quintals: NonNegativeNumber) derives Plus, Times, Minus
 
 /**
- * A [[Week week]] of a given [[Year year]].
- */
-final case class Period(week: Week, year: Year)
-
-/**
- * The number of a week in a year
- * @note it must be a [[NumberInClosedRange number]] between 1 and 52 inclusive.
- * @example `Week(1)` is a valid week.
- * @example `Week(54)` is not a valid week.
- */
-final case class Week(n: NumberInClosedRange[1, 52])
-
-/**
- * A year.
- * @note it must be a [[PositiveNumber positive number]].
- * @example `Year(2022)` is a valid year.
- * @example `Year(-1000)` is not a valid year.
- */
-final case class Year(n: PositiveNumber)
-
-/**
  * Represent how many [[QuintalsOfMilk quintals of milk]] are needed to produce a given quantity of [[Product product]].
  * @example In order to produce 180kg of a product are necessary 10 quintals of milk, in this case the yield is `5.55`.
  * @example `Yield(0)` is not a valid yield.
