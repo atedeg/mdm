@@ -1,13 +1,13 @@
 package dev.atedeg.mdm.products
 
-import eu.timepit.refined.api.{ Refined, Validate }
-import eu.timepit.refined.predicates.all.Positive
-import eu.timepit.refined.refineV
+import dev.atedeg.mdm.utils.*
 
 /**
  * A weight in grams.
  */
 final case class Grams(n: PositiveNumber)
+
+extension (n: PositiveNumber) def grams: Grams = Grams(n)
 
 /**
  * A type of cheese.
