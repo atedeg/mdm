@@ -55,7 +55,7 @@ jobs:
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/jacoco.xml
+          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/aggregate/jacoco.xml
           verbose: true
 
   publish:
