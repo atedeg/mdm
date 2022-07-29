@@ -36,9 +36,7 @@ ThisBuild / developers := List(
   ),
 )
 
-ThisBuild / scalacOptions += "-language:strictEquality"
-
-ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading)
+ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading, Wart.Equals)
 
 ThisBuild / scalafixDependencies ++= Seq(
   "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
