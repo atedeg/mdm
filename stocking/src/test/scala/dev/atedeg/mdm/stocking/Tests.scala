@@ -17,7 +17,11 @@ import dev.atedeg.mdm.utils.monads.*
 trait Mocks {
   val batchID: BatchID = BatchID(UUID.randomUUID())
   val cheeseType: CheeseType = CheeseType.Squacquerone
-  val product: Product = Product.Squacquerone(100)
+  val squacquerone: Product = Product.Squacquerone(100)
+  val casatella: Product = Product.Casatella(300)
+  val ricotta: Product = Product.Ricotta(350)
+  val stracchino: Product = Product.Stracchino(250)
+  val caciotta: Product = Product.Caciotta(500)
   val readyForQA: Batch.ReadyForQualityAssurance = Batch.ReadyForQualityAssurance(batchID, cheeseType)
 }
 
@@ -26,45 +30,65 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
   Feature("Missing stock") {
     Scenario("There are missing products from the desired stock") {
       Given("An available stock")
-      val available = Map(product -> AvailableQuantity(10))
+      val available = Map(
+        squacquerone -> AvailableQuantity(10),
+        casatella -> AvailableQuantity(20),
+        ricotta -> AvailableQuantity(30),
+        stracchino -> AvailableQuantity(40),
+        caciotta -> AvailableQuantity(50),
+      )
       And("a desired stock")
-      val desired = Map(product -> DesiredQuantity(20))
+      val desired = Map(
+        squacquerone -> DesiredQuantity(20),
+        casatella -> DesiredQuantity(30),
+        ricotta -> DesiredQuantity(40),
+        stracchino -> DesiredQuantity(50),
+        caciotta -> DesiredQuantity(60),
+      )
       When("someone asks how many products are missing to reach the desired stock")
-      val missing = getMissingCountFromProductStock(available, desired)(product)
+      val missingSquacquerone = getMissingCountFromProductStock(available, desired)(squacquerone)
+      val missingCasatella = getMissingCountFromProductStock(available, desired)(casatella)
+      val missingRicotta = getMissingCountFromProductStock(available, desired)(ricotta)
+      val missingStracchino = getMissingCountFromProductStock(available, desired)(stracchino)
+      val missingCaciotta = getMissingCountFromProductStock(available, desired)(caciotta)
       Then("the missing quantity should be greater than zero")
-      missing shouldBe MissingQuantity(10)
+      missingSquacquerone shouldBe MissingQuantity(10)
+      missingCasatella shouldBe MissingQuantity(10)
+      missingRicotta shouldBe MissingQuantity(10)
+      missingStracchino shouldBe MissingQuantity(10)
+      missingCaciotta shouldBe MissingQuantity(10)
     }
     Scenario("There are more products than needed in the desired stock") {
       Given("An available stock")
-      val available = Map(product -> AvailableQuantity(20))
+      val available = Map(squacquerone -> AvailableQuantity(20))
       And("a desired stock")
-      val desired = Map(product -> DesiredQuantity(10))
+      val desired = Map(squacquerone -> DesiredQuantity(10))
       When("someone asks how many products are missing to reach the desired stock")
-      val missing = getMissingCountFromProductStock(available, desired)(product)
+      val missing = getMissingCountFromProductStock(available, desired)(squacquerone)
       Then("the missing quantity should be zero")
       missing shouldBe MissingQuantity(0)
     }
     Scenario("Removal from stock with enough available products") {
       Given("An available stock")
-      val available = Map(product -> AvailableQuantity(10))
+      val available = Map(squacquerone -> AvailableQuantity(10))
       And("a quantity to remove from stock")
       val toRemove = DesiredQuantity(5)
       When("someone removes the product from the stock")
-      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(product, toRemove)
+      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(squacquerone, toRemove)
       Then("the stock should be updated")
       val (_, result) = action.execute
-      result.value shouldEqual Map(product -> AvailableQuantity(5))
+      result.value shouldEqual Map(squacquerone -> AvailableQuantity(5))
     }
     Scenario("Removal from stock with not enough available products") {
       Given("An available stock")
-      val available = Map(product -> AvailableQuantity(10))
+      val available = Map(squacquerone -> AvailableQuantity(10))
       And("a quantity to remove from stock")
       val toRemove = DesiredQuantity(50)
       When("someone removes the product from the stock")
-      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(product, toRemove)
+      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(squacquerone, toRemove)
       Then("an error should be raised")
       val (_, result) = action.execute
-      result.left.value shouldEqual NotEnoughStock(product, toRemove, AvailableQuantity(10))
+      result.left.value shouldEqual NotEnoughStock(squacquerone, toRemove, AvailableQuantity(10))
     }
   }
 
@@ -98,7 +122,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, correctWeight)
       Then("the label should be printed with the correct information")
       val (events, result) = labelAction.execute
-      val expectedLabelledProduct = LabelledProduct(product, AvailableQuantity(1), passed.id)
+      val expectedLabelledProduct = LabelledProduct(squacquerone, AvailableQuantity(1), passed.id)
       result.value shouldEqual expectedLabelledProduct
       And("an event should be emitted")
       events should contain(ProductStocked(expectedLabelledProduct))
@@ -112,7 +136,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       Then("the label should not be printed")
       val (events, result) = labelAction.execute
       And("an error should be raised")
-      result.left.value shouldEqual WeightNotInRange(product.weight, wrongWeight)
+      result.left.value shouldEqual WeightNotInRange(squacquerone.weight, wrongWeight)
       And("no events should be emitted")
       events shouldBe empty
     }
