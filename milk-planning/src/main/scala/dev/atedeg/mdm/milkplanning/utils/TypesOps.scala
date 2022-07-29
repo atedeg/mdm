@@ -16,4 +16,4 @@ object QuintalsOfMilkOps:
   given Order[QuintalsOfMilk] with
     override def compare(x: QuintalsOfMilk, y: QuintalsOfMilk): Int = Order[Int].compare(x.quintals, y.quintals)
 
-  extension (n: NonNegativeNumber) def toQuintalsOfMilk: QuintalsOfMilk = QuintalsOfMilk(n)
+  extension (n: NonNegativeDecimal) def quintalsOfMilk: QuintalsOfMilk = QuintalsOfMilk(n.toNumber)
