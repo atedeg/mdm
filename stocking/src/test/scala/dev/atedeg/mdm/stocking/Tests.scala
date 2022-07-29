@@ -8,18 +8,65 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
+import dev.atedeg.mdm.products.*
+import dev.atedeg.mdm.stocking.Errors.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
-import dev.atedeg.mdm.stocking.grams
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
 
 trait Mocks {
   val batchID: BatchID = BatchID(UUID.randomUUID())
-  val cheeseType: CheeseType = 0
+  val cheeseType: CheeseType = CheeseType.Squacquerone
+  val product: Product = Product.Squacquerone(100)
   val readyForQA: Batch.ReadyForQualityAssurance = Batch.ReadyForQualityAssurance(batchID, cheeseType)
 }
 
 class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+
+  Feature("Missing stock") {
+    Scenario("There are missing products from the desired stock") {
+      Given("An available stock")
+      val available = Map(product -> AvailableQuantity(10))
+      And("a desired stock")
+      val desired = Map(product -> DesiredQuantity(20))
+      When("someone asks how many products are missing to reach the desired stock")
+      val missing = getMissingCountFromProductStock(available, desired)(product)
+      Then("the missing quantity should be greater than zero")
+      missing shouldBe MissingQuantity(10)
+    }
+    Scenario("There are more products than needed in the desired stock") {
+      Given("An available stock")
+      val available = Map(product -> AvailableQuantity(20))
+      And("a desired stock")
+      val desired = Map(product -> DesiredQuantity(10))
+      When("someone asks how many products are missing to reach the desired stock")
+      val missing = getMissingCountFromProductStock(available, desired)(product)
+      Then("the missing quantity should be zero")
+      missing shouldBe MissingQuantity(0)
+    }
+    Scenario("Removal from stock with enough available products") {
+      Given("An available stock")
+      val available = Map(product -> AvailableQuantity(10))
+      And("a quantity to remove from stock")
+      val toRemove = DesiredQuantity(5)
+      When("someone removes the product from the stock")
+      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(product, toRemove)
+      Then("the stock should be updated")
+      val (_, result) = action.execute
+      result.value shouldEqual Map(product -> AvailableQuantity(5))
+    }
+    Scenario("Removal from stock with not enough available products") {
+      Given("An available stock")
+      val available = Map(product -> AvailableQuantity(10))
+      And("a quantity to remove from stock")
+      val toRemove = DesiredQuantity(50)
+      When("someone removes the product from the stock")
+      val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(product, toRemove)
+      Then("an error should be raised")
+      val (_, result) = action.execute
+      result.left.value shouldEqual NotEnoughStock(product, toRemove, AvailableQuantity(10))
+    }
+  }
 
   Feature("Quality assurance") {
     Scenario("An operator marks a batch as passing quality assurance") {
@@ -40,15 +87,18 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       failed.id shouldEqual batchID
       failed.cheeseType shouldEqual cheeseType
     }
+  }
+
+  Feature("Label printing") {
     Scenario("An operator tries to print a label for a cheese within weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
-      val weight = 1.grams
+      val correctWeight = 102.grams
       When("the operator prints a label for a product within weight range")
-      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, weight)
+      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, correctWeight)
       Then("the label should be printed with the correct information")
       val (events, result) = labelAction.execute
-      val expectedLabelledProduct = LabelledProduct(passed.cheeseType, 1, passed.id)
+      val expectedLabelledProduct = LabelledProduct(product, AvailableQuantity(1), passed.id)
       result.value shouldEqual expectedLabelledProduct
       And("an event should be emitted")
       events should contain(ProductStocked(expectedLabelledProduct))
@@ -56,13 +106,13 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
     Scenario("An operator tries to print a label for a cheese outside weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
-      val weight = 100.grams
+      val wrongWeight = 50.grams
       When("the operator prints a label for a cheese outside weight range")
-      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, weight)
+      val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, wrongWeight)
       Then("the label should not be printed")
       val (events, result) = labelAction.execute
       And("an error should be raised")
-      result.left.value shouldEqual WeightNotInRange(3.grams, 100.grams)
+      result.left.value shouldEqual WeightNotInRange(product.weight, wrongWeight)
       And("no events should be emitted")
       events shouldBe empty
     }
