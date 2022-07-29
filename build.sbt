@@ -80,12 +80,9 @@ lazy val root = project
       "-doc-root-content",
       "docs/api.md",
     ),
-    jacocoReportSettings := JacocoReportSettings(
+    jacocoAggregateReportSettings := JacocoReportSettings(
       title = "mdm coverage report",
-      subDirectory = None,
-      thresholds = JacocoThresholds(),
-      formats = Seq(JacocoReportFormats.HTML, JacocoReportFormats.XML),
-      fileEncoding = "utf-8",
+      formats = Seq(JacocoReportFormats.XML),
     ),
   )
   .aggregate(utils)
