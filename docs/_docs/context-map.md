@@ -32,5 +32,10 @@ title: Context Map
   `Production` informs `Restocking` when some raw materials are consumed.
   `Production` is a downstream bounded context and needs an Anti-Corruption Layer since `Restocking` is going to be a generic bounded context.
 
-There is a *Shared Kernel* between every bounded context which contains the definitions for **product** and **cheese type**.
-This choice was taken as the two concepts above are crucial and every change in the shared kernel must affect every other bounded context.
+There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
+This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
+bounded contexts handling these concepts.
+In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts: 
+the production, ordering, labelling and stocking processes would need a rehaul to take into account the new kind of product.
+By sharing this information among different bounded context it is guaranteed that, whenever a change happens to any of these concepts, all the domains
+will maintain an up-to-date vision of these concepts.
