@@ -24,5 +24,4 @@ extension (q: QuintalsOfIngredient)
   def map(f: PositiveDouble => PositiveDouble): QuintalsOfIngredient = q.quintals.map(f) of q.ingredient
   def *(w: WeightInQuintals): QuintalsOfIngredient = (w * q.quintals) of q.ingredient
 
-extension (d: PositiveDouble)
-  def quintals: WeightInQuintals = WeightInQuintals(d)
+extension (d: PositiveDouble) def quintals: WeightInQuintals = WeightInQuintals(d)
