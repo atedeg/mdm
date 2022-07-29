@@ -23,8 +23,8 @@ trait Div[N]:
   extension (x: N) @targetName("divOperator") def /(y: N) = div(x, y)
 
 trait Ceil[N]:
-  def ceil(n: N): N
-  extension (n: N) def toCeil: N = ceil(n)
+  def toCeil(n: N): N
+  extension (n: N) def ceil: N = toCeil(n)
 
 object Plus:
 
@@ -67,13 +67,13 @@ object Div:
     def div(n1: N, n2: N): N = inst.map2(n1, n2)([n] => (d: Div[n], n1: n, n2: n) => d.div(n1, n2))
 
 given [N, P <: Positive | NonNegative: ValidFor[N]](using C: Ceil[N]): Ceil[N Refined P] with
-  override def ceil(n: N Refined P): N Refined P = coerce(C.ceil(n.value))
+  override def toCeil(n: N Refined P): N Refined P = coerce(C.toCeil(n.value))
 
 given Ceil[Double] with
-  override def ceil(n: Double): Double = math.ceil(n)
+  override def toCeil(n: Double): Double = math.ceil(n)
 
 object Ceil:
   inline def derived[A](using gen: K0.ProductGeneric[A]): Ceil[A] = ceilGen
 
   inline given ceilGen[N](using inst: K0.ProductInstances[Ceil, N]): Ceil[N] with
-    override def ceil(n: N): N = inst.map(n)([n] => (c: Ceil[n], n: n) => c.ceil(n))
+    override def toCeil(n: N): N = inst.map(n)([n] => (c: Ceil[n], n: n) => c.toCeil(n))
