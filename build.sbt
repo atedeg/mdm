@@ -1,4 +1,4 @@
-val scala3Version = "3.2.0-RC2"
+val scala3Version = "3.1.3"
 val scalaTestVersion = "3.2.12"
 
 ThisBuild / scalaVersion := scala3Version
