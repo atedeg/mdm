@@ -19,6 +19,11 @@ final case class AvailableQuantity(n: NonNegativeNumber)
 final case class DesiredQuantity(n: PositiveNumber)
 
 /**
+ * The required quantity of a certain product to reach the desired stock level.
+ */
+final case class MissingQuantity(n: NonNegativeNumber)
+
+/**
  * The available quantity of a certain product.
  */
 type AvailableStock = Map[Product, AvailableQuantity]
@@ -67,10 +72,3 @@ final case class BatchID(id: UUID)
  * A [[Product product]] with its respective [[Quantity quantity]] and the [[BatchID ID of the batch]] it belongs to.
  */
 final case class LabelledProduct(cheeseType: Product, quantity: AvailableQuantity, batchID: BatchID)
-
-/**
- * A weight in grams reported by a scale.
- */
-final case class WeightInGrams(grams: PositiveDecimal)
-
-extension (n: PositiveDecimal) def grams: WeightInGrams = WeightInGrams(n)
