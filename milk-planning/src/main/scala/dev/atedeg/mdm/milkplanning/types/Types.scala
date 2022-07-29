@@ -44,10 +44,17 @@ final case class Week(n: NumberInClosedRange[1, 52])
 final case class Year(n: PositiveNumber)
 
 /**
- * It defines the how many [[QuintalsOfMilk quintals of milk]] are needed to produce a quintal of a given
- * [[CheeseType cheese type]].
+ * Represent how many [[QuintalsOfMilk quintals of milk]] are needed to produce a given quantity of [[Product product]].
+ * @example In order to produce 180kg of a product are necessary 10 quintals of milk, in this case the yield is `5.55`.
+ * @example `Yield(0)` is not a valid yield.
+ * @example `Yield(5.55)` is a valid yield.
  */
-type RecipeBook = CheeseType => QuintalsOfMilk
+final case class Yield(n: PositiveDecimal)
+
+/**
+ * It defines, for each [[Product product]], the [[Yield yield]] of the milk.
+ */
+type RecipeBook = CheeseType => Yield
 
 /**
  * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].
@@ -67,7 +74,7 @@ final case class StockedQuantity(quantity: NonNegativeNumber)
  * @example `Quantity(-2)` is not a valid quantity.
  * @example `Quantity(20)` is a valida quantity.
  */
-final case class Quantity(n: NonNegativeNumber) derives Plus, Times, Minus
+final case class Quantity(n: PositiveNumber) derives Plus, Times
 
 /**
  * A [[Product product]] requested in a given [[Quantity quantity]] that has to be produced by the given
