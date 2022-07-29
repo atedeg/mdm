@@ -1,15 +1,15 @@
 package dev.atedeg.mdm.production
 
 import java.util.UUID
+
 import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
-trait Mocks {
-
-}
+trait Mocks {}
 
 class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+
   Feature("Production management") {
     Scenario("A production is started") {
       Given("a production that has to be started")
