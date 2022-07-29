@@ -9,9 +9,7 @@ import eu.timepit.refined.refineV
 /**
  * A weight in grams.
  */
-final case class Grams[N <: Int | PositiveNumber](n : N) {
-  def map[M <: Int | PositiveNumber](f: N => M): Grams[M] = Grams(f(n))
-}
+final case class Grams(n: PositiveNumber)
 
 /**
  * A type of cheese.
@@ -26,29 +24,29 @@ enum CheeseType:
 /**
  * A [[CheeseType type of cheese]] with its respective [[Grams weight]].
  */
-enum Product(val cheeseType: CheeseType, val weight: Grams[_ <: PositiveNumber]):
-  case Squacquerone(w: SquacqueroneWeight) extends Product(CheeseType.Squacquerone, toGrams(w))
-  case Casatella(w: CasatellaWeight) extends Product(CheeseType.Casatella, toGrams(w))
-  case Ricotta(w: RicottaWeight) extends Product(CheeseType.Ricotta, toGrams(w))
-  case Stracchino(w: StracchinoWeight) extends Product(CheeseType.Stracchino, toGrams(w))
-  case Caciotta(w: CaciottaWeight) extends Product(CheeseType.Caciotta, toGrams(w))
+enum Product(val cheeseType: CheeseType, val weight: Grams):
+  case Squacquerone(w: SquacqueroneWeightInGrams) extends Product(CheeseType.Squacquerone, toGrams(w))
+  case Casatella(w: CasatellaWeightInGrams) extends Product(CheeseType.Casatella, toGrams(w))
+  case Ricotta(w: RicottaWeightInGrams) extends Product(CheeseType.Ricotta, toGrams(w))
+  case Stracchino(w: StracchinoWeightInGrams) extends Product(CheeseType.Stracchino, toGrams(w))
+  case Caciotta(w: CaciottaWeightInGrams) extends Product(CheeseType.Caciotta, toGrams(w))
 
-type SquacqueroneWeights = (Grams[100], Grams[250], Grams[350], Grams[800], Grams[1000], Grams[1500])
-type SquacqueroneWeight = OneOf[SquacqueroneWeights]
-val allSquacqueroneWeights = all[SquacqueroneWeights]
+type SquacqueroneWeightsInGrams = (100, 250, 350, 800, 1000, 1500)
+type SquacqueroneWeightInGrams = OneOf[SquacqueroneWeightsInGrams]
+val allSquacqueroneWeights = all[SquacqueroneWeightsInGrams]
 
-type CasatellaWeights = (Grams[300], Grams[350], Grams[800], Grams[1000])
-type CasatellaWeight = OneOf[CasatellaWeights]
-val allCasatellaWeights = all[CasatellaWeights]
+type CasatellaWeightsInGrams = (300, 350, 800, 1000)
+type CasatellaWeightInGrams = OneOf[CasatellaWeightsInGrams]
+val allCasatellaWeights = all[CasatellaWeightsInGrams]
 
-type RicottaWeights = (Grams[350], Grams[1800])
-type RicottaWeight = OneOf[RicottaWeights]
-val allRicottaWeights = all[RicottaWeights]
+type RicottaWeightsInGrams = (350, 1800)
+type RicottaWeightInGrams = OneOf[RicottaWeightsInGrams]
+val allRicottaWeights = all[RicottaWeightsInGrams]
 
-type StracchinoWeights = (Grams[250], Grams[1000])
-type StracchinoWeight = OneOf[StracchinoWeights]
-val allStracchinoWeights = all[StracchinoWeights]
+type StracchinoWeightsInGrams = (250, 1000)
+type StracchinoWeightInGrams = OneOf[StracchinoWeightsInGrams]
+val allStracchinoWeights = all[StracchinoWeightsInGrams]
 
-type CaciottaWeights = (Grams[500], Grams[1000])
-type CaciottaWeight = OneOf[CaciottaWeights]
-val allCaciottaWeights = all[CaciottaWeights]
+type CaciottaWeightsInGrams = (500, 1000)
+type CaciottaWeightInGrams = OneOf[CaciottaWeightsInGrams]
+val allCaciottaWeights = all[CaciottaWeightsInGrams]
