@@ -1,8 +1,6 @@
 package dev.atedeg.mdm.products
 
-import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.given
-import eu.timepit.refined.api.{Refined, Validate}
+import eu.timepit.refined.api.{ Refined, Validate }
 import eu.timepit.refined.predicates.all.Positive
 import eu.timepit.refined.refineV
 

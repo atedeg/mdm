@@ -36,8 +36,6 @@ ThisBuild / developers := List(
   ),
 )
 
-ThisBuild / scalacOptions += "-language:strictEquality"
-
 ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading)
 
 ThisBuild / scalafixDependencies ++= Seq(
@@ -86,8 +84,8 @@ lazy val root = project
     ),
   )
   .aggregate(utils)
+  .aggregate(`products-shared-kernel`)
   .aggregate(stocking)
-  .aggregate(utils)
 
 lazy val utils = project
   .in(file("utils"))
@@ -102,3 +100,4 @@ lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
   .dependsOn(utils)
+  .dependsOn(`products-shared-kernel`)

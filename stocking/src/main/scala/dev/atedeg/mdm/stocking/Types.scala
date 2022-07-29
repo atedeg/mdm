@@ -5,11 +5,28 @@ import java.util.UUID
 
 import cats.data.NonEmptyList
 
-// FIXME: shared kernel
-type Product = Int
-type CheeseType = Int
-type Quantity = Int
-type PositiveDecimal = Double
+import dev.atedeg.mdm.products.*
+import dev.atedeg.mdm.utils.*
+
+/**
+ * The available quantity of a certain product.
+ */
+final case class AvailableQuantity(n: NonNegativeNumber)
+
+/**
+ * The desired quantity of a certain product.
+ */
+final case class DesiredQuantity(n: PositiveNumber)
+
+/**
+ * The available quantity of a certain product.
+ */
+type AvailableStock = Map[Product, AvailableQuantity]
+
+/**
+ * The desired quantity of a certain product.
+ */
+type DesiredStock = Map[Product, DesiredQuantity]
 
 /**
  * A batch of products of a certain [[CheeseType type]], uniquely identified by an [[BatchID ID]],
@@ -47,9 +64,9 @@ enum QualityAssuredBatch:
 final case class BatchID(id: UUID)
 
 /**
- * A [[CheeseType cheese type]] with its respective [[Quantity quantity]] and the [[BatchID ID of the batch]] it belongs to.
+ * A [[Product product]] with its respective [[Quantity quantity]] and the [[BatchID ID of the batch]] it belongs to.
  */
-final case class LabelledProduct(cheeseType: CheeseType, quantity: Quantity, batchID: BatchID)
+final case class LabelledProduct(cheeseType: Product, quantity: AvailableQuantity, batchID: BatchID)
 
 /**
  * A weight in grams reported by a scale.

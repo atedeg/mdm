@@ -1,5 +1,7 @@
 package dev.atedeg.mdm.stocking
 
+import dev.atedeg.mdm.products.Product
+
 /**
  * The events that may be produced by the bounded context.
  */
@@ -17,3 +19,4 @@ enum IncomingEvent:
    * Received when a [[Batch batch]] is ready for quality assurance.
    */
   case BatchReadyForQualityAssurance(batch: BatchID)
+  case ProductRemovedFromStock(quantity: AvailableQuantity, product: Product)
