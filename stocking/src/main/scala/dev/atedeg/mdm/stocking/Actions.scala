@@ -2,13 +2,11 @@ package dev.atedeg.mdm.stocking
 
 import cats.Monad
 import cats.data.{ NonEmptyList, NonEmptySet }
-import cats.implicits.toReducibleOps
-import eu.timepit.refined.auto.autoUnwrap
+import cats.syntax.all.*
 
 import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.stocking.Errors.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
-import dev.atedeg.mdm.stocking.grams
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
@@ -19,19 +17,19 @@ import dev.atedeg.mdm.utils.monads.*
 def getMissingCountFromProductStock(
     availableStock: AvailableStock,
     desiredStock: DesiredStock,
-)(product: Product): AvailableQuantity = AvailableQuantity(
-  availableStock(product).n - desiredStock(product).n.toNonNegative,
-)
+)(product: Product): MissingQuantity =
+  if availableStock(product).n >= desiredStock(product).n.toNonNegative then MissingQuantity(0)
+  else MissingQuantity(desiredStock(product).n.toNonNegative - availableStock(product).n)
 
 /**
  * Removes the given quantity of a certain product from the stock, giving the new current stock.
  */
 def removeFromStock[M[_]: Monad: CanRaise[NotEnoughStock]](
     stock: AvailableStock,
-)(product: Product, quantity: AvailableQuantity): M[AvailableStock] =
-  (stock(product).n >= quantity.n)
+)(product: Product, quantity: DesiredQuantity): M[AvailableStock] =
+  (stock(product).n > quantity.n.toNonNegative)
     .otherwiseRaise(NotEnoughStock(product, quantity, stock(product)): NotEnoughStock)
-    .thenReturn(stock + (product -> AvailableQuantity(stock(product).n - quantity.n)))
+    .thenReturn(stock + (product -> AvailableQuantity(stock(product).n - quantity.n.toNonNegative)))
 
 /**
  * Approves a batch after quality assurance.
@@ -51,16 +49,31 @@ def rejectBatch(batch: Batch.ReadyForQualityAssurance): QualityAssuredBatch.Fail
  */
 def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked]](
     batch: QualityAssuredBatch.Passed,
-    actualWeight: Grams[PositiveNumber],
+    actualWeight: Grams,
 ): M[LabelledProduct] =
-  batch.cheeseType match
+  val (candidate: Int, product: Product) = batch.cheeseType match
     case CheeseType.Squacquerone =>
-      val candidate = nearestWeight(allSquacqueroneWeights)(actualWeight)
-      ???
-    case _ => ???
+      val w: SquacqueroneWeightInGrams = nearestWeight(allSquacqueroneWeights)(actualWeight)
+      (w, Product.Squacquerone(w))
+    case CheeseType.Casatella =>
+      val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
+      (w, Product.Casatella(w))
+    case CheeseType.Ricotta =>
+      val w: RicottaWeightInGrams = nearestWeight(allRicottaWeights)(actualWeight)
+      (w, Product.Ricotta(w))
+    case CheeseType.Stracchino =>
+      val w: StracchinoWeightInGrams = nearestWeight(allStracchinoWeights)(actualWeight)
+      (w, Product.Stracchino(w))
+    case CheeseType.Caciotta =>
+      val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
+      (w, Product.Casatella(w))
+  val labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
+  actualWeight.n.value.toDouble
+    .isInRange(candidate.toDouble +- 5.percent)
+    .otherwiseRaise(WeightNotInRange(Grams(coerce(candidate)), actualWeight): WeightNotInRange)
+    .andThen(emit(ProductStocked(labelledProduct): ProductStocked))
+    .thenReturn(labelledProduct)
 
-private def nearestWeight(weights: NonEmptyList[Grams[Int]])(
-    actualWeight: Grams[Int],
-): Grams[Int] =
-  def distanceFromActualWeight(weight: Grams[Int]) = math.abs(weight.n - actualWeight.n)
+private def nearestWeight[T <: Int](weights: NonEmptyList[T])(actualWeight: Grams): T =
+  def distanceFromActualWeight(weight: T) = weight distanceFrom actualWeight.n.value
   weights.minimumBy(distanceFromActualWeight)
