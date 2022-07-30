@@ -5,6 +5,7 @@ import cats.data.{ NonEmptyList, NonEmptySet }
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.products.*
+import dev.atedeg.mdm.products.given
 import dev.atedeg.mdm.stocking.Errors.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
@@ -51,29 +52,15 @@ def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked
     batch: QualityAssuredBatch.Passed,
     actualWeight: Grams,
 ): M[LabelledProduct] =
-  val (candidate: Int, product: Product) = batch.cheeseType match
-    case CheeseType.Squacquerone =>
-      val w: SquacqueroneWeightInGrams = nearestWeight(allSquacqueroneWeights)(actualWeight)
-      (w: Int, Product.Squacquerone(w): Product)
-    case CheeseType.Casatella =>
-      val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
-      (w: Int, Product.Casatella(w): Product)
-    case CheeseType.Ricotta =>
-      val w: RicottaWeightInGrams = nearestWeight(allRicottaWeights)(actualWeight)
-      (w: Int, Product.Ricotta(w): Product)
-    case CheeseType.Stracchino =>
-      val w: StracchinoWeightInGrams = nearestWeight(allStracchinoWeights)(actualWeight)
-      (w: Int, Product.Stracchino(w): Product)
-    case CheeseType.Caciotta =>
-      val w: CasatellaWeightInGrams = nearestWeight(allCasatellaWeights)(actualWeight)
-      (w: Int, Product.Casatella(w): Product)
-  val labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
-  actualWeight.n.value.toDouble
-    .isInRange(candidate.toDouble +- 5.percent)
-    .otherwiseRaise(WeightNotInRange(Grams(coerce(candidate)), actualWeight): WeightNotInRange)
-    .andThen(emit(ProductStocked(labelledProduct): ProductStocked))
-    .thenReturn(labelledProduct)
+  val closestAllowedWeight = batch.cheeseType.allowedWeights.closestTo(actualWeight)
+  for {
+    product <- batch.cheeseType
+      .withWeight(closeTo(actualWeight))
+      .ifMissingRaise(WeightNotInRange(closestAllowedWeight, actualWeight): WeightNotInRange)
+    labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
+    _ <- emit(ProductStocked(labelledProduct): ProductStocked)
+  } yield labelledProduct
 
-private def nearestWeight[T <: Int](weights: NonEmptyList[T])(actualWeight: Grams): T =
-  def distanceFromActualWeight(weight: T) = weight distanceFrom actualWeight.n.value
-  weights.minimumBy(distanceFromActualWeight)
+private def closeTo(weight: Grams)(n: Int): Boolean = weight.n.value.toDouble isInRange (n.toDouble +- 5.percent)
+
+extension (gs: NonEmptyList[Grams]) private def closestTo(g: Grams): Grams = gs.minimumBy(_.n.value - g.n.value)

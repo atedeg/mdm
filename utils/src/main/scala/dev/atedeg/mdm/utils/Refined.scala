@@ -69,3 +69,7 @@ given refinedMinus[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Minus[N]
 
   override def minus(x: N Refined P, y: N Refined P): N Refined P =
     coerce(if y.value > x.value then Numeric[N].zero else Op.minus(x.value, y.value))
+
+given refinedDistance[N, P <: NonNegative: ValidFor[N]](using D: Distance[N]): Distance[N Refined P] with
+
+  override def distance(x: N Refined P, y: N Refined P): N Refined P = coerce(D.distance(x.value, y.value))
