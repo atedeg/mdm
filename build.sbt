@@ -83,9 +83,7 @@ lazy val root = project
       formats = Seq(JacocoReportFormats.XML),
     ),
   )
-  .aggregate(utils)
-  .aggregate(`products-shared-kernel`)
-  .aggregate(stocking)
+  .aggregate(utils, `products-shared-kernel`, stocking)
 
 lazy val utils = project
   .in(file("utils"))

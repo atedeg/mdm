@@ -8,12 +8,12 @@ import dev.atedeg.mdm.products.*
 enum Errors:
   /**
    * An error raised by the [[labelProduct() labelling action]] if the actual weight is too far
-   * from the expected weights.
+   * from the expected weight.
    */
   case WeightNotInRange(expectedWeight: Grams, actualWeight: Grams)
 
   /**
    * An error raised by the [[removeFromStock() removal from stock action]] if the quantity to be removed from stock
-   * exceeds the available one
+   * exceeds the available one.
    */
   case NotEnoughStock(product: Product, triedQuantity: DesiredQuantity, actualQuantity: AvailableQuantity)

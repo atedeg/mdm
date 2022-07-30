@@ -4,7 +4,7 @@ title: Stocking
 
 # Stocking
 
-After a batch of cheeses has aged for the required amount of time,
+After a batch of cheeses has ripened for the required amount of time,
 one of them is selected to perform quality assurance.
 Its result could be either positive or negative.
 The former results in the cheeses being wrapped, labelled and put in the refrigeration room;
