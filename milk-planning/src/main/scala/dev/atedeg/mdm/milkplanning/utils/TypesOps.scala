@@ -7,7 +7,7 @@ import eu.timepit.refined.auto.autoUnwrap
 import eu.timepit.refined.predicates.all.NonNegative
 import eu.timepit.refined.refineV
 
-import dev.atedeg.mdm.milkplanning.types.{ Quantity, QuintalsOfMilk, StockedQuantity }
+import dev.atedeg.mdm.milkplanning.{ Quantity, QuintalsOfMilk, StockedQuantity }
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.NonNegativeNumber
 

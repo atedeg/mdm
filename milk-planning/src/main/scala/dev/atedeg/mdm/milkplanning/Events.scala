@@ -1,4 +1,4 @@
-package dev.atedeg.mdm.milkplanning.types
+package dev.atedeg.mdm.milkplanning
 
 import cats.data.NonEmptyList
 

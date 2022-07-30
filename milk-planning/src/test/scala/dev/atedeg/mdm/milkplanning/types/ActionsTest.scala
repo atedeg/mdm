@@ -9,7 +9,8 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
-import dev.atedeg.mdm.milkplanning.types.OutgoingEvent.OrderMilk
+import dev.atedeg.mdm.milkplanning.*
+import dev.atedeg.mdm.milkplanning.OutgoingEvent.OrderMilk
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.*
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.given
 import dev.atedeg.mdm.products.{ CheeseType, Grams, Product }
