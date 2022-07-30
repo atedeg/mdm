@@ -23,8 +23,9 @@ final case class ProcessedMilk(quantity: QuintalsOfMilk)
 final case class QuintalsOfMilk(quintals: NonNegativeNumber) derives Plus, Times, Minus
 
 /**
- * Represent how many [[QuintalsOfMilk quintals of milk]] are needed to produce a given quantity of [[Product product]].
- * @example In order to produce 180kg of a product are necessary 10 quintals of milk, in this case the yield is `5.55`.
+ * A decimal that represents the yield of milk when producing a given [[CheeseType cheese type]]:
+ * i.e. to produce `n` quintals of a given [[CheeseType cheese type]], `yield of cheese type * n`
+ * [[QuintalsOfMilk quintals of milk]] must be used.
  * @example `Yield(0)` is not a valid yield.
  * @example `Yield(5.55)` is a valid yield.
  */

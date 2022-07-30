@@ -66,9 +66,6 @@ object Div:
   inline given divGen[N](using inst: K0.ProductInstances[Div, N]): Div[N] with
     def div(n1: N, n2: N): N = inst.map2(n1, n2)([n] => (d: Div[n], n1: n, n2: n) => d.div(n1, n2))
 
-given [N, P <: Positive | NonNegative: ValidFor[N]](using C: Ceil[N]): Ceil[N Refined P] with
-  override def toCeil(n: N Refined P): N Refined P = coerce(C.toCeil(n.value))
-
 given Ceil[Double] with
   override def toCeil(n: Double): Double = math.ceil(n)
 
