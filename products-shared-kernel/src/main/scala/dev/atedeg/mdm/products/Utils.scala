@@ -50,6 +50,9 @@ extension (cheeseType: CheeseType)
       case CheeseType.Stracchino => allStracchinoWeights.find(p(_)).map(Product.Stracchino(_))
       case CheeseType.Caciotta => allCaciottaWeights.find(p(_)).map(Product.Caciotta(_))
 
+/**
+ * Returns a [[NonEmptyList list]] of all the allowed weights in [[Grams grams]] for a given [[CheeseType cheese type]].
+ */
   def allowedWeights: NonEmptyList[Grams] = cheeseType match
     case CheeseType.Squacquerone => allSquacqueroneWeights.map(toGrams)
     case CheeseType.Casatella => allCasatellaWeights.map(toGrams)

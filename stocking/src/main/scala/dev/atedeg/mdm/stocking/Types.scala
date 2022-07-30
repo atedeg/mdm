@@ -39,7 +39,7 @@ type DesiredStock = Map[Product, DesiredQuantity]
  */
 enum Batch:
   /**
-   * An aging batch that will become ready for quality assurance at the given date and time.
+   * An aging batch that will become [[Batch.ReadyForQualityAssurance ready for quality assurance]] at the given date and time.
    */
   case Aging(id: BatchID, cheeseType: CheeseType, readyFrom: LocalDateTime)
 
@@ -54,12 +54,12 @@ enum Batch:
  */
 enum QualityAssuredBatch:
   /**
-   * A batch which passed quality assurance.
+   * A batch which [[approveBatch() passed quality assurance]].
    */
   case Passed(id: BatchID, cheeseType: CheeseType)
 
   /**
-   * A batch which failed quality assurance.
+   * A batch which [[rejectBatch() failed quality assurance]].
    */
   case Failed(id: BatchID, cheeseType: CheeseType)
 
