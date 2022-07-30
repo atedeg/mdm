@@ -15,6 +15,8 @@ type NumberInClosedRange[L, U] = Int Refined Interval.Closed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
 
+extension [N: Numeric](n: N Refined Positive) def toNonNegative: N Refined NonNegative = coerce(n.value)
+
 // `T Refined P` has an order relation if `T` has an order relation
 given refinedOrd[N: Order, P]: Order[N Refined P] with
   override def compare(x: N Refined P, y: N Refined P): Int = Order[N].compare(x.value, y.value)
@@ -52,3 +54,7 @@ given refinedMinus[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Minus[N]
 
   override def minus(x: N Refined P, y: N Refined P): N Refined P =
     coerce(if y.value > x.value then Numeric[N].zero else Op.minus(x.value, y.value))
+
+given refinedDistance[N, P <: NonNegative: ValidFor[N]](using D: Distance[N]): Distance[N Refined P] with
+
+  override def distance(x: N Refined P, y: N Refined P): N Refined P = coerce(D.distance(x.value, y.value))
