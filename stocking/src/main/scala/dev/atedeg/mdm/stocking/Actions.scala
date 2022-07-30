@@ -13,7 +13,7 @@ import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
 
 /**
- * Gets how many products are missing from the stock, given the desired stock.
+ * Gets [[MissingQuantity how many products]] are missing from the [[AvailableStock stock]], given the [[DesiredStock desired stock]].
  */
 def getMissingCountFromProductStock(
     availableStock: AvailableStock,
@@ -23,7 +23,7 @@ def getMissingCountFromProductStock(
   else MissingQuantity(desiredStock(product).n.toNonNegative - availableStock(product).n)
 
 /**
- * Removes the given quantity of a certain product from the stock, giving the new current stock.
+ * Removes the given quantity of a certain [[Product product]] from the [[AvailableStock stock]], giving the new current [[AvailableStock stock]].
  */
 def removeFromStock[M[_]: Monad: CanRaise[NotEnoughStock]](
     stock: AvailableStock,
@@ -45,7 +45,7 @@ def rejectBatch(batch: Batch.ReadyForQualityAssurance): QualityAssuredBatch.Fail
   QualityAssuredBatch.Failed(batch.id, batch.cheeseType)
 
 /**
- * Labels a product given the [[QualityAssuredBatch.Passed batch]] it comes from and its [[WeightInGrams actual weight]]
+ * Labels a [[Product product]] given the [[QualityAssuredBatch.Passed batch]] it comes from and its [[Grams actual weight]]
  * as given by the scale.
  */
 def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked]](

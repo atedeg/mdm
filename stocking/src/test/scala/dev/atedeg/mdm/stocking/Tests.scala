@@ -82,7 +82,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
     Scenario("Removal from stock with not enough available products") {
       Given("An available stock")
       val available = Map(squacquerone -> AvailableQuantity(10))
-      And("a quantity to remove from stock")
+      And("a quantity to remove from stock that is greater than the available one")
       val toRemove = DesiredQuantity(50)
       When("someone removes the product from the stock")
       val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(squacquerone, toRemove)
@@ -117,8 +117,9 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
     Scenario("An operator tries to print a label for a cheese within weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
+      And("A weight that is within the allowed range")
       val correctWeight = 102.grams
-      When("the operator prints a label for a product within weight range")
+      When("the operator tries to print a label")
       val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, correctWeight)
       Then("the label should be printed with the correct information")
       val (events, result) = labelAction.execute
@@ -130,8 +131,9 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
     Scenario("An operator tries to print a label for a cheese outside weight range from a batch") {
       Given("a batch")
       val passed = approveBatch(readyForQA)
+      And("a weight that is outside the allowed range")
       val wrongWeight = 50.grams
-      When("the operator prints a label for a cheese outside weight range")
+      When("the operator tries to print a label")
       val labelAction: Action[WeightNotInRange, ProductStocked, LabelledProduct] = labelProduct(passed, wrongWeight)
       Then("the label should not be printed")
       val (events, result) = labelAction.execute
