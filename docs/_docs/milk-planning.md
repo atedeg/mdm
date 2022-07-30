@@ -22,4 +22,10 @@ She makes this estimate by taking into account the following factors:
 
 ## Domain Events
 
-{% include milk-planning-de.md %}
+### Incoming Events
+
+{% include milk-planning-incoming.md %}
+
+### Outgoing Events
+
+{% include milk-planning-outgoing.md %}
