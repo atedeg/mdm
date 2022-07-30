@@ -23,6 +23,12 @@ extension [N, P <: Positive | NonNegative: ValidFor[N]: ValidFor[Double]](n: N R
 extension [P <: Positive | NonNegative: ValidFor[Double]](d: Double Refined P)
   def toNumber: NonNegativeNumber = coerce(d.value.toInt)
 
+given Conversion[PositiveNumber, NonNegativeNumber] with
+  override def apply(x: PositiveNumber): NonNegativeNumber = coerce(x.value)
+
+given Conversion[PositiveDecimal, NonNegativeDecimal] with
+  override def apply(x: PositiveDecimal): NonNegativeDecimal = coerce(x.value)
+
 // `T Refined P` has an order relation if `T` has an order relation
 given refinedOrd[N: Order, P]: Order[N Refined P] with
   override def compare(x: N Refined P, y: N Refined P): Int = Order[N].compare(x.value, y.value)
