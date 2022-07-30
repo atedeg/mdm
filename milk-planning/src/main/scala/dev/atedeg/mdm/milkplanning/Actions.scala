@@ -8,7 +8,7 @@ import dev.atedeg.mdm.milkplanning.OutgoingEvent.*
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.*
 import dev.atedeg.mdm.milkplanning.utils.QuintalsOfMilkOps.given
 import dev.atedeg.mdm.milkplanning.utils.given
-import dev.atedeg.mdm.products.Product
+import dev.atedeg.mdm.products.{ Grams, Product }
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.{ emit, thenReturn, when, Emits }
@@ -45,9 +45,9 @@ private def milkNeededForProduct(
     stock: Stock,
     recipeBook: RecipeBook,
 ): QuintalsOfMilk =
-  val RequestedProduct(p @ Product(cheeseType, weight), quantity, _) = product
-  val unitsToProduce = (quantity.n: NonNegativeNumber) - stock(p).quantity
-  val gramsToProduce = unitsToProduce * weight.n
+  val RequestedProduct(p @ Product(cheeseType, Grams(weight)), Quantity(quantity), _) = product
+  val unitsToProduce = quantity.toNonNegative - stock(p).quantity
+  val gramsToProduce = unitsToProduce * weight
   val quintalsToProduce = gramsToProduce.toDecimal / 100_000
   val neededQuintals = quintalsToProduce * recipeBook(cheeseType).n
   neededQuintals.ceil.quintalsOfMilk

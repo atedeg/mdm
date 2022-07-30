@@ -19,7 +19,7 @@ import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
 
-trait Fixture {
+trait Mocks {
 
   val recipeBook: RecipeBook = Map(
     CheeseType.Squacquerone -> Yield(5.55),
@@ -31,7 +31,7 @@ trait Fixture {
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with Fixture {
+class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
 
   Feature("Estimate the quintals of milk needed for the following week") {
     Scenario("Raffaella wants to estimate the quintals of milk") {

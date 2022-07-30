@@ -16,12 +16,12 @@ tables:
     termName: "Event"
     definitionName: "Description"
     rows:
-      - case: "ReceivedOrder"
+      - case: "IncomingEvent.ReceivedOrder"
 
   - name: "milk-planning-outgoing"
     termName: "Event"
     definitionName: "Description"
     rows:
-      - case: "OrderMilk"
+      - case: "OutgoingEvent.OrderMilk"
 
 ignored: []
