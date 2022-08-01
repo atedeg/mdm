@@ -2,7 +2,7 @@ val scala3Version = "3.1.3"
 val scalaTestVersion = "3.2.13"
 
 ThisBuild / scalaVersion := scala3Version
-ThisBuild / organization := "dev.atedeg"
+ThisBuild / organization := "dev.atedeg.mdm"
 ThisBuild / homepage := Some(url("https://github.com/atedeg/mdm"))
 ThisBuild / licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / versionScheme := Some("early-semver")
@@ -66,6 +66,7 @@ lazy val root = project
     name := "mdm",
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
+    sonatypeProfileName := "dev.atedeg",
     ScalaUnidoc / unidoc / target := file("target/site"),
     Compile / doc / scalacOptions := Seq(
       "-project",
