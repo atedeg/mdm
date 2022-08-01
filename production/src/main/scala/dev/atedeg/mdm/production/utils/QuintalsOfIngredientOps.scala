@@ -12,3 +12,4 @@ extension (q: QuintalsOfIngredient)
 
 extension (n: PositiveDecimal)
   def quintals : WeightInQuintals = WeightInQuintals(n)
+  def of(i: Ingredient): QuintalsOfIngredient = QuintalsOfIngredient(n.quintals, i)
