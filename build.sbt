@@ -59,6 +59,8 @@ val commonSettings = Seq(
   ),
 )
 
+addCommandAlias("ubidocGenerate", "clean; unidoc; ubidoc; clean; unidoc")
+
 lazy val root = project
   .in(file("."))
   .enablePlugins(ScalaUnidocPlugin)
