@@ -2,8 +2,6 @@ package dev.atedeg.mdm.products
 
 import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.utils.*
-
-import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
 /**
