@@ -1,10 +1,12 @@
 package dev.atedeg.mdm.production
 
 import java.util.UUID
+
 import OutgoingEvent.*
 import cats.Monad
 import cats.data.NonEmptyList
 import cats.syntax.all.*
+
 import dev.atedeg.mdm.production.utils.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
