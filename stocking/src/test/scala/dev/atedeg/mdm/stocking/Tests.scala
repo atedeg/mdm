@@ -51,7 +51,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       val missingRicotta = getMissingCountFromProductStock(available, desired)(ricotta)
       val missingStracchino = getMissingCountFromProductStock(available, desired)(stracchino)
       val missingCaciotta = getMissingCountFromProductStock(available, desired)(caciotta)
-      Then("the missing quantity should be greater than zero")
+      Then("the missing quantity should be the difference between the available and desired quantities")
       missingSquacquerone shouldBe MissingQuantity(10)
       missingCasatella shouldBe MissingQuantity(10)
       missingRicotta shouldBe MissingQuantity(10)
