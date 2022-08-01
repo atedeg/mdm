@@ -86,3 +86,11 @@ jobs:
           sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
           sonatype-password: ${{ secrets.SONATYPE_PASSWORD }}
           github-token: ${{ steps.atedeg-bot.outputs.token }}
+      
+      - name: Deploy site
+        if: github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          GITHUB_TOKEN: ${{ steps.atedeg-bot.outputs.token }}
+          BRANCH: gh-pages
+          FOLDER: target/site
