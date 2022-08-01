@@ -64,9 +64,17 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta')
     steps:
+      - name: Setup atedeg-bot
+        id: atedeg-bot
+        uses: tibdex/github-app-token@v1.6.0
+        with:
+          app_id: ${{ secrets.ATEDEG_BOT_APP_ID }}
+          private_key: ${{ secrets.ATEDEG_BOT_PRIVATE_KEY }}
+
       - name: Checkout current branch
         uses: actions/checkout@v3
         with:
+          token: ${{ steps.atedeg-bot.outputs.token }}
           fetch-depth: 0
 
       - name: Release
@@ -77,4 +85,4 @@ jobs:
           pgp-passphrase: ${{ secrets.PGP_PASSPHRASE }}
           sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
           sonatype-password: ${{ secrets.SONATYPE_PASSWORD }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ steps.atedeg-bot.outputs.token }}
