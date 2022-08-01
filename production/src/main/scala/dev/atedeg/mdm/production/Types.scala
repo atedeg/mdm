@@ -9,6 +9,18 @@ import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
 /**
+ * A production plan that specifies how many [[NumberOfUnits units]] of
+ * [[Product products]] need to be produced.
+ */
+final case class ProductionPlan(plan: NonEmptyList[ProductionPlanItem])
+
+/**
+ * A single line of a [[ProductionPlan production plan]] that specifies a
+ * [[Product product]] and how many [[NumberOfUnits units]] of it to produce.
+ */
+final case class ProductionPlanItem(productToProduce: Product, units: NumberOfUnits)
+
+/**
  * Counts the number of units of something.
  */
 final case class NumberOfUnits(n: PositiveNumber)

@@ -1,15 +1,23 @@
 package dev.atedeg.mdm.production
 
 import java.util.UUID
-
 import OutgoingEvent.*
 import cats.Monad
+import cats.data.NonEmptyList
 import cats.syntax.all.*
-
 import dev.atedeg.mdm.production.utils.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
+
+/**
+ * Prepares the new [[Production.ToStart productions to start]] from a given
+ * [[ProductionPlan production plan]].
+ */
+def setupProductions(productionPlan: ProductionPlan): NonEmptyList[Production.ToStart] =
+  productionPlan.plan.map(item => Production.ToStart(generateProductionId, item.productToProduce, item.units))
+
+private def generateProductionId: ProductionID = ProductionID(UUID.randomUUID)
 
 /**
  * Starts a [[Production.ToStart production]] by calculating the quintals of [[Ingredient ingredients]] needed to
@@ -31,11 +39,11 @@ def startProduction[M[_]: Monad: CanRaise[MissingRecipe]: Emits[StartProduction]
 /**
  * Ends a [[Production.InProgress production]] by assigning it a [[BatchID batch ID]].
  */
-def endProduction[M[_]: Monad: Emits[ProductionEnded]](production: Production.InProgress): M[Production.Ended] = for {
-  batchID <- generateBatchID
-  producedProduct = production.productInProduction
-  unitsProduced = production.unitsInProduction
-  _ <- emit(ProductionEnded(production.ID, batchID): ProductionEnded)
-} yield Production.Ended(production.ID, batchID, producedProduct, unitsProduced)
+def endProduction[M[_]: Monad: Emits[ProductionEnded]](production: Production.InProgress): M[Production.Ended] =
+  val batchID = generateBatchID
+  val producedProduct = production.productInProduction
+  val unitsProduced = production.unitsInProduction
+  emit(ProductionEnded(production.ID, batchID): ProductionEnded)
+    .thenReturn(Production.Ended(production.ID, batchID, producedProduct, unitsProduced))
 
-def generateBatchID[M[_]: Monad]: M[BatchID] = BatchID(UUID.randomUUID).pure
+private def generateBatchID: BatchID = BatchID(UUID.randomUUID)

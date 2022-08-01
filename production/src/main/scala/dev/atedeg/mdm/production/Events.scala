@@ -18,3 +18,10 @@ enum OutgoingEvent:
    * [[LotNumber lot number]] and sent to the refrigeration room.
    */
   case ProductionEnded(productionID: ProductionID, batchID: BatchID)
+
+enum IncomingEvent:
+  /**
+   * Specifies the [[ProductionPlan production plan]] for the day with
+   * the [[Product products]] that need to be produced.
+   */
+  case ProductionPlanReady(productionPlan: ProductionPlan)
