@@ -44,4 +44,31 @@ tables:
     rows:
       - case: "OutgoingEvent.OrderMilk"
 
+  - name: "production-ul"
+    rows:
+      - class: "ProductionPlan"
+      - class: "ProductionPlanItem"
+      - case: "Production.ToStart"
+        name: "Production To Start"
+      - case: "Production.InProgress"
+        name: "Production In Progress"
+      - case: "Production.Ended"
+        name: "Ended Production"
+      - type: "RecipeBook"
+      - class: "Recipe"
+      - class: "QuintalsOfIngredient"
+      - enum: "Ingredient"
+  - name: "production-outgoing"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "OutgoingEvent.StartProduction"
+      - case: "OutgoingEvent.ProductionEnded"
+  - name: "production-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.ProductionPlanReady"
+
+
 ignored: []
