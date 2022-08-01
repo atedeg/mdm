@@ -42,7 +42,7 @@ extension (cheeseType: CheeseType)
   def withWeight(predicate: Int => Boolean): Option[Product] =
     // Somehow Scala does not understand that a function (A => B) could also be treated as a function
     // [a <: A] => a => B and won't compile unless I explicitly convert the function myself...
-    def p = [t <: Int] => (n: t) => predicate(n)
+    def p = [T <: Int] => (n: T) => predicate(n)
     cheeseType match
       case CheeseType.Squacquerone => allSquacqueroneWeights.find(p(_)).map(Product.Squacquerone(_))
       case CheeseType.Casatella => allCasatellaWeights.find(p(_)).map(Product.Casatella(_))
