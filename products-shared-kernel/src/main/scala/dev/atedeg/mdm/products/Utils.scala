@@ -30,6 +30,8 @@ inline private def checkInt[T](inline n: T): Int = inline erasedValue[T] match
 
 private[products] def toGrams(n: Int): Grams = Grams(coerce[Int, Positive](n))
 
+extension (n: PositiveNumber) def grams: Grams = Grams(n)
+
 given Order[Grams] with
   def compare(x: Grams, y: Grams): Int = Order[Int].compare(x.n.value, y.n.value)
 

@@ -10,8 +10,6 @@ import dev.atedeg.mdm.utils.given
  */
 final case class Grams(n: PositiveNumber)
 
-extension (n: PositiveNumber) def grams: Grams = Grams(n)
-
 /**
  * A type of cheese.
  */
