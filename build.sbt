@@ -5,6 +5,7 @@ ThisBuild / scalaVersion := scala3Version
 ThisBuild / organization := "dev.atedeg"
 ThisBuild / homepage := Some(url("https://github.com/atedeg/mdm"))
 ThisBuild / licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
+ThisBuild / versionScheme := Some("early-semver")
 
 ThisBuild / ubidoc / targetDirectory := baseDirectory.value / "_includes"
 ThisBuild / ubidoc / lookupDirectory := target.value / "site"
@@ -82,12 +83,16 @@ lazy val root = project
       title = "mdm coverage report",
       formats = Seq(JacocoReportFormats.XML),
     ),
+    publish / skip := true,
   )
   .aggregate(utils, `milk-planning`)
 
 lazy val utils = project
   .in(file("utils"))
   .settings(commonSettings)
+  .settings(
+    publish / skip := true,
+  )
 
 lazy val `milk-planning` = project
   .in(file("milk-planning"))
