@@ -13,7 +13,8 @@ enum Error:
   case WeightNotInRange(expectedWeight: Grams, actualWeight: Grams)
 
   /**
-   * An error raised by the [[removeFromStock() removal from stock action]] if the quantity to be removed from stock
-   * exceeds the available one.
+   * An error raised by the [[removeFromStock() removal from stock action]] if the
+   * [[Quantity quantity to be removed]] from stock
+   * exceeds the [[AvailableQuantity available one]].
    */
-  case NotEnoughStock(product: Product, triedQuantity: DesiredQuantity, actualQuantity: AvailableQuantity)
+  case NotEnoughStock(product: Product, triedQuantity: Quantity, actualQuantity: AvailableQuantity)

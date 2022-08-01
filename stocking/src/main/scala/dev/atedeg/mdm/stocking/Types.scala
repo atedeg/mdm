@@ -19,6 +19,11 @@ final case class AvailableQuantity(n: NonNegativeNumber)
 final case class DesiredQuantity(n: PositiveNumber)
 
 /**
+ * A quantity of something.
+ */
+final case class Quantity(n: PositiveNumber)
+
+/**
  * The required quantity of a certain product to reach the desired stock level.
  */
 final case class MissingQuantity(n: NonNegativeNumber)
