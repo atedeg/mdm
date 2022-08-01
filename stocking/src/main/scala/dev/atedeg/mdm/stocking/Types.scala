@@ -24,12 +24,15 @@ final case class DesiredQuantity(n: PositiveNumber)
 final case class MissingQuantity(n: NonNegativeNumber)
 
 /**
- * The available quantity of a certain product.
+ * The currently available [[Product products]] in stock; each one is available
+ * in a certain [[AvailableQuantity quantity]] (that could also be zero if the
+ * product is out-of-stock).
  */
 type AvailableStock = Map[Product, AvailableQuantity]
 
 /**
- * The desired quantity of a certain product.
+ * The [[DesiredQuantity desired quantity]] of each [[Product product]] that should
+ * always be in stock in order to have a safe margin to keep order fulfillment going.
  */
 type DesiredStock = Map[Product, DesiredQuantity]
 
