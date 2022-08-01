@@ -5,7 +5,7 @@ import dev.atedeg.mdm.products.*
 /**
  * The errors that have to be handled by the bounded context.
  */
-enum Errors:
+enum Error:
   /**
    * An error raised by the [[labelProduct() labelling action]] if the actual weight is too far
    * from the expected weight.

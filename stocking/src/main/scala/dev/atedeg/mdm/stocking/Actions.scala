@@ -7,7 +7,7 @@ import cats.syntax.all.*
 import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.products.utils.given
-import dev.atedeg.mdm.stocking.Errors.*
+import dev.atedeg.mdm.stocking.Error.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given

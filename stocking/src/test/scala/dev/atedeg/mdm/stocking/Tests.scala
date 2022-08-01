@@ -10,7 +10,7 @@ import org.scalatest.matchers.should.Matchers
 
 import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.utils.*
-import dev.atedeg.mdm.stocking.Errors.*
+import dev.atedeg.mdm.stocking.Error.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
