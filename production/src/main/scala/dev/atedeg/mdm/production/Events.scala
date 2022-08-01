@@ -15,7 +15,7 @@ enum OutgoingEvent:
 
   /**
    * Fired when a [[Production.InProgress production]] is terminated, given a
-   * [[LotNumber lot number]] and sent to the refrigeration room.
+   * [[BatchID batch ID]] and sent to the refrigeration room.
    */
   case ProductionEnded(productionID: ProductionID, batchID: BatchID)
 
