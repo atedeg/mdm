@@ -15,6 +15,23 @@ type NumberInClosedRange[L, U] = Int Refined Interval.Closed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
 
+extension [N: Numeric](n: N Refined Positive) def toNonNegative: N Refined NonNegative = coerce(n.value)
+
+extension [N, P <: Positive | NonNegative: ValidFor[N]: ValidFor[Double]](n: N Refined P)(using N: Numeric[N])
+  def toDecimal: Double Refined P = coerce(N.toDouble(n.value))
+
+extension [P <: Positive | NonNegative: ValidFor[Double]](d: Double Refined P)
+  def toNumber: NonNegativeNumber = coerce(d.value.toInt)
+
+given Conversion[PositiveNumber, NonNegativeNumber] with
+  override def apply(x: PositiveNumber): NonNegativeNumber = coerce(x.value)
+
+given Conversion[PositiveDecimal, NonNegativeDecimal] with
+  override def apply(x: PositiveDecimal): NonNegativeDecimal = coerce(x.value)
+
+given [N, P <: Positive | NonNegative: ValidFor[N]](using C: Ceil[N]): Ceil[N Refined P] with
+  override def toCeil(n: N Refined P): N Refined P = coerce(C.toCeil(n.value))
+
 // `T Refined P` has an order relation if `T` has an order relation
 given refinedOrd[N: Order, P]: Order[N Refined P] with
   override def compare(x: N Refined P, y: N Refined P): Int = Order[N].compare(x.value, y.value)

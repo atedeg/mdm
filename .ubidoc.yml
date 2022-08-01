@@ -1,0 +1,27 @@
+tables:
+  - name: "milk-planning-ul"
+    termName: "Term"
+    definitionName: "Definition"
+    rows:
+      - class: "ProcessedMilk"
+      - class: "QuintalsOfMilk"
+      - class: "Yield"
+      - type: "RecipeBook"
+      - type: "Stock"
+      - class: "StockedQuantity"
+      - class: "Quantity"
+      - class: "RequestedProduct"
+
+  - name: "milk-planning-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.ReceivedOrder"
+
+  - name: "milk-planning-outgoing"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "OutgoingEvent.OrderMilk"
+
+ignored: []

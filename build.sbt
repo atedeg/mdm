@@ -36,9 +36,7 @@ ThisBuild / developers := List(
   ),
 )
 
-ThisBuild / scalacOptions += "-language:strictEquality"
-
-ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading)
+ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.Overloading, Wart.Equals)
 
 ThisBuild / scalafixDependencies ++= Seq(
   "com.github.xuwei-k" %% "scalafix-rules" % "0.2.1",
@@ -85,11 +83,16 @@ lazy val root = project
       formats = Seq(JacocoReportFormats.XML),
     ),
   )
-  .aggregate(utils)
+  .aggregate(utils, `milk-planning`)
 
 lazy val utils = project
   .in(file("utils"))
   .settings(commonSettings)
+
+lazy val `milk-planning` = project
+  .in(file("milk-planning"))
+  .settings(commonSettings)
+  .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
