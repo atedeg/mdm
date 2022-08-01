@@ -1,5 +1,6 @@
 package dev.atedeg.mdm.products
 
+import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.utils.*
 
 import dev.atedeg.mdm.utils.*
@@ -24,11 +25,11 @@ enum CheeseType:
  * A [[CheeseType type of cheese]] with its respective [[Grams weight]].
  */
 enum Product(val cheeseType: CheeseType, val weight: Grams):
-  case Squacquerone(w: SquacqueroneWeightInGrams) extends Product(CheeseType.Squacquerone, toGrams(w))
-  case Casatella(w: CasatellaWeightInGrams) extends Product(CheeseType.Casatella, toGrams(w))
-  case Ricotta(w: RicottaWeightInGrams) extends Product(CheeseType.Ricotta, toGrams(w))
-  case Stracchino(w: StracchinoWeightInGrams) extends Product(CheeseType.Stracchino, toGrams(w))
-  case Caciotta(w: CaciottaWeightInGrams) extends Product(CheeseType.Caciotta, toGrams(w))
+  case Squacquerone(w: SquacqueroneWeightInGrams) extends Product(CheeseType.Squacquerone, coerceToGrams(w))
+  case Casatella(w: CasatellaWeightInGrams) extends Product(CheeseType.Casatella, coerceToGrams(w))
+  case Ricotta(w: RicottaWeightInGrams) extends Product(CheeseType.Ricotta, coerceToGrams(w))
+  case Stracchino(w: StracchinoWeightInGrams) extends Product(CheeseType.Stracchino, coerceToGrams(w))
+  case Caciotta(w: CaciottaWeightInGrams) extends Product(CheeseType.Caciotta, coerceToGrams(w))
 
 type SquacqueroneWeightsInGrams = (100, 250, 350, 800, 1000, 1500)
 type SquacqueroneWeightInGrams = OneOf[SquacqueroneWeightsInGrams]
