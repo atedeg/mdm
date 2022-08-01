@@ -1,10 +1,14 @@
 package dev.atedeg.mdm.production
 
+import java.util.UUID
+
 import OutgoingEvent.*
 import cats.Monad
 import cats.syntax.all.*
 
+import dev.atedeg.mdm.production.utils.*
 import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
 
 /**
@@ -19,20 +23,19 @@ def startProduction[M[_]: Monad: CanRaise[MissingRecipe]: Emits[StartProduction]
   val gramsOfSingleUnit = production.productToProduce.weight
   for {
     recipe <- recipeBook(typeToProduce) ifMissingRaise MissingRecipe(typeToProduce)
-    quintalsToProduce = (production.unitsToProduce * gramsOfSingleUnit).toQuintals
+    quintalsToProduce = (production.unitsToProduce.n * gramsOfSingleUnit.n).toDecimal / 100_000
     neededIngredients = recipe.lines.map(_ * quintalsToProduce)
     _ <- emit(StartProduction(neededIngredients): StartProduction)
   } yield Production.InProgress(production.ID, production.productToProduce, production.unitsToProduce)
 
 /**
- * Ends a [[Production.InProgress production]] by assigning it a [[LotNumber lot number]].
+ * Ends a [[Production.InProgress production]] by assigning it a [[BatchID batch ID]].
  */
 def endProduction[M[_]: Monad: Emits[ProductionEnded]](production: Production.InProgress): M[Production.Ended] = for {
-  lotNumber <- getLotNumber
-  id = production.ID
+  batchID <- generateBatchID
   producedProduct = production.productInProduction
   unitsProduced = production.unitsInProduction
-  _ <- emit(ProductionEnded(id, lotNumber): ProductionEnded)
-} yield Production.Ended(id, lotNumber, producedProduct, unitsProduced)
+  _ <- emit(ProductionEnded(production.ID, batchID): ProductionEnded)
+} yield Production.Ended(production.ID, batchID, producedProduct, unitsProduced)
 
-def getLotNumber[M[_]: Monad]: M[LotNumber] = ???
+def generateBatchID[M[_]: Monad]: M[BatchID] = BatchID(UUID.randomUUID).pure
