@@ -116,6 +116,9 @@ lazy val production = project
 lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
   .settings(commonSettings)
+  .settings(
+    publish / skip := true,
+  )
   .dependsOn(utils)
 
 lazy val stocking = project
