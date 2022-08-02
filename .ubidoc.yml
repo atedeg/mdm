@@ -11,14 +11,14 @@ tables:
       - class: "BatchID"
         name: "Batch ID"
       - class: "LabelledProduct"
-  - name: "stocking-incoming"
-    rows:
-      - case: "IncomingEvent.ProductStocked"
   - name: "stocking-outgoing"
     rows:
-      - case: "OutgoingEvent.BatchReadyForQualityAssurance"
-      - case: "OutgoingEvent.ProductRemovedFromStock"
-      - case: "OutgoingEvent.NewBatch"
+      - case: "OutgoingEvent.ProductStocked"
+  - name: "stocking-incoming"
+    rows:
+      - case: "IncomingEvent.BatchReadyForQualityAssurance"
+      - case: "IncomingEvent.ProductRemovedFromStock"
+      - case: "IncomingEvent.NewBatch"
   - name: "milk-planning-ul"
     termName: "Term"
     definitionName: "Definition"
