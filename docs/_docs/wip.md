@@ -17,7 +17,7 @@
 ## Code development
 ### Design approach
 While we were furthering our knowledge to better approach the development of the project we stumbled upon a very
-interesting talk by [Scott Wlaschin](https://www.youtube.com/watch?v=2JB1_e5wZmU) and later read the book
+interesting [talk](https://www.youtube.com/watch?v=2JB1_e5wZmU) by Scott Wlaschin and later read the book
 [_"Domain Modelling Made Functional"_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/).
 This sparked a keen interest in the topic and convinced us to carry out the project by embracing a fully functional
 approach.
@@ -76,35 +76,33 @@ objects but also refined with compile-time checked predicates. The main advantag
 - fewer tests to write
 - better modelling of core domain concepts
 
-```scala
-// Simple value object, this is not enough.
-final case class InStockQuantity private(n: Int)
+> As a practical example: we want to model the concept of a stocked quantity of a cheese; of course it does not 
+> make sense for this quantity to be a negative number. A simple value object for this concept could look like this:
+> ```scala
+> final case class InStockQuantity private(n: Int)
+> object InStockQuantity:
+>     def apply(n: Int): Option[InStockQuantity] =
+>       if n < 0 then None else Some(InStockQuantity(n))
+> ```
+> However, this is critical: the core invariant that states that "n" must be positive is not immediately apparent 
+> from the definition of `InStockQuantity`; the programmer must read the builder implementation to understand that
+> negative numbers are not allowed.
+> It is not guaranteed that the builder will always make sure that the invariant holds, so it is necessary to write
+> unit tests to ensure that no accidental changes to the `apply` method do not break the invariant.
+> 
+> Using refinement types:
+> ```scala
+> type PositiveNumber = Int Refined Positive
+> final case class InStockQuantity(n: PositiveNumber)
+> ```
+> There's no need to have a builder that enforces the positive invariant: `n` is guaranteed to be correct by the types.
+> This code is also self-documenting: by simply reading the definition it is immediately clear that `n` must be
+> positive; there's no need to go and read the builder (actually there's no need to have a separate builder at all!
+> The default `apply` method of the case class is more than enough)
+> 
+> Even better: we do not have to write a single test to check that `InStockQuantity` is built correctly since the 
+> compiler will reject any code where we can not prove that `n` is indeed positive!
 
-object InStockQuantity:
-    // Core logic about the values allowed for "n"
-    // is only expressed in the implementation of 
-    // the builder.
-    // To avoid accidental changes to this fundamental
-    // aspect we need to write unit tests.
-    def apply(n: Int): Option[InStockQuantity] =
-      if n < 0 then None else Some(InStockQuantity(n))
-```
-```scala
-// Better modelling: 
-type PositiveNumber = Int Refined Positive
-final case class InStockQuantity(n: PositiveNumber)
-
-// No need to have a builder that enforces some 
-// logic, it is guaranteed to be correct by the types:
-// simply reading the definition we know that
-// "n" must be a positive number; we do not have to 
-// go and read some (possibly complex) builder code.
-
-// Even better: we do not have to write a single 
-// test to check that InStockQuantity is built correctly
-// since we won't be able to build one unless we 
-// can prove to the compiler that "n" is indeed positive!
-```
 
 ## Documentation
 Documentation plays a fundamental role in our codebase: every entity --be it a case class, enum or type alias--
