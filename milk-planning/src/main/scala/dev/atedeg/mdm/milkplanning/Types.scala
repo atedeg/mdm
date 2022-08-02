@@ -16,9 +16,9 @@ final case class ProcessedMilk(quantity: QuintalsOfMilk)
 
 /**
  * A quantity of milk expressed in quintals.
- * @note it must be a [[PositiveDecimal positive decimal number]].
- * @example `QuintalsOfMilk(1.1)` is a valid weight of 110 kg.
- * @example `QuintalsOfMilk(-20.5)` is not a valid weight.
+ * @note it must be a [[NonNegativeNumber non negative number]].
+ * @example `QuintalsOfMilk(1)` is a valid weight of 110 kg.
+ * @example `QuintalsOfMilk(-2)` is not a valid weight.
  */
 final case class QuintalsOfMilk(quintals: NonNegativeNumber) derives Plus, Times, Minus
 
