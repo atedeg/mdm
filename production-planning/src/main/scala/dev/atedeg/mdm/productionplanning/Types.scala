@@ -1,13 +1,14 @@
 package dev.atedeg.mdm.productionplanning
 
-import dev.atedeg.mdm.utils.{NonNegativeNumber, NumberInClosedRange, Plus, PositiveNumber, Times}
-import dev.atedeg.mdm.products.{CheeseType, Product}
-import cats.data.NonEmptyList
-import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.given
-
 import java.time.LocalDate
 import java.util.UUID
+
+import cats.data.NonEmptyList
+
+import dev.atedeg.mdm.products.{ CheeseType, Product }
+import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.{ NonNegativeNumber, NumberInClosedRange, Plus, PositiveNumber, Times }
+import dev.atedeg.mdm.utils.given
 
 /**
  * All the [[ProductToProduce products to be produced]] in a day.
@@ -24,7 +25,7 @@ final case class ProductToProduce(product: Product, quantity: Quantity)
  * @example `Quantity(-2)` is not a valid quantity.
  * @example `Quantity(5)` is a valida quantity.
  */
-final case class  Quantity(n: PositiveNumber) derives Plus, Times
+final case class Quantity(n: PositiveNumber) derives Plus, Times
 
 /**
  * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].

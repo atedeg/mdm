@@ -8,12 +8,11 @@ import cats.syntax.all.*
 
 import dev.atedeg.mdm.productionplanning.{ CheeseTypeRipeningDays, RipeningDays }
 import dev.atedeg.mdm.productionplanning.OutgoingEvent.{ OrderDelayed, ProductionPlanReady }
-import dev.atedeg.mdm.productionplanning.utils.given
+import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.CheeseType
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
-import dev.atedeg.mdm.products.*
 
 /**
  * Estimate how many [[Product products]] to produce that day.
