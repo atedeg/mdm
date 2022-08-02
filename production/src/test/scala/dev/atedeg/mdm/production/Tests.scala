@@ -2,7 +2,6 @@ package dev.atedeg.mdm.production
 
 import java.util.UUID
 
-import Ingredient.*
 import OutgoingEvent.*
 import cats.data.NonEmptyList
 import org.scalatest.EitherValues.*
@@ -13,6 +12,8 @@ import org.scalatest.matchers.should.Matchers
 import dev.atedeg.mdm.production.*
 import dev.atedeg.mdm.production.utils.*
 import dev.atedeg.mdm.products.{ CheeseType, Product }
+import dev.atedeg.mdm.products.Ingredient
+import dev.atedeg.mdm.products.Ingredient.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.doubleToPositiveDecimal
 import dev.atedeg.mdm.utils.given

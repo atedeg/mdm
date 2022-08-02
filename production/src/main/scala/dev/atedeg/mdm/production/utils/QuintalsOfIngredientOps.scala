@@ -3,6 +3,7 @@ package dev.atedeg.mdm.production.utils
 import scala.annotation.targetName
 
 import dev.atedeg.mdm.production.*
+import dev.atedeg.mdm.products.Ingredient
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
