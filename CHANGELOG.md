@@ -1,3 +1,11 @@
+# [1.0.0-beta.4](https://github.com/atedeg/mdm/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-02)
+
+
+### Bug Fixes
+
+* fix ubidoc table ([6b8b0f9](https://github.com/atedeg/mdm/commit/6b8b0f9b152f5c526163116ddb0cfc551e091e2c))
+* relationships between restocking and production ([04c182b](https://github.com/atedeg/mdm/commit/04c182b7bc2461d1a5908f82ddf3fcc4150c0a74))
+
 # [1.0.0-beta.3](https://github.com/atedeg/mdm/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-08-02)
 
 
