@@ -6,7 +6,7 @@ import eu.timepit.refined.predicates.all.Positive
 import dev.atedeg.mdm.products.Grams
 import dev.atedeg.mdm.utils.{ coerce, PositiveNumber }
 
-private[products] def coerceToGrams(n: Int): Grams = Grams(coerce[Int, Positive](n))
+private[products] def coerceToGrams(n: Int): Grams = Grams(coerce(n))
 
 extension (n: PositiveNumber) def grams: Grams = Grams(n)
 
