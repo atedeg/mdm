@@ -22,4 +22,4 @@ enum OutgoingEvent:
    * If an order cannot be fulfilled since there are some products' ripening days takes more
    * time than the order required date.
    */
-  case OrderDelayed()
+  case OrderDelayed(orderID: OrderID)
