@@ -82,5 +82,24 @@ tables:
     rows:
       - case: "IncomingEvent.OrderMilk"
       - case: "IncomingEvent.ProductionStarted"
+  - name: "production-planning-ul"
+    rows:
+      - class: "ProductionPlan"
+      - class: "ProductToProduce"
+      - class: "Quantity"
+      - type: "Stock"
+      - class: "StockedQuantity"
+      - class: "Order"
+      - class: "OrderedProduct"
+      - type: "CheeseTypeRipeningDays"
+      - class: "RipeningDays"
+
+  - name: "production-planning-incoming"
+    rows:
+      - case: "IncomingEvent.NewOrderReceived"
+  - name: "production-planning-outgoing"
+    rows:
+      - case: "OutgoingEvent.ProductionPlanReady"
+      - case: "OutgoingEvent.OrderDelayed"
 
 ignored: []
