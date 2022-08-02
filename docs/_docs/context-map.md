@@ -18,9 +18,9 @@ title: Context Map
   `ProductionPlanning` provides `Production` with the production plan for the day.
   As `ProductionPlanning` is the service provider concerning `Production`, they are respectively upstream and downstream.
   Since `ProductionPlanning` and `Production` are tightly coupled, the latter is *Conformist*.
-- `ClientOrders [D] <- [U, OHS, PL] Stocking`  
+- `Stocking [D, ACL] <- [U] ClientOrders`  
   `Stocking` receives a message from `ClientOrders` notifying the removal from stock of certain products.
-  `Stocking ` is a *Open-Host Service* and must expose a *published language*, as `ClientOrders` is going to be a generic bounded context and it will be
+  `Stocking ` has an *Anti-Corruption Layer*, as `ClientOrders` is going to be a generic bounded context and it will be
   impossible to control the format of the messages.
 - `ProductionPlanning [D, ACL] <- [U] Stocking`  
   `ProductionPlannig` asks `Stocking` for the amount of products missing from the stock.
