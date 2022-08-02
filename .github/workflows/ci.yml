@@ -58,6 +58,9 @@ jobs:
           files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/aggregate/jacoco.xml
           verbose: true
 
+      - name: Build docsite
+        run: sbt ubidocGenerate
+
   publish:
     name: Publish
     needs: [build]
