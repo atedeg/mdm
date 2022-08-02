@@ -126,8 +126,12 @@ lazy val `products-shared-kernel` = project
 lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
-  .dependsOn(utils)
-  .dependsOn(`products-shared-kernel`)
+  .dependsOn(utils, `products-shared-kernel`)
+
+lazy val `client-orders` = project
+  .in(file("client-orders"))
+  .settings(commonSettings)
+  .dependsOn(utils, `products-shared-kernel`)
 
 lazy val restocking = project
   .in(file("restocking"))
