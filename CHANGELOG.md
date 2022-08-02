@@ -1,3 +1,12 @@
+# [1.0.0-beta.3](https://github.com/atedeg/mdm/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-08-02)
+
+
+### Features
+
+* add domain actions and events, closes [#77](https://github.com/atedeg/mdm/issues/77) ([5d50f12](https://github.com/atedeg/mdm/commit/5d50f1221cb6fe5348a711cba2d5d3b0edb81c66))
+* add first draft implementation of one of the actions ([474ce44](https://github.com/atedeg/mdm/commit/474ce44f9d7c849307775cd233fe22bc55fc5e81))
+* add ubiquitous language,closes [#75](https://github.com/atedeg/mdm/issues/75) ([6cfe906](https://github.com/atedeg/mdm/commit/6cfe906cd70361719c9c24dabc676157b2b4e976))
+
 # [1.0.0-beta.2](https://github.com/atedeg/mdm/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2022-08-01)
 
 
