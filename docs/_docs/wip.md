@@ -43,6 +43,23 @@ Using monads to model side effects proved useful in three distinct ways:
   while all necessary dependencies are injected as simple
   parameters or in the reader monad. Following this discipline makes a hexagonal architecture emerge quite naturally
 
+> A code example from our codebase:
+> ```scala 
+> def labelProduct[M[_]: CanRaise[WeightNotInRange]: CanEmit[ProductStocked]: Monad](...): M[LabelledProduct] =
+> for {
+>   ...
+>   product <- optionalProduct.ifMissingRaise(WeightNotInRange(...): WeightNotInRange)
+>   labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
+>   _ <- emit(ProductStocked(labelledProduct): ProductStocked)
+> } yield labelledProduct
+> ```
+> Just by reading the type signature one knows that the execution of the function can raise a
+> `WeightNotInRange` error and can emit `ProductStocked` events.
+> 
+> `ifMissingRaise` and `emit` are a part of the monadic DSL we devised to write more concise 
+> and easy-to-read code: thanks to these functions and for comprehension we can compose a 
+> sequence of small actions to obtain more complex behaviour.
+
 ### Make illegal states unrepresentable
 Before starting the development of the project we also decided to fully embrace the
 _"make illegal states unrepresentable"_ philosophy while leveraging the features the Scala's type system could offer.
@@ -81,14 +98,14 @@ objects but also refined with compile-time checked predicates. The main advantag
 > ```scala
 > final case class InStockQuantity private(n: Int)
 > object InStockQuantity:
->     def apply(n: Int): Option[InStockQuantity] =
->       if n < 0 then None else Some(InStockQuantity(n))
+>   def apply(n: Int): Option[InStockQuantity] =
+>     if n < 0 then None else Some(InStockQuantity(n))
 > ```
-> However, this is critical: the core invariant that states that "n" must be positive is not immediately apparent 
+> However, this is critical: the core invariant that states that `n` must be positive is not immediately apparent 
 > from the definition of `InStockQuantity`; the programmer must read the builder implementation to understand that
 > negative numbers are not allowed.
 > It is not guaranteed that the builder will always make sure that the invariant holds, so it is necessary to write
-> unit tests to ensure that no accidental changes to the `apply` method do not break the invariant.
+> unit tests to ensure that no accidental changes to the `apply` method can break the invariant.
 > 
 > Using refinement types:
 > ```scala
@@ -101,23 +118,41 @@ objects but also refined with compile-time checked predicates. The main advantag
 > The default `apply` method of the case class is more than enough)
 > 
 > Even better: we do not have to write a single test to check that `InStockQuantity` is built correctly since the 
-> compiler will reject any code where we can not prove that `n` is indeed positive!
+> compiler will reject any code where the programmer can not prove that `n` is indeed positive!
 
 
 ## Documentation
 Documentation plays a fundamental role in our codebase: every entity --be it a case class, enum or type alias--
-mirrors a ubiquitous language concept. There should not be domain entities in our code that do not belong to the
-ubiquitous language and vice-versa. To make sure that the code and the ubiquitous language always evolve together
+mirrors a ubiquitous language concept. To make sure that the code and the ubiquitous language always evolve together
 we decided that the code should be the only source of truth: each and every ubiquitous language concept should
 appear in the code and the code should not use words that do not belong to the ubiquitous language.
 
-Despite having to overcome some challenges, this approach proved to be extremely useful:
-- since the code and the ubiquitous language are the same thing, reworking the ubiquitous language definitions along
-  with the help of domain experts consists in changing the code
-- there is no need to have separate textual documents to keep track of the ubiquitous language; the code __is__
-  the ubiquitous language and there is no risk of having other documents that could go out of sync with the code
-- trying to change the code definitions forces the programmer to think about the ubiquitous language and discuss
-  these changes with the domain experts
+This way the code __is__ the ubiquitous language: there are no additional documents describing the ubiquitous 
+language that could go stale and have to be actively kept in sync with the code. 
+Moreover, trying to change the code definitions forces the programmer to think about the ubiquitous language and discuss
+these changes with the domain experts.
+Lastly, knowledge crunching with the domain experts consists in writing simple data structure definitions; in our
+experience the domain expert quickly became familiar with the syntax and learned to "ignore" it to
+focus on the correctness of the definitions we were writing as we spoke.
+
+> One of our first meetings to knowledge crunch with the domain experts went like this:
+> 
+> __Domain expert:__ ... a type of cheese is either Ricotta or Caciotta
+>
+> _Meanwhile, we write something like this:_
+> ```scala
+> enum CheeseType:
+>   case Ricotta
+>   case Caciotta 
+> ```
+> 
+> __Domain expert:__ what is that enum word?
+> 
+> __Programmer:__ it is just a way to say that a cheese type can be any of the following alternatives: so, just like you
+> said, a cheese type is either a Ricotta or a Caciotta
+
+This approach allowed for a tight feedback loop where the experts could look at the code and check that it actually 
+mirrored their understanding of the domain.
 
 ### Challenges
 In order to use this approach we had to face a couple of challenges:
