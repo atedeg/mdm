@@ -57,7 +57,6 @@ tables:
       - type: "RecipeBook"
       - class: "Recipe"
       - class: "QuintalsOfIngredient"
-      - enum: "Ingredient"
   - name: "production-outgoing"
     termName: "Event"
     definitionName: "Description"
@@ -70,5 +69,18 @@ tables:
     rows:
       - case: "IncomingEvent.ProductionPlanReady"
 
+  - name: "restocking-ul"
+    rows:
+      - type: "Stock"
+      - class: "StockedMilk"
+      - class: "StockedQuantity"
+      - class: "QuintalsOfIngredient"
+      - class: "QuintalsOfMilk"
+  - name: "restocking-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.OrderMilk"
+      - case: "IncomingEvent.ProductionStarted"
 
 ignored: []
