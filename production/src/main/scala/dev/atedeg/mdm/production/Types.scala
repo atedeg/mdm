@@ -73,4 +73,3 @@ final case class QuintalsOfIngredient(quintals: WeightInQuintals, ingredient: In
  * A weight expressed in quintals.
  */
 final case class WeightInQuintals(n: PositiveDecimal) derives Times
-
