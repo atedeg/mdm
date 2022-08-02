@@ -30,8 +30,8 @@ title: Context Map
   Since `Production` and `Stocking` are tightly coupled, the latter is Conformist.
 - `Restocking [D] <- [U, CF] Production`  
   `Production` informs `Restocking` when some raw materials are consumed.
-  `Production` is an upstream bounded context that *conforms* to the `Restocking` downstream bounded context.
-  This is necessary since `Restocking` is going to be a generic bounded context whose API we will not be able to freely change.
+  `Production` is an upstream Open-Host Service and must expose a published language as the `Restocking` downstream bounded context
+  is going to be generic and we will not be able to freely change its API.
 
 There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
 This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
