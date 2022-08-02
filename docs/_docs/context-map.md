@@ -28,9 +28,10 @@ title: Context Map
 - `Stocking [D, CF] <- [U] Production`  
   `Production` informs `Stocking` that a batch is ripening.
   Since `Production` and `Stocking` are tightly coupled, the latter is Conformist.
-- `Production [D, ACL] <- [U] Restocking`  
+- `Restocking [D] <- [U, CF] Production`  
   `Production` informs `Restocking` when some raw materials are consumed.
-  `Production` is a downstream bounded context and needs an Anti-Corruption Layer since `Restocking` is going to be a generic bounded context.
+  `Production` is an upstream bounded context that *conforms* to the `Restocking` downstream bounded context.
+  This is necessary since `Restocking` is going to be a generic bounded context whose API we will not be able to freely change.
 
 There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
 This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
