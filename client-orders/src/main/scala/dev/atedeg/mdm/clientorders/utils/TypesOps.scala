@@ -23,4 +23,3 @@ object QuantityOps:
 
   given Order[Quantity] with
     override def compare(x: Quantity, y: Quantity): Int = Order[Int].compare(x.n, y.n)
-
