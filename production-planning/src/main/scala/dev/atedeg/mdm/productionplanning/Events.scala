@@ -1,5 +1,7 @@
 package dev.atedeg.mdm.productionplanning
 
+import java.time.LocalDate
+
 /**
  * The events that have to be handled by the bounded context.
  */
@@ -21,5 +23,6 @@ enum OutgoingEvent:
   /**
    * An event emitted if an [[Order order]] cannot be fulfilled since there are some [[Product products]] whose
    * [[RipeningDays ripening days]] would make it impossible to fulfil the order by the required date.
+   * A new delivery date is also provided.
    */
-  case OrderDelayed(orderID: OrderID)
+  case OrderDelayed(orderID: OrderID, newDeliveryDate: LocalDate)
