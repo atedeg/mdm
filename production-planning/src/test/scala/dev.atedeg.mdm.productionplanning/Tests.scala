@@ -15,7 +15,7 @@ import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
 
-trait Mocks {
+trait Mocks:
 
   val cheeseTypeRipeningDays: CheeseTypeRipeningDays = Map(
     CheeseType.Squacquerone -> RipeningDays(4),
@@ -32,10 +32,9 @@ trait Mocks {
   val orderedProd1: OrderedProduct = OrderedProduct(Product.Caciotta(500), Quantity(5))
   val orderedProd2: OrderedProduct = OrderedProduct(Product.Casatella(300), Quantity(10))
   val orderedProd3: OrderedProduct = OrderedProduct(Product.Squacquerone(250), Quantity(10))
-}
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
 
   Feature("Create the production plan for the day") {
     Scenario("Raffaella wants to create the production plan") {
@@ -95,4 +94,3 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       e2 should contain(OrderDelayed(order1ID))
     }
   }
-}
