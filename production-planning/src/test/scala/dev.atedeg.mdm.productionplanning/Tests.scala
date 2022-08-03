@@ -41,11 +41,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
       Given("a list of orders with deadline in 10 days")
       val requiredBy = java.time.LocalDate.now.plusDays(10)
       val orderedProducts = NonEmptyList.of(orderedProd1, orderedProd2, orderedProd3)
-      val orders = List(
-        Order(OrderID(UUID.randomUUID()), requiredBy, orderedProducts),
-        Order(OrderID(UUID.randomUUID()), requiredBy, orderedProducts),
-        Order(OrderID(UUID.randomUUID()), requiredBy, orderedProducts),
-      )
+      val orders = List.fill(3)(Order(OrderID(UUID.randomUUID), requiredBy, orderedProducts))
       And("the production plan of the previous year for the same day")
       val productsToProduce = NonEmptyList.of(prodToProd1, prodToProd2, prodToProd3)
       val previousProductionPlan = ProductionPlan(productsToProduce)
