@@ -5,7 +5,7 @@ package dev.atedeg.mdm.productionplanning
  */
 enum IncomingEvent:
   /**
-   * Event representing an order placed used to create the [[ProductionPlan production plan]] of the day.
+   * Event representing an [[Order order]] placed, data about the orders is used to create the [[ProductionPlan production plan]].
    */
   case NewOrderReceived(order: Order)
 
@@ -14,12 +14,12 @@ enum IncomingEvent:
  */
 enum OutgoingEvent:
   /**
-   * Events that contains the [[ProductionPlan production plan]] of the day.
+   * Event that contains the [[ProductionPlan production plan]] of the day.
    */
   case ProductionPlanReady(productionPlan: ProductionPlan)
 
   /**
-   * If an order cannot be fulfilled since there are some products' ripening days takes more
-   * time than the order required date.
+   * An event emitted if an [[Order order]] cannot be fulfilled since there are some [[Product products]] whose
+   * [[RipeningDays ripening days]] would make it impossible to fulfil the order by the required date.
    */
   case OrderDelayed(orderID: OrderID)
