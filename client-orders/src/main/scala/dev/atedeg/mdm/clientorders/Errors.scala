@@ -15,7 +15,7 @@ enum PalletizationError:
   /**
    * Raised when trying to palletize more of a [[Product product]] than required.
    */
-  case PalletizedMoreThanRequired(requiredQuantity: Quantity)
+  case PalletizedMoreThanRequired(requiredQuantity: MissingQuantity)
 
 /**
  * An error that may be produced by the [[completeOrder() order completion action]].
