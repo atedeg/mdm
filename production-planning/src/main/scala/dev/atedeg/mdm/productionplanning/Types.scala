@@ -59,4 +59,4 @@ type CheeseTypeRipeningDays = CheeseType => RipeningDays
 /**
  * The number of days needed for the ripening process to be done.
  */
-final case class RipeningDays(days: NonNegativeNumber)
+final case class RipeningDays(days: NonNegativeNumber) derives Plus

@@ -40,7 +40,10 @@ private def checkDeliverabilityOfOrder[M[_]: Monad: CanEmit[OrderDelayed]](
 )(order: Order): M[Unit] = {
   val ripeningDays = order.orderedProducts.map(_.product.cheeseType).map(cheeseTypeRipeningDays(_))
   val isDelayed = ripeningDays.map(productionInTime(_, order.requiredBy)).exists(_ == OrderStatus.Delayed)
-  when(isDelayed)(emit(OrderDelayed(order.orderdID): OrderDelayed))
+  when(isDelayed) {
+    val deliveryDate = newDeliveryDate(RipeningDays(ripeningDays.map(_.days).reduceLeft(max)))
+    emit(OrderDelayed(order.orderdID, deliveryDate): OrderDelayed)
+  }
 }
 
 private def magicAIProductsToProduceEstimator(
@@ -53,10 +56,14 @@ private def magicAIProductsToProduceEstimator(
   NonEmptyList.of(ProductToProduce(Product.Caciotta(500), Quantity(5)))
 
 private def productionInTime(ripeningDays: RipeningDays, requiredBy: LocalDate): OrderStatus =
-  val today = java.time.LocalDate.now
+  val today = LocalDate.now
   if today.plusDays(ripeningDays.days.value.toLong).isBefore(requiredBy)
   then OrderStatus.NonDelayed
   else OrderStatus.Delayed
+
+private def newDeliveryDate(ripeningDays: RipeningDays): LocalDate =
+  val today = LocalDate.now
+  today.plusDays(ripeningDays.days.value.toLong)
 
 private enum OrderStatus:
   case Delayed
