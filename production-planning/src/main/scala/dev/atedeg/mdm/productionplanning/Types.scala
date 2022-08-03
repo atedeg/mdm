@@ -22,8 +22,6 @@ final case class ProductToProduce(product: Product, quantity: Quantity)
 
 /**
  * A quantity of something.
- * @example `Quantity(-2)` is not a valid quantity.
- * @example `Quantity(5)` is a valida quantity.
  */
 final case class Quantity(n: PositiveNumber) derives Plus, Times
 
@@ -34,9 +32,6 @@ type Stock = Product => StockedQuantity
 
 /**
  * A quantity of a stocked [[Product product]], it may also be zero.
- * @note it must be a [[NonNegativeNumber non-negative number]].
- * @example `StockedQuantity(0)` is valid.
- * @example `StockedQuantity(-1)` is invalid.
  */
 final case class StockedQuantity(n: NonNegativeNumber)
 
@@ -63,7 +58,5 @@ type CheeseTypeRipeningDays = CheeseType => RipeningDays
 
 /**
  * The number of days needed for the ripening process to be done.
- * @example `RipeningDays(7)` is a valid number of days.
- * @example `RipeningDays(-2)` is not a valid number of days.
  */
 final case class RipeningDays(days: NonNegativeNumber)
