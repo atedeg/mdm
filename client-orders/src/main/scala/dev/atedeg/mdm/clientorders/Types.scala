@@ -9,7 +9,8 @@ import eu.timepit.refined.numeric.Interval
 import eu.timepit.refined.string.MatchesRegex
 
 import dev.atedeg.mdm.products.Product
-import dev.atedeg.mdm.utils.{ NonNegativeNumber, PositiveDecimal, PositiveNumber }
+import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.given
 
 /**
  * A set of [[IncomingOrderLine order lines]] with their respective [[Quantity quantity]] (e.g. 1000 ricotte of 0.5kg,
@@ -72,12 +73,12 @@ final case class Location(latitude: Latitude, longitude: Longitude)
 /**
  * A latitude specified in degrees.
  */
-final case class Latitude(value: Double Refined Interval.Closed[-90, 90])
+final case class Latitude(value: NumberInClosedRange[-90, 90])
 
 /**
  * A longitude specified in degrees.
  */
-final case class Longitude(value: Double Refined Interval.Closed[-180, 180])
+final case class Longitude(value: NumberInClosedRange[-180, 180])
 
 /**
  * Associates to each [[Product product]] its [[PriceInEuroCents unitary price]].
@@ -87,7 +88,7 @@ type PriceList = Product => PriceInEuroCents
 /**
  * A price expressed in cents, the smallest currency unit for euros.
  */
-final case class PriceInEuroCents(n: PositiveNumber)
+final case class PriceInEuroCents(n: PositiveNumber) derives Plus
 
 /**
  * An order where each [[PricedOrderLine line]] has an associated [[PriceInEuroCents price]] and, optionally, an applied
@@ -104,8 +105,7 @@ final case class PricedOrder(
 )
 
 /**
- * A [[Product product]] with its [[Quantity quantity]], a [[PriceInEuroCents price]] and, optionally, a
- * [[Discount discount]].
+ * A [[Product product]] with its [[Quantity quantity]] and a [[PriceInEuroCents price]].
  */
 final case class PricedOrderLine(quantity: Quantity, product: Product, totalPrice: PriceInEuroCents)
 
@@ -188,4 +188,4 @@ final case class TransportDocumentLine(quantity: Quantity, product: Product)
 /**
  * A weight expressed in kilograms.
  */
-final case class WeightInKilograms(n: PositiveDecimal)
+final case class WeightInKilograms(n: PositiveDecimal) derives Plus
