@@ -41,6 +41,11 @@ final case class IncomingOrderLine(quantity: Quantity, product: Product)
 final case class Quantity(n: PositiveNumber)
 
 /**
+ * The missing quantity of a [[Product product]] necessary to fullfil an [[InProgressOrderLine in-progress order line]].
+ */
+final case class MissingQuantity(n: NonNegativeNumber)
+
+/**
  * A physical or legal entity that places [[IncomingOrder orders]].
  */
 final case class Customer(code: CustomerID, name: CustomerName, vatNumber: VATNumber)
@@ -147,7 +152,7 @@ enum InProgressOrderLine:
 /**
  * A quantity (possibly 0) of a palletized [[Product product]].
  */
-final case class PalletizedQuantity(n: NonNegativeNumber)
+final case class PalletizedQuantity(n: NonNegativeNumber) derives Plus
 
 /**
  * An order that has been fulfilled by the operator and is ready to be shipped.
