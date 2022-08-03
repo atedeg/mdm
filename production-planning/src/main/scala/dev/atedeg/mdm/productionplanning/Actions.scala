@@ -22,7 +22,7 @@ import dev.atedeg.mdm.utils.monads.*
  * If an order cannot be fulfilled since it contains products whose ripening days make it impossible
  * to satisfy the order by the required date, it emits an [[OrderDelayed order delayed]] event.
  */
-private def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderDelayed]](
+def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderDelayed]](
     stock: Stock,
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
 )(
