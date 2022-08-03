@@ -90,12 +90,12 @@ lazy val root = project
   )
   .aggregate(
     stocking,
-    utils,
     production,
     `milk-planning`,
     `production-planning`,
     `products-shared-kernel`,
     restocking,
+    `client-orders`,
   )
 
 lazy val utils = project
