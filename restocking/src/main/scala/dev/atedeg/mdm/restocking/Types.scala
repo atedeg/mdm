@@ -6,9 +6,6 @@ import dev.atedeg.mdm.utils.given
 
 /**
  * A quantity of milk expressed in quintals.
- * @note it must be a [[PositiveNumber positive number]].
- * @example `QuintalsOfMilk(1)` is a valid weight of 110 kg.
- * @example `QuintalsOfMilk(0)` is not a valid weight.
  */
 final case class QuintalsOfMilk(quintals: PositiveNumber)
 
