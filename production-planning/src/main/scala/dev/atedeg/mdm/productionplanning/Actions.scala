@@ -17,10 +17,10 @@ import dev.atedeg.mdm.utils.monads.*
 /**
  * Estimate how many [[Product products]] to produce that day.
  * To do so, takes into account the [[ProductionPlan production plan]] for the same day of the previous year,
- * the new [[Order orders]] considering the [[RipeningDays ripening time]] for each [[CheeseType cheese type]] and the
+ * the new [[Order orders]] considering the [[RipeningDays ripening days]] of each [[CheeseType cheese type]] and the
  * [[Product products]] needed to replenish the stock.
- * If an order cannot be fulfilled since there are some products' ripening days  that takes more
- * time than the order required date, it emits an [[OrderDelayed order delayed]] event.
+ * If an order cannot be fulfilled since it contains products whose ripening days make it impossible
+ * to satisfy the order by the required date, it emits an [[OrderDelayed order delayed]] event.
  */
 private def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderDelayed]](
     stock: Stock,
