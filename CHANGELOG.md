@@ -1,3 +1,10 @@
+# [1.0.0-beta.5](https://github.com/atedeg/mdm/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-03)
+
+
+### Features
+
+* add restocking bc ([36af124](https://github.com/atedeg/mdm/commit/36af124611279107621dca88931483f72eb8ec81))
+
 # [1.0.0-beta.4](https://github.com/atedeg/mdm/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-02)
 
 
