@@ -9,7 +9,7 @@ import dev.atedeg.mdm.products.{ Ingredient, Product }
 import dev.atedeg.mdm.products.Ingredient.{ Cream, Milk, Probiotics, Rennet, Salt }
 import dev.atedeg.mdm.utils.given
 
-trait Mocks {
+trait Mocks:
   private val milk = QuintalsOfIngredient(WeightInQuintals(5.5), Milk)
   private val cream = QuintalsOfIngredient(WeightInQuintals(3.0), Cream)
   private val rennet = QuintalsOfIngredient(WeightInQuintals(2.0), Rennet)
@@ -18,9 +18,7 @@ trait Mocks {
 
   val ingredients: NonEmptyList[QuintalsOfIngredient] = NonEmptyList.of(milk, cream, rennet, salt, probiotics)
 
-}
-
-class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
 
   Feature("Consume ingredients") {
     Scenario("Some ingredients are consumed as a result of the producion process") {
@@ -45,4 +43,3 @@ class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with M
       newStock shouldBe updatedStock
     }
   }
-}
