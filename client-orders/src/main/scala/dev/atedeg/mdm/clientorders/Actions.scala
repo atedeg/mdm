@@ -1,9 +1,11 @@
 package dev.atedeg.mdm.clientorders
 
 import java.time.LocalDateTime
+import scala.annotation.tailrec
 
 import cats.Monad
 import cats.data.NonEmptyList
+import cats.kernel.Comparison.*
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.clientorders.InProgressOrderLine.*
@@ -53,8 +55,6 @@ def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
 /**
  * Palletizes a [[Product product]] in the specified [[order.Quantity quantity]].
  *
- * @note
- *   It can raise a [[PalletizationError palletization error]].
  * @param inProgressOrder
  *   the order for which the product needs to be palletized.
  * @param quantity
@@ -70,16 +70,13 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](
 )(quantity: Quantity, product: Product): M[InProgressOrder] =
   val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
   for {
-    orderLine <- findOrderLine(product, ol).ifMissingRaise(ProductNotInOrder())
-    requiredQuantity = getRequiredQuantity(orderLine)
-    totalPriceForProduct = getTotalPriceForProduct(orderLine)
-    _ <- (quantity <= requiredQuantity).otherwiseRaise(PalletizedMoreThanRequired(requiredQuantity))
-    updatedLine = updateLine(product, quantity, requiredQuantity, totalPriceForProduct)
-    newOrderLine = ol.map {
+    orderLine <- ol.find(_ == product).ifMissingRaise(ProductNotInOrder())
+    updatedLine <- addToLine(orderLine)(quantity)
+    newOrderLines = ol.map {
       case i @ Incomplete(_, _, `product`, _) => updatedLine
       case l @ _ => l
     }
-  } yield InProgressOrder(id, newOrderLine, customer, dd, dl, totalPrice)
+  } yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
 
 private def isProductInOrder(orderLines: NonEmptyList[InProgressOrderLine], product: Product): Boolean =
   orderLines.map {
@@ -87,33 +84,20 @@ private def isProductInOrder(orderLines: NonEmptyList[InProgressOrderLine], prod
     case Incomplete(_, _, prod, _) => prod
   }.exists(_ == product)
 
-private def findOrderLine(product: Product, ol: NonEmptyList[InProgressOrderLine]): Option[InProgressOrderLine] =
-  ol.find(_ == product)
-
-private def getRequiredQuantity(orderLine: InProgressOrderLine): Quantity = orderLine match {
-  case Complete(quantity, _, _) => quantity
-  case Incomplete(_, requiredQuantity, _, _) => requiredQuantity
-}
-
-private def getTotalPriceForProduct(orderLine: InProgressOrderLine): PriceInEuroCents = orderLine match {
-  case Complete(_, _, price) => price
-  case Incomplete(_, _, _, price) => price
-}
-
-private def updateLine(
-    product: Product,
-    quantity: Quantity,
-    requiredQuantity: Quantity,
-    totalPrice: PriceInEuroCents,
-): InProgressOrderLine =
-  if quantity == requiredQuantity then Complete(quantity, product, totalPrice)
-  else Incomplete(quantity.toPalletizedQuantity, requiredQuantity, product, totalPrice)
+private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InProgressOrderLine)(
+    quantityToAdd: Quantity,
+): M[InProgressOrderLine] = ol match
+  case _: Complete => raise(PalletizedMoreThanRequired(0.missingQuantity): PalletizedMoreThanRequired)
+  case Incomplete(palletized, required, product, price) =>
+    val missingQuantity = (required.n.toNonNegative - palletized.n).missingQuantity
+    missingQuantity.n.comparison(quantityToAdd.n.toNonNegative) match
+      case GreaterThan => Incomplete(palletized + quantityToAdd.toPalletizedQuantity, required, product, price).pure
+      case EqualTo => Complete(required, product, price).pure
+      case LessThan => raise(PalletizedMoreThanRequired(missingQuantity): PalletizedMoreThanRequired)
 
 /**
  * Completes an [[order.InProgressOrder in-progress order]].
  *
- * @note
- *   It can raise an [[OrderCompletionError order completion error]].
  * @param inProgressOrder
  *   the in-progress order to be marked as complete.
  */
@@ -123,16 +107,18 @@ def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
   val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
   for {
     completedOrderLines <- getCompletedOrderLines(ol).ifMissingRaise(OrderNotComplete())
-    completeOrderLines   = ol.map(o => CompleteOrderLine(o.quantity, o.product, o.price))
+    completeOrderLines = completedOrderLines.map(o => CompleteOrderLine(o.quantity, o.product, o.price))
   } yield CompletedOrder(id, completeOrderLines, customer, dd, dl, totalPrice)
 
 private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]): Option[NonEmptyList[Complete]] =
-  def prova(acc: Option[List[Complete]])(l: List[InProgressOrderLine]): Option[List[Complete]] = l match
-    case (c @ _: Complete) :: tail => prova(acc.map(c :: _))(tail)
-    case (_: Incomplete) :: _ => None
-    case Nil => acc
+  @tailrec
+  def _getCompletedOrderLines(acc: Option[List[Complete]])(l: List[InProgressOrderLine]): Option[List[Complete]] =
+    l match
+      case (c @ _: Complete) :: tail => _getCompletedOrderLines(acc.map(c :: _))(tail)
+      case (_: Incomplete) :: _ => None
+      case Nil => acc
 
-  prova(Some(Nil))(orderLines.toList).flatMap(_.toNel).map(_.reverse)
+  _getCompletedOrderLines(Some(Nil))(orderLines.toList).flatMap(_.toNel).map(_.reverse)
 
 /**
  * Computes the total [[order.WeightInKilograms weight]] of a [[order.CompletedOrder complete order]].
