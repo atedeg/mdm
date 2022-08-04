@@ -39,7 +39,6 @@ private def milkNeededForProducts(
     .map(milkNeededForProduct(_, stock, recipeBook))
     .foldLeft(0.quintalsOfMilk)(_ + _)
 
-@SuppressWarnings(Array("scalafix:DisableSyntax.noValPatterns"))
 private def milkNeededForProduct(
     product: RequestedProduct,
     stock: Stock,

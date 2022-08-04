@@ -28,7 +28,6 @@ trait Mocks {
   val allIngredients: NonEmptyList[Ingredient] = NonEmptyList.of(Milk, Cream, Rennet, Salt, Probiotics)
 }
 
-@SuppressWarnings(Array("scalafix:DisableSyntax.noValPatterns"))
 class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
 
   Feature("Production management") {

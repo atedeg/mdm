@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 import cats.Monad
 import cats.data.NonEmptyList
+import cats.kernel.Eq
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.productionplanning.{ CheeseTypeRipeningDays, RipeningDays }
@@ -39,7 +40,7 @@ private def checkDeliverabilityOfOrder[M[_]: Monad: CanEmit[OrderDelayed]](
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
 )(order: Order): M[Unit] = {
   val ripeningDays = order.orderedProducts.map(_.product.cheeseType).map(cheeseTypeRipeningDays(_))
-  val isDelayed = ripeningDays.map(productionInTime(_, order.requiredBy)).exists(_ == OrderStatus.Delayed)
+  val isDelayed = ripeningDays.map(productionInTime(_, order.requiredBy)).exists(_ === OrderStatus.Delayed)
   when(isDelayed) {
     val deliveryDate = newDeliveryDate(RipeningDays(ripeningDays.map(_.days).reduceLeft(max)))
     emit(OrderDelayed(order.orderdID, deliveryDate): OrderDelayed)
@@ -68,3 +69,6 @@ private def newDeliveryDate(ripeningDays: RipeningDays): LocalDate =
 private enum OrderStatus:
   case Delayed
   case NonDelayed
+
+object OrderStatus:
+  given Eq[OrderStatus] = Eq.fromUniversalEquals
