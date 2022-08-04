@@ -1,5 +1,7 @@
 package dev.atedeg.mdm.products
 
+import cats.kernel.Eq
+
 import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
@@ -51,3 +53,4 @@ val allCaciottaWeights = all[CaciottaWeightsInGrams]
 
 object Product:
   def unapply(prod: Product): (CheeseType, Grams) = (prod.cheeseType, prod.weight)
+  given Eq[Product] = Eq.fromUniversalEquals
