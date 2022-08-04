@@ -1,11 +1,8 @@
 ---
 title: Context Map
+layout: base
 ---
-
 # Context Map
-
-! [Context Map](images/context-map.svg)
-
 - `MilkPlanning [D, ACL] <- [U] ClientOrders` and `ProductionPlanning [D, ACL] <- [U] ClientOrders`  
   `ClientOrders` sends a message to `MilkPlanning` and `ProductionPlanning` to inform a new order was received.
   `MilkPlanning` and `ProductionPlanning` are downstream *core domains* so it's necessary to insert an *Anti-Corruption Layer* between them and `ClientOrders`.
@@ -44,3 +41,5 @@ In fact, adding a new kind of product involves a series of important domain chan
 the production, ordering, labelling and stocking processes would need a rehaul to take into account the new kind of product.
 By sharing this information among different bounded context it is guaranteed that, whenever a change happens to any of these concepts, all the domains
 will maintain an up-to-date vision of these concepts.
+
+![Context Map](images/contextMap.svg)

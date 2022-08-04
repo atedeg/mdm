@@ -1,5 +1,6 @@
 ---
 title: Event Storming
+layout: base
 ---
 # Motivations
 Given the complexity of the domain, it was decided to use Event Storming to become familiar with
