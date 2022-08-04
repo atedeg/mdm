@@ -1,3 +1,19 @@
+# [1.0.0-beta.6](https://github.com/atedeg/mdm/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-08-04)
+
+
+### Bug Fixes
+
+* remove private modifier for production planning action ([6913676](https://github.com/atedeg/mdm/commit/69136763fcd2ab8001994a5fdebf08d58706c553))
+
+
+### Features
+
+* add new delivery date for delayed orded in production planning bc ([b14b551](https://github.com/atedeg/mdm/commit/b14b551de76f7a01f27da18161f3cd7eee728691))
+* bc actions definition ([984a7ba](https://github.com/atedeg/mdm/commit/984a7ba6e6813d73e7285e4d6c4af9e756e645b2))
+* bc events definition ([1ae213e](https://github.com/atedeg/mdm/commit/1ae213e4af772da429d072941a7844c7838a0a12))
+* bc types definition ([fbdcd83](https://github.com/atedeg/mdm/commit/fbdcd837a169d53e414810b74003d6672d0118b4))
+* implement bc actions ([86c6e86](https://github.com/atedeg/mdm/commit/86c6e869432d3def47e7ff6f0a3bbbb63e4c3f5f))
+
 # [1.0.0-beta.5](https://github.com/atedeg/mdm/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-03)
 
 
