@@ -41,9 +41,6 @@ def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder 
 /**
  * Turns a [[order.PricedOrder priced order]] into an [[order.InProgressOrder in-progress order]] that can then be
  * fulfilled by operators.
- *
- * @param pricedOrder
- *   the priced order to be marked as in progress.
  */
 def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
   val PricedOrder(id, ol, customer, deliveryDate, deliveryLocation, totalPrice) = pricedOrder
@@ -53,19 +50,11 @@ def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
   InProgressOrder(id, newOrderLine, customer, deliveryDate, deliveryLocation, totalPrice)
 
 /**
- * Palletizes a [[Product product]] in the specified [[order.Quantity quantity]].
- *
- * @param inProgressOrder
- *   the order for which the product needs to be palletized.
- * @param quantity
- *   the quantity of product to be palletized.
- * @param product
- *   the product to be palletized.
- * @return
- *   an [[order.InProgressOrder in-progress order]] where the corresponding [[order.InProgressOrderLine line]] has been
- *   updated with the [[order.Quantity specified quantity]].
+ * Palletizes a [[Product product]] in the specified [[order.Quantity quantity]] for a given
+ * [[InProgressOrder order in progress]]. The result is an [[order.InProgressOrder in-progress order]]
+ * where the corresponding [[order.InProgressOrderLine line]] has been updated with the
+ * [[order.Quantity specified quantity]].
  */
-
 def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity: Quantity, product: Product)(
     inProgressOrder: InProgressOrder,
 ): M[InProgressOrder] =
@@ -96,9 +85,6 @@ private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InP
 
 /**
  * Completes an [[order.InProgressOrder in-progress order]].
- *
- * @param inProgressOrder
- *   the in-progress order to be marked as complete.
  */
 def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
     inProgressOrder: InProgressOrder,
@@ -121,9 +107,6 @@ private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]
 
 /**
  * Computes the total [[order.WeightInKilograms weight]] of a [[order.CompletedOrder complete order]].
- *
- * @param completeOrder
- *   the order whose weight has to be computed.
  */
 def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
   completeOrder.orderLines
@@ -134,11 +117,6 @@ def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
 
 /**
  * Creates a [[order.TransportDocument transport document]] from a [[order.CompletedOrder complete order]].
- *
- * @param completeOrder
- *   the order for which the transport document has to be created.
- * @param weight
- *   the weight of the order.
  */
 def createTransportDocument(completeOrder: CompletedOrder, weight: WeightInKilograms): TransportDocument =
   val CompletedOrder(_, orderLines, customer, _, deliveryLocation, _) = completeOrder
