@@ -46,7 +46,7 @@ private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): Pric
   )
 
 /**
- * Turns a [[order.PricedOrder priced order]] into an [[order.InProgressOrder in-progress order]] that can then be
+ * Turns a [[Order.PricedOrder priced order]] into an [[Order.InProgressOrder in-progress order]] that can then be
  * fulfilled by operators.
  */
 def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
@@ -57,10 +57,10 @@ def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
   InProgressOrder(id, newOrderLine, customer, deliveryDate, deliveryLocation, totalPrice)
 
 /**
- * Palletizes a [[Product product]] in the specified [[order.Quantity quantity]] for a given
- * [[InProgressOrder order in progress]]. The result is an [[order.InProgressOrder in-progress order]]
- * where the corresponding [[order.InProgressOrderLine line]] has been updated with the
- * [[order.Quantity specified quantity]].
+ * Palletizes a [[Product product]] in the specified [[Order.Quantity quantity]] for a given
+ * [[InProgressOrder order in progress]]. The result is an [[Order.InProgressOrder in-progress order]]
+ * where the corresponding [[Order.InProgressOrderLine line]] has been updated with the
+ * [[Order.Quantity specified quantity]].
  */
 def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity: Quantity, product: Product)(
     inProgressOrder: InProgressOrder,
@@ -91,7 +91,7 @@ private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InP
       case LessThan => raise(PalletizedMoreThanRequired(missingQuantity): PalletizedMoreThanRequired)
 
 /**
- * Completes an [[order.InProgressOrder in-progress order]].
+ * Completes an [[Order.InProgressOrder in-progress order]].
  */
 def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
     inProgressOrder: InProgressOrder,
@@ -113,7 +113,7 @@ private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]
   _getCompletedOrderLines(Some(Nil))(orderLines.toList).flatMap(_.toNel).map(_.reverse)
 
 /**
- * Computes the total [[order.WeightInKilograms weight]] of a [[order.CompletedOrder complete order]].
+ * Computes the total [[Order.WeightInKilograms weight]] of a [[Order.CompletedOrder complete order]].
  */
 def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
   completeOrder.orderLines
@@ -123,7 +123,7 @@ def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
     .reduce(_ + _)
 
 /**
- * Creates a [[order.TransportDocument transport document]] from a [[order.CompletedOrder complete order]].
+ * Creates a [[Order.TransportDocument transport document]] from a [[Order.CompletedOrder complete order]].
  */
 def createTransportDocument(completeOrder: CompletedOrder, weight: WeightInKilograms): TransportDocument =
   val CompletedOrder(_, orderLines, customer, _, deliveryLocation, _) = completeOrder
