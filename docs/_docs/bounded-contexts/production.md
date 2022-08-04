@@ -1,5 +1,6 @@
 ---
 title: Production
+layout: static-site-main
 ---
 
 # Production

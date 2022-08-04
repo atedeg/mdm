@@ -1,5 +1,6 @@
 ---
 title: Stocking
+layout: static-site-main
 ---
 
 # Stocking

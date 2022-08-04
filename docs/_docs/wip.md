@@ -1,3 +1,6 @@
+---
+layout: static-site-main
+---
 # WIP
 
 ## CI

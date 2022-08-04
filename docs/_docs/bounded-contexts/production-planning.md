@@ -1,5 +1,6 @@
 ---
 title: Production Planning
+layout: static-site-main
 ---
 
 # Production Planning

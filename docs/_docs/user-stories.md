@@ -1,5 +1,6 @@
 ---
 title: "User stories"
+layout: static-site-main
 ---
 
 # User stories
