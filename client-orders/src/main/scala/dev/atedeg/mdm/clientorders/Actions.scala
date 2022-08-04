@@ -129,4 +129,4 @@ def createTransportDocument(completeOrder: CompletedOrder, weight: WeightInKilog
   val date = LocalDateTime.now
   TransportDocument(deliveryLocation, mambelliDeliveryLocation, customer, date, transportDocumentLines, weight)
 
-private val mambelliDeliveryLocation = Location(Latitude(12), Longitude(44))
+private val mambelliDeliveryLocation = Location(Latitude(12.0), Longitude(44.0))

@@ -78,12 +78,12 @@ final case class Location(latitude: Latitude, longitude: Longitude)
 /**
  * A latitude specified in degrees.
  */
-final case class Latitude(value: NumberInClosedRange[-90, 90])
+final case class Latitude(value: DecimalInClosedRange[-90.0, 90.0])
 
 /**
  * A longitude specified in degrees.
  */
-final case class Longitude(value: NumberInClosedRange[-180, 180])
+final case class Longitude(value: DecimalInClosedRange[-180.0, 180.0])
 
 /**
  * Associates to each [[Product product]] its [[PriceInEuroCents unitary price]].
