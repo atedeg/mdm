@@ -78,12 +78,6 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](
     }
   } yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
 
-private def isProductInOrder(orderLines: NonEmptyList[InProgressOrderLine], product: Product): Boolean =
-  orderLines.map {
-    case Complete(_, prod, _) => prod
-    case Incomplete(_, _, prod, _) => prod
-  }.exists(_ == product)
-
 private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InProgressOrderLine)(
     quantityToAdd: Quantity,
 ): M[InProgressOrderLine] = ol match
@@ -144,13 +138,7 @@ def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
 def createTransportDocument(completeOrder: CompletedOrder, weight: WeightInKilograms): TransportDocument =
   val CompletedOrder(_, orderLines, customer, _, deliveryLocation, _) = completeOrder
   val transportDocumentLines = orderLines.map(l => TransportDocumentLine(l.quantity, l.product))
-  TransportDocument(
-    deliveryLocation,
-    mambelliDeliveryLocation,
-    customer,
-    LocalDateTime.now(),
-    transportDocumentLines,
-    weight,
-  )
+  val date = LocalDateTime.now
+  TransportDocument(deliveryLocation, mambelliDeliveryLocation, customer, date, transportDocumentLines, weight)
 
 private val mambelliDeliveryLocation = Location(Latitude(12), Longitude(44))
