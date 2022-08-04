@@ -50,10 +50,8 @@ private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): Pric
  * fulfilled by operators.
  */
 def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
-  val PricedOrder(id, ol, customer, deliveryDate, deliveryLocation, totalPrice) = pricedOrder
-  val newOrderLine = ol.map { case PricedOrderLine(quantity, product, price) =>
-    Incomplete(0.palletizedQuantity, quantity, product, price)
-  }
+  val PricedOrder(id, ols, customer, deliveryDate, deliveryLocation, totalPrice) = pricedOrder
+  val newOrderLine = ols.map(ol => Incomplete(0.palletizedQuantity, ol.quantity, ol.product, ol.totalPrice))
   InProgressOrder(id, newOrderLine, customer, deliveryDate, deliveryLocation, totalPrice)
 
 /**
@@ -96,21 +94,21 @@ private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InP
 def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
     inProgressOrder: InProgressOrder,
 ): Result[CompletedOrder] =
-  val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
+  val InProgressOrder(id, ols, customer, dd, dl, totalPrice) = inProgressOrder
   for {
-    completedOrderLines <- getCompletedOrderLines(ol).ifMissingRaise(OrderNotComplete())
-    completeOrderLines = completedOrderLines.map(o => CompleteOrderLine(o.quantity, o.product, o.price))
+    completedOrderLines <- getCompletedOrderLines(ols).ifMissingRaise(OrderNotComplete())
+    completeOrderLines = completedOrderLines.map(ol => CompleteOrderLine(ol.quantity, ol.product, ol.price))
   } yield CompletedOrder(id, completeOrderLines, customer, dd, dl, totalPrice)
 
 private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]): Option[NonEmptyList[Complete]] =
   @tailrec
-  def _getCompletedOrderLines(acc: Option[List[Complete]])(l: List[InProgressOrderLine]): Option[List[Complete]] =
+  def go(acc: Option[List[Complete]])(l: List[InProgressOrderLine]): Option[List[Complete]] =
     l match
-      case (c @ _: Complete) :: tail => _getCompletedOrderLines(acc.map(c :: _))(tail)
+      case (c @ _: Complete) :: tail => go(acc.map(c :: _))(tail)
       case (_: Incomplete) :: _ => None
       case Nil => acc
 
-  _getCompletedOrderLines(Some(Nil))(orderLines.toList).flatMap(_.toNel).map(_.reverse)
+  go(Some(Nil))(orderLines.toList).flatMap(_.toNel).map(_.reverse)
 
 /**
  * Computes the total [[Order.WeightInKilograms weight]] of a [[Order.CompletedOrder complete order]].
