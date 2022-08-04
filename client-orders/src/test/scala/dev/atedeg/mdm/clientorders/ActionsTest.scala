@@ -17,6 +17,7 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
+import dev.atedeg.mdm.clientorders.OutgoingEvent.OrderProcessed
 import dev.atedeg.mdm.clientorders.utils.*
 import dev.atedeg.mdm.products.{ CheeseType, Grams, Product }
 import dev.atedeg.mdm.products.Product.*
@@ -72,12 +73,16 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
   Feature("Order pricing") {
     Scenario("Operator prices an order") {
       Given("an incoming order")
-      When("the order is priced")
-      val pricedOrder = priceOrder(priceList)(incomingOrder)
+      val order = incomingOrder
+      When("the order is processed")
+      val priceAction: SafeAction[OrderProcessed, PricedOrder] = processIncomingOrder(priceList)(incomingOrder)
+      val (events, pricedOrder) = priceAction.execute
       Then("the priced is computed correctly")
       val expectedPrice =
         incomingOrder.orderLines.map(ol => priceList(ol.product).n * ol.quantity.n).reduce(_ + _).euroCents
       pricedOrder.totalPrice shouldBe expectedPrice
+      And("an event is emitted")
+      events shouldBe List(OrderProcessed(incomingOrder))
     }
   }
 
