@@ -35,3 +35,7 @@ to the customer notifying them the order has been shipped.
 ### Incoming Events
 
 {% include client-orders-incoming.md %}
+
+### Outgoing Events
+
+{% include client-orders-outgoing.md %}
