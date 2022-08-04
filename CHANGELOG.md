@@ -1,3 +1,22 @@
+# [1.0.0-beta.7](https://github.com/atedeg/mdm/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2022-08-04)
+
+
+### Bug Fixes
+
+* location uses decimals ([e58c814](https://github.com/atedeg/mdm/commit/e58c81436ce1bca5ab75a377262c3e59afa95737))
+* replace quantity with missing quantity ([8fa1f2d](https://github.com/atedeg/mdm/commit/8fa1f2d10f3c140eb0f98234793708073fb24a7b))
+
+
+### Features
+
+* add client orders errors ([7b0eb54](https://github.com/atedeg/mdm/commit/7b0eb5464032dd5f91f43ee7d5a1bc8c2f3b6f69))
+* add client orders events ([fd66d84](https://github.com/atedeg/mdm/commit/fd66d8422201db21d56a1675a44ab25d1eef8473))
+* add client orders types ([0167e81](https://github.com/atedeg/mdm/commit/0167e8139855e656517ea89422bedad5a6ef228e))
+* add MissingQuantity class ([e7a23f7](https://github.com/atedeg/mdm/commit/e7a23f72e9c4babdcd89e9688fa5539cc59e8e53))
+* add new outgoing event ([498bb39](https://github.com/atedeg/mdm/commit/498bb39de6160c2edf224d0eaccc57b3c9d83510))
+* emit processed order event ([dac6483](https://github.com/atedeg/mdm/commit/dac64834f8bae9b8271f935b70f61ca5a46cb2ff))
+* implement client-order actions ([a0f6240](https://github.com/atedeg/mdm/commit/a0f624037198bbff0fd3102936122e6165aba943))
+
 # [1.0.0-beta.6](https://github.com/atedeg/mdm/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-08-04)
 
 
