@@ -7,7 +7,7 @@ import cats.data.NonEmptyList
 
 import dev.atedeg.mdm.products.{ CheeseType, Product }
 import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.{ NonNegativeNumber, NumberInClosedRange, Plus, PositiveNumber, Times }
+import dev.atedeg.mdm.utils.{ DecimalInClosedRange, NonNegativeNumber, Plus, PositiveNumber, Times }
 import dev.atedeg.mdm.utils.given
 
 /**
