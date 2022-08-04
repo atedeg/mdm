@@ -24,7 +24,7 @@ import dev.atedeg.mdm.utils.monads.*
  * of each [[IncomingOrderLine line]] using a [[PriceList price list]].
  */
 def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder =
-  val pricedOrderLines = incomingOrder.orderLines.map { case iol @ IncomingOrderLine(quantity, product) =>
+  val pricedOrderLines = incomingOrder.orderLines.map { case IncomingOrderLine(quantity, product) =>
     val price = priceList(product).n * quantity.n
     PricedOrderLine(quantity, product, price.euroCents)
   }
@@ -65,18 +65,23 @@ def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
  *   an [[order.InProgressOrder in-progress order]] where the corresponding [[order.InProgressOrderLine line]] has been
  *   updated with the [[order.Quantity specified quantity]].
  */
-def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](
+
+def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity: Quantity, product: Product)(
     inProgressOrder: InProgressOrder,
-)(quantity: Quantity, product: Product): M[InProgressOrder] =
+): M[InProgressOrder] =
   val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
   for {
-    orderLine <- ol.find(_ == product).ifMissingRaise(ProductNotInOrder())
+    orderLine <- ol.find(hasProduct(product)).ifMissingRaise(ProductNotInOrder(product))
     updatedLine <- addToLine(orderLine)(quantity)
     newOrderLines = ol.map {
-      case i @ Incomplete(_, _, `product`, _) => updatedLine
+      case Incomplete(_, _, `product`, _) => updatedLine
       case l @ _ => l
     }
   } yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
+
+private def hasProduct(product: Product)(ol: InProgressOrderLine): Boolean = ol match
+  case Incomplete(_, _, p, _) => p === product
+  case Complete(_, p, _) => p === product
 
 private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InProgressOrderLine)(
     quantityToAdd: Quantity,

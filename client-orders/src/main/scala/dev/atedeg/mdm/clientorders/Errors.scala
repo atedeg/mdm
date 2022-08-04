@@ -10,7 +10,7 @@ enum PalletizationError:
    * Raised when trying to palletize a [[Product product]] for an [[Order.InProgressOrder order]] that does not require
    * it.
    */
-  case ProductNotInOrder()
+  case ProductNotInOrder(productNotInOrder: Product)
 
   /**
    * Raised when trying to palletize more of a [[Product product]] than required.
