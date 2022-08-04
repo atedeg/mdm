@@ -93,7 +93,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       When("the order is marked as in progress")
       val inProgressOrder = startPreparingOrder(pricedOrder)
       Then("it should not contain any palletized product")
-      inProgressOrder.orderLines shouldBe NonEmptyList.of(
+      inProgressOrder.orderLines.toList should contain allOf (
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(1000), 10_000.euroCents),
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(500), 5000.euroCents),
       )
@@ -135,7 +135,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
         palletizeProductForOrder(Quantity(100), productInOrder)(inProgressOrder)
       Then("the corresponding order line is marked as completed")
       val (_, result) = palletizeAction.execute
-      result.value.orderLines shouldBe NonEmptyList.of(
+      result.value.orderLines.toList should contain allOf (
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(1000), 10_000.euroCents),
         InProgressOrderLine.Complete(Quantity(100), Caciotta(500), 5000.euroCents),
       )
@@ -151,7 +151,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
         palletizeProductForOrder(Quantity(20), productInOrder)(inProgressOrder)
       Then("the corresponding order line is updated")
       val (_, result) = palletizeAction.execute
-      result.value.orderLines shouldBe NonEmptyList.of(
+      result.value.orderLines.toList should contain allOf (
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(1000), 10_000.euroCents),
         InProgressOrderLine.Incomplete(PalletizedQuantity(20), Quantity(100), Caciotta(500), 5000.euroCents),
       )
@@ -171,48 +171,45 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
 
     Scenario("A complete order is completed") {
       Given("a complete in-progress order")
-      val order = inProgressCompleteOrder
       When("one marks it as completed")
-      val completeAction: Action[OrderCompletionError, Unit, CompletedOrder] = completeOrder(order)
+      val completeAction: Action[OrderCompletionError, Unit, CompletedOrder] = completeOrder(inProgressCompleteOrder)
       Then("it is completed correctly")
       val (_, completed) = completeAction.execute
       completed.value shouldBe CompletedOrder(
-        order.id,
+        inProgressCompleteOrder.id,
         NonEmptyList.of(
           CompleteOrderLine(Quantity(100), Caciotta(1000), 10_000.euroCents),
           CompleteOrderLine(Quantity(100), Caciotta(500), 5000.euroCents),
         ),
-        order.customer,
-        order.deliveryDate,
-        order.deliveryLocation,
-        order.totalPrice,
+        inProgressCompleteOrder.customer,
+        inProgressCompleteOrder.deliveryDate,
+        inProgressCompleteOrder.deliveryLocation,
+        inProgressCompleteOrder.totalPrice,
       )
     }
   }
 
   Feature("Order transportation") {
     Scenario("The order weight is computed") {
-      Given("an order")
-      val order = completedOrder
+      Given("a completed order")
       When("the weight is computed")
-      val weight = weightOrder(order)
+      val weight = weightOrder(completedOrder)
       Then("it is the exact sum of the weights of its products")
-      val expectedGrams = order.orderLines.map(ol => ol.quantity.n * ol.product.weight.n).reduce(_ + _)
+      val expectedGrams = completedOrder.orderLines.map(ol => ol.quantity.n * ol.product.weight.n).reduce(_ + _)
       val expectedKilograms = WeightInKilograms(expectedGrams.toDecimal / 1000)
       weight shouldBe expectedKilograms
     }
 
     Scenario("A transport document is created") {
-      Given("an order")
-      val order = completedOrder
-      val weight = weightOrder(order)
+      Given("a completed order")
+      val weight = weightOrder(completedOrder)
       When("one requests the transport document")
-      val td = createTransportDocument(order, weight)
+      val td = createTransportDocument(completedOrder, weight)
       Then("the correct transport document is generated")
-      td.customer shouldBe order.customer
-      td.deliveryLocation shouldBe order.deliveryLocation
+      td.customer shouldBe completedOrder.customer
+      td.deliveryLocation shouldBe completedOrder.deliveryLocation
       td.totalWeight shouldBe weight
-      td.transportDocumentLines shouldBe NonEmptyList.of(
+      td.transportDocumentLines.toList should contain allOf (
         TransportDocumentLine(Quantity(100), Caciotta(1000)),
         TransportDocumentLine(Quantity(100), Caciotta(500)),
       )
