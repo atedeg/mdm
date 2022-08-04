@@ -4,11 +4,13 @@ import cats.kernel.Order
 import eu.timepit.refined.auto.autoUnwrap
 
 import dev.atedeg.mdm.clientorders.*
+import dev.atedeg.mdm.products.Product
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
 extension (n: PositiveNumber)
   def euroCents: PriceInEuroCents = PriceInEuroCents(n)
+  def of(p: Product): IncomingOrderLine = IncomingOrderLine(Quantity(n), p)
   def quantity: Quantity = Quantity(n)
 
 extension (i: NonNegativeNumber)

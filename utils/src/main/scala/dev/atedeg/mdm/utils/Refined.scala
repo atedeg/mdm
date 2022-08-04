@@ -44,8 +44,11 @@ given refinedEq[N: Eq, P]: Eq[N Refined P] with
   override def eqv(x: N Refined P, y: N Refined P): Boolean = Eq[N].eqv(x.value, y.value)
 
 // Instances for the various numeric ops
+
+extension [N](n: N) def refined[P: ValidFor[N]]: Option[N Refined P] = refineV[P](n).toOption
+
 @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
+def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = a.refined.get
 
 private type ValidFor[N] = [P] =>> Validate[N, P]
 
