@@ -102,4 +102,30 @@ tables:
       - case: "OutgoingEvent.ProductionPlanReady"
       - case: "OutgoingEvent.OrderDelayed"
 
+  - name: "client-orders-ul"
+    rows:
+      - class: "IncomingOrder"
+      - class: "IncomingOrderLine"
+      - class: "Customer"
+      - class: "Location"
+      - type: "PriceList"
+      - class: "PricedOrder"
+      - class: "PricedOrderLine"
+      - class: "InProgressOrder"
+      - enum: "InProgressOrderLine"
+      - class: "CompletedOrder"
+      - class: "CompleteOrderLine"
+      - class: "TransportDocument"
+      - class: "TransportDocumentLine"
+
+  - name: "client-orders-incoming"
+    rows:
+      - case: "IncomingEvent.OrderReceived"
+      - case: "IncomingEvent.ProductPalletizedForOrder"
+      - case: "IncomingEvent.OrderCompleted"
+
+  - name: "client-orders-outgoing"
+    rows:
+      - case: "OutgoingEvent.OrderProcessed"
+
 ignored: []
