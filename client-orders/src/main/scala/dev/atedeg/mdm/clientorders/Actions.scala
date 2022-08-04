@@ -10,6 +10,7 @@ import cats.syntax.all.*
 
 import dev.atedeg.mdm.clientorders.InProgressOrderLine.*
 import dev.atedeg.mdm.clientorders.OrderCompletionError.*
+import dev.atedeg.mdm.clientorders.OutgoingEvent.OrderProcessed
 import dev.atedeg.mdm.clientorders.PalletizationError.*
 import dev.atedeg.mdm.clientorders.utils.*
 import dev.atedeg.mdm.clientorders.utils.QuantityOps.*
@@ -23,7 +24,13 @@ import dev.atedeg.mdm.utils.monads.*
  * Turns an [[IncomingOrder incoming order]] into a [[PricedOrder priced order]] by computing the price
  * of each [[IncomingOrderLine line]] using a [[PriceList price list]].
  */
-def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder =
+def processIncomingOrder[M[_]: Monad: Emits[OrderProcessed]](priceList: PriceList)(
+    incomingOrder: IncomingOrder,
+): M[PricedOrder] =
+  val pricedOrder = priceOrder(priceList)(incomingOrder)
+  emit(OrderProcessed(incomingOrder): OrderProcessed).thenReturn(pricedOrder)
+
+private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder =
   val pricedOrderLines = incomingOrder.orderLines.map { case IncomingOrderLine(quantity, product) =>
     val price = priceList(product).n * quantity.n
     PricedOrderLine(quantity, product, price.euroCents)

@@ -41,4 +41,4 @@ enum OutgoingEvent:
   /**
    * An event emitted when a new [[IncomingOrder incoming order]] is received and processed.
    */
-  case OrderReceived(incomingOrder: IncomingOrder)
+  case OrderProcessed(incomingOrder: IncomingOrder)
