@@ -1,5 +1,6 @@
 ---
 title: Milk Planning
+layout: static-site-main
 ---
 
 # Milk Planning

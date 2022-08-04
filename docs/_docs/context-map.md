@@ -1,6 +1,6 @@
 ---
 title: Context Map
-layout: base
+layout: static-site-main
 ---
 # Context Map
 - `MilkPlanning [D, ACL] <- [U] ClientOrders` and `ProductionPlanning [D, ACL] <- [U] ClientOrders`  

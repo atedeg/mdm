@@ -1,5 +1,6 @@
 ---
 title: Restocking
+layout: static-site-main
 ---
 
 # Restocking

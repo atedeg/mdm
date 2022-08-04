@@ -1,5 +1,6 @@
 ---
 title: Quality Assurance
+layout: static-site-main
 ---
 
 # Quality Assurance
