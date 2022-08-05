@@ -4,9 +4,14 @@ html, body {
 }
 
 main.container {
-    min-height: 100vh;
-    padding: 50px 25px;
+    /* min-height: 100vh; */
+    padding: 200em;
+    margin: 50px;
     /*padding-bottom: 45px;*/ /* prevents the content to be hidden by the gitter sidecar */
+}
+
+.breadcrumbs.container {
+    padding-bottom: 1em;
 }
 
 .container img {
@@ -17,6 +22,10 @@ main.container {
 
 strong {
     font-weight: bold;
+}
+
+table {
+    margin: 30px 0;
 }
 
 /* headers */
