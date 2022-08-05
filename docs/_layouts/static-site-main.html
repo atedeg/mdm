@@ -2,39 +2,6 @@
 layout: base
 ---
 <div class="container">
-    <br>
-    <!--div id="site-header">
-        <div class="wrap">
-            <nav class="navigation" role="menu">
-                <ul class="navigation-menu">
-                    <li class="navigation-menu-item">
-                        <a href="https://docs.scala-lang.org/" class="active">Learn</a>
-                    </li>
-                    <li class="navigation-menu-item">
-                        <a href="https://www.scala-lang.org/download/">Install</a>
-                    </li>
-                    <li class="navigation-menu-item">
-                        <a href="https://scastie.scala-lang.org">Playground</a>
-                    </li>
-                    <li class="navigation-menu-item">
-                        <a href="https://index.scala-lang.org">Find A Library</a>
-                    </li>
-                    <li class="navigation-menu-item">
-                        <a href="https://www.scala-lang.org/community/">Community</a>
-                    </li>
-                    <li class="navigation-menu-item">
-                        <a href="https://www.scala-lang.org/blog/">Blog</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div-->
-    {% if page.nightlyOf %}
-    <aside class="warning">
-        This is a nightly documentation. The content of this page may not be consistent with the current stable version of language.
-        Click <a href="{{ page.nightlyOf }}">here</a> to find the stable version of this page.
-    </aside>
-    {% endif %}
     {{ content }}
     <nav class="arrows-wrapper" aria-label="Page navigation">
         {% if page.previous %}
