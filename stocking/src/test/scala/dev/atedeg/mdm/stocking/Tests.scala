@@ -15,7 +15,7 @@ import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
 
-trait Mocks {
+trait Mocks:
   val batchID: BatchID = BatchID(UUID.randomUUID())
   val cheeseType: CheeseType = CheeseType.Squacquerone
   val squacquerone: Product = Product.Squacquerone(100)
@@ -24,9 +24,8 @@ trait Mocks {
   val stracchino: Product = Product.Stracchino(250)
   val caciotta: Product = Product.Caciotta(500)
   val readyForQA: Batch.ReadyForQualityAssurance = Batch.ReadyForQualityAssurance(batchID, cheeseType)
-}
 
-class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
 
   Feature("Missing stock") {
     Scenario("There are missing products from the desired stock") {
@@ -144,4 +143,3 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       events shouldBe empty
     }
   }
-}

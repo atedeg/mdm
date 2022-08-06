@@ -8,7 +8,6 @@ import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
 extension (q: QuintalsOfIngredient)
-
   @targetName("quintalsOfIngredientTimesDecimal")
   def *(n: PositiveDecimal) = QuintalsOfIngredient(q.quintals * n.quintals, q.ingredient)
 

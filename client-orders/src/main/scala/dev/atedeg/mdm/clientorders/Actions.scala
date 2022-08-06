@@ -64,14 +64,14 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity
     inProgressOrder: InProgressOrder,
 ): M[InProgressOrder] =
   val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
-  for {
+  for
     orderLine <- ol.find(hasProduct(product)).ifMissingRaise(ProductNotInOrder(product))
     updatedLine <- addToLine(orderLine)(quantity)
     newOrderLines = ol.map {
       case Incomplete(_, _, `product`, _) => updatedLine
       case l @ _ => l
     }
-  } yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
+  yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
 
 private def hasProduct(product: Product)(ol: InProgressOrderLine): Boolean = ol match
   case Incomplete(_, _, p, _) => p === product
@@ -95,10 +95,10 @@ def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
     inProgressOrder: InProgressOrder,
 ): Result[CompletedOrder] =
   val InProgressOrder(id, ols, customer, dd, dl, totalPrice) = inProgressOrder
-  for {
+  for
     completedOrderLines <- getCompletedOrderLines(ols).ifMissingRaise(OrderNotComplete())
     completeOrderLines = completedOrderLines.map(ol => CompleteOrderLine(ol.quantity, ol.product, ol.price))
-  } yield CompletedOrder(id, completeOrderLines, customer, dd, dl, totalPrice)
+  yield CompletedOrder(id, completeOrderLines, customer, dd, dl, totalPrice)
 
 private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]): Option[NonEmptyList[Complete]] =
   @tailrec

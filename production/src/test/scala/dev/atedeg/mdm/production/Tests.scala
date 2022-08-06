@@ -22,13 +22,12 @@ import dev.atedeg.mdm.utils.monads.given
 
 extension (n: PositiveNumber) def ofProd(p: Product): ProductionPlanItem = ProductionPlanItem(p, NumberOfUnits(n))
 
-trait Mocks {
+trait Mocks:
   private val productionID = ProductionID(UUID.randomUUID)
   val production: Production.ToStart = Production.ToStart(productionID, Product.Caciotta(500), NumberOfUnits(10_000))
   val allIngredients: NonEmptyList[Ingredient] = NonEmptyList.of(Milk, Cream, Rennet, Salt, Probiotics)
-}
 
-class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
+class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
 
   Feature("Production management") {
     Scenario("A production plan is handled") {
@@ -95,4 +94,3 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks {
       events should contain(ProductionEnded(result.ID, result.batchID))
     }
   }
-}
