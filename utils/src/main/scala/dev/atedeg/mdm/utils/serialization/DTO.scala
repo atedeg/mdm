@@ -15,8 +15,8 @@ trait DTO[E, D]:
   def elemToDto(e: E): D
   def dtoToElem(dto: D): Either[String, E]
 
-  extension (e: E) def toDTO: D = elemToDto(e)
-  extension (dto: D) def toDomain: Either[String, E] = dtoToElem(dto)
+extension [E](e: E) def toDTO[D](using d: DTO[E, D]) = d.elemToDto(e)
+extension [D](dto: D) def toDomain[E](using d: DTO[E, D]): Either[String, E] = d.dtoToElem(dto)
 
 object DTO:
   given listDTO[E, D](using DTO[E, D]): DTO[List[E], List[D]] with

@@ -47,7 +47,7 @@ ThisBuild / semanticdbEnabled := true
 ThisBuild / scalacOptions ++= Seq("-language:implicitConversions")
 
 lazy val startupTransition: State => State = "conventionalCommits" :: _
-Global / onLoad := { startupTransition compose (Global / onLoad).value }
+Global / onLoad := startupTransition compose (Global / onLoad).value
 
 val commonSettings = Seq(
   libraryDependencies ++= Seq(
