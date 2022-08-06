@@ -35,14 +35,8 @@ jobs:
           export SCALA_VERSION=`sbt --no-colors --error 'set aggregate := false; print scalaVersion'`
           echo "::set-output name=scala-version::$SCALA_VERSION"          
 
-      - name: Scalafmt
-        run: sbt scalafmtCheckAll
-
-      - name: Scalafix
-        run: sbt 'scalafixAll --check'
-
-      - name: WartRemover
-        run: sbt wartremoverInspect
+      - name: Quality Assurance
+        run: sbt qaCheck
 
       - name: Test
         run: sbt test
