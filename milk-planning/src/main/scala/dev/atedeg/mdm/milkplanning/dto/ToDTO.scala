@@ -15,7 +15,7 @@ extension (rp: RequestedProduct)
     RequestedProductDTO(
       rp.product.toProductDTO,
       rp.quantity.n.value,
-      rp.requiredBy.format(DateTimeFormatter.ISO_DATE_TIME),
+      rp.requiredBy.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
     )
 
 extension (om: OrderMilk) def toDTO: OrderMilkDTO = OrderMilkDTO(om.quintalsOfMilk.quintals.value)

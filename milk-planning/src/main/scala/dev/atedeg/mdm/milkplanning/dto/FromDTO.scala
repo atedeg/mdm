@@ -22,7 +22,7 @@ extension (ro: ReceivedOrderDTO)
 
 extension (rp: RequestedProductDTO)
   def toDomain: Either[String, RequestedProduct] =
-    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
     for
       quantity <- rp.quantity.refined[Positive].map(Quantity.apply)
       product <- rp.product.toProductDomain
