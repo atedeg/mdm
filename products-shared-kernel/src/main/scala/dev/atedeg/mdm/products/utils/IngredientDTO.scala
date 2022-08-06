@@ -14,7 +14,7 @@ object IngredientDTO:
       case "cream" => Cream.asRight[String]
       case "milk" => Milk.asRight[String]
       case "salt" => Salt.asRight[String]
-      case _ => s"Unknown `Ingredient`: '$s'".asLeft[Ingredient]
+      case _ => s"Unknown `Ingredient`: '$dto'".asLeft[Ingredient]
 
     override def elemToDto(e: Ingredient): String = e match
       case Probiotics => "probiotics"
