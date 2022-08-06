@@ -64,6 +64,6 @@ class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with M
           .foldLeft(0.quintalsOfMilk)(_ + _)
       estimation should be > quintalsForRequestedProducts
       events should not be empty
-      events.map(_.n) should contain(estimation)
+      events.map(_.quintalsOfMilk) should contain(estimation)
     }
   }

@@ -21,4 +21,4 @@ enum OutgoingEvent:
    * Event to order the [[QuintalsOfMilk quintals of milk]] needed for the next week.
    * This event is emitted every week on saturday.
    */
-  case OrderMilk(n: QuintalsOfMilk)
+  case OrderMilk(quintalsOfMilk: QuintalsOfMilk)
