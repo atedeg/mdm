@@ -61,6 +61,7 @@ val commonSettings = Seq(
 )
 
 addCommandAlias("ubidocGenerate", "clean; unidoc; ubidoc; clean; unidoc")
+addCommandAlias("qaCheck", "scalafmtCheckAll; scalafixAll --check; wartremoverInspect")
 
 lazy val root = project
   .in(file("."))
