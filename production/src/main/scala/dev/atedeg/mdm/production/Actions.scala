@@ -31,12 +31,12 @@ def startProduction[M[_]: Monad: CanRaise[MissingRecipe]: Emits[StartProduction]
 ): M[Production.InProgress] =
   val typeToProduce = production.productToProduce.cheeseType
   val gramsOfSingleUnit = production.productToProduce.weight
-  for {
+  for
     recipe <- recipeBook(typeToProduce) ifMissingRaise MissingRecipe(typeToProduce)
     quintalsToProduce = (production.unitsToProduce.n * gramsOfSingleUnit.n).toDecimal / 100_000
     neededIngredients = recipe.lines.map(_ * quintalsToProduce)
     _ <- emit(StartProduction(neededIngredients): StartProduction)
-  } yield Production.InProgress(production.ID, production.productToProduce, production.unitsToProduce)
+  yield Production.InProgress(production.ID, production.productToProduce, production.unitsToProduce)
 
 /**
  * Ends a [[Production.InProgress production]] by assigning it a [[BatchID batch ID]].

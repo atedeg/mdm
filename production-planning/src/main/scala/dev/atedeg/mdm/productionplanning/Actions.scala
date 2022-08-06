@@ -29,23 +29,22 @@ def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderD
 )(
     previousProductionPlan: ProductionPlan,
     orders: List[Order],
-): M[ProductionPlan] = for {
+): M[ProductionPlan] = for
   _ <- orders.traverse(checkDeliverabilityOfOrder(cheeseTypeRipeningDays))
   productsToProduce = magicAIProductsToProduceEstimator(orders, previousProductionPlan, cheeseTypeRipeningDays, stock)
   productionPlan = ProductionPlan(productsToProduce)
   _ <- emit(ProductionPlanReady(productionPlan): ProductionPlanReady)
-} yield productionPlan
+yield productionPlan
 
 private def checkDeliverabilityOfOrder[M[_]: Monad: CanEmit[OrderDelayed]](
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
-)(order: Order): M[Unit] = {
+)(order: Order): M[Unit] =
   val ripeningDays = order.orderedProducts.map(_.product.cheeseType).map(cheeseTypeRipeningDays(_))
   val isDelayed = ripeningDays.map(productionInTime(_, order.requiredBy)).exists(_ === OrderStatus.Delayed)
   when(isDelayed) {
     val deliveryDate = newDeliveryDate(RipeningDays(ripeningDays.map(_.days).reduceLeft(max)))
     emit(OrderDelayed(order.orderdID, deliveryDate): OrderDelayed)
   }
-}
 
 private def magicAIProductsToProduceEstimator(
     orders: List[Order],

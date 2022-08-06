@@ -54,13 +54,13 @@ def labelProduct[M[_]: Monad: CanRaise[WeightNotInRange]: CanEmit[ProductStocked
     actualWeight: Grams,
 ): M[LabelledProduct] =
   val closestAllowedWeight = batch.cheeseType.allowedWeights.closestTo(actualWeight)
-  for {
+  for
     product <- batch.cheeseType
       .withWeight(closeTo(actualWeight))
       .ifMissingRaise(WeightNotInRange(closestAllowedWeight, actualWeight): WeightNotInRange)
     labelledProduct = LabelledProduct(product, AvailableQuantity(1), batch.id)
     _ <- emit(ProductStocked(labelledProduct): ProductStocked)
-  } yield labelledProduct
+  yield labelledProduct
 
 private def closeTo(weight: Grams)(n: Int): Boolean = weight.n.value.toDouble isInRange (n.toDouble +- 5.percent)
 
