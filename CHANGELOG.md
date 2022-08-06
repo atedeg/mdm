@@ -1,3 +1,10 @@
+# [1.0.0-beta.8](https://github.com/atedeg/mdm/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2022-08-06)
+
+
+### Features
+
+* define DTOs for restocking b.c. ([8035a9c](https://github.com/atedeg/mdm/commit/8035a9c0e4b74ad10eb5b265ea10baa9d63accbc))
+
 # [1.0.0-beta.7](https://github.com/atedeg/mdm/compare/v1.0.0-beta.6...v1.0.0-beta.7) (2022-08-04)
 
 
