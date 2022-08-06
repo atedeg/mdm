@@ -11,7 +11,7 @@ enum OutgoingEvent:
    * [[QuintalsOfIngredient needed ingredients and the quantity]] necessary to sustain the
    * production.
    */
-  case StartProduction(neededIngredient: NonEmptyList[QuintalsOfIngredient])
+  case StartProduction(neededIngredients: NonEmptyList[QuintalsOfIngredient])
 
   /**
    * Fired when a [[Production.InProgress production]] is terminated, given a
