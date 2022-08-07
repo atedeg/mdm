@@ -79,4 +79,4 @@ final case class BatchID(id: UUID)
 /**
  * A [[Product product]] with its respective [[Quantity quantity]] and the [[BatchID ID of the batch]] it belongs to.
  */
-final case class LabelledProduct(cheeseType: Product, quantity: AvailableQuantity, batchID: BatchID)
+final case class LabelledProduct(product: Product, quantity: AvailableQuantity, batchID: BatchID)
