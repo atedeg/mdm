@@ -1,3 +1,12 @@
+# [1.0.0-beta.9](https://github.com/atedeg/mdm/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-08-07)
+
+
+### Features
+
+* add DTOs for product and cheesetype ([5f1c40a](https://github.com/atedeg/mdm/commit/5f1c40ad23c26a15b9904f4e02740f77c90d44f4))
+* add prod planning dtos ([c41bcea](https://github.com/atedeg/mdm/commit/c41bcea4af51fa5814369fa025c2de5eec298b2d))
+* add production planning DTOs ([d3ae700](https://github.com/atedeg/mdm/commit/d3ae700dc71a14edb7a2853d998f6e7ecea944c4))
+
 # [1.0.0-beta.8](https://github.com/atedeg/mdm/compare/v1.0.0-beta.7...v1.0.0-beta.8) (2022-08-06)
 
 
