@@ -19,7 +19,7 @@ import org.scalatest.*
 import org.scalatest.EitherValues.*
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.propspec.AnyPropSpec
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import dev.atedeg.mdm.utils.coerce
@@ -47,93 +47,72 @@ trait Generators:
   val uuidDTO: Gen[String] = uuid.map(_.toString)
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class Tests extends AnyFeatureSpec with GivenWhenThen with ScalaCheckDrivenPropertyChecks with Matchers with Generators:
+class Tests extends AnyWordSpec with ScalaCheckDrivenPropertyChecks with Matchers with Generators:
   extension [D](dto: D) def decodeAndEncode[E](using DTO[E, D]): D = dto.toDomain[E].value.toDTO[D]
   extension [E](elem: E) def encodeAndDecode[D](using DTO[E, D]): E = elem.toDTO[D].toDomain[E].value
   def encodingInverseOfDecoding[E, D](dto: D)(using DTO[E, D]): Assertion = dto.decodeAndEncode[E] shouldBe dto
   def decodingInverseOfEncoding[E, D](e: E)(using DTO[E, D]): Assertion = e.encodeAndDecode[D] shouldBe e
   extension [A, B](e: Either[A, B]) def shouldBeLeft: Assertion = e should matchPattern { case Left(_) => }
 
-  Feature("Default instances' decoding is the inverse of encoding") {
-    Scenario("Int")(forAll(decodingInverseOfEncoding[Int, Int]))
-    Scenario("String")(forAll(decodingInverseOfEncoding[String, String]))
-    Scenario("Double")(forAll(decodingInverseOfEncoding[Double, Double]))
-    Scenario("List")(forAll(decodingInverseOfEncoding[List[Int], List[Int]]))
-    Scenario("NonEmptyList")(forAll(nonEmpty)(decodingInverseOfEncoding[NonEmptyList[Int], List[Int]]))
-    Scenario("UUID")(forAll(uuid)(decodingInverseOfEncoding[UUID, String]))
-    Scenario("LocalDate")(forAll(localDate)(decodingInverseOfEncoding[LocalDate, String]))
-    Scenario("LocalDateTime")(forAll(localDateTime)(decodingInverseOfEncoding[LocalDateTime, String]))
-    Scenario("Refined positive")(forAll(positiveNumber)(decodingInverseOfEncoding[Int Refined Positive, Int]))
-  }
-
-  Feature("Default instances' encoding is the inverse of decoding") {
-    Scenario("Int")(forAll(encodingInverseOfDecoding[Int, Int]))
-    Scenario("String")(forAll(encodingInverseOfDecoding[String, String]))
-    Scenario("Double")(forAll(encodingInverseOfDecoding[Double, Double]))
-    Scenario("List")(forAll(encodingInverseOfDecoding[List[Int], List[Int]]))
-    Scenario("NonEmptyList")(forAll(nonEmptyDTO)(encodingInverseOfDecoding[NonEmptyList[Int], List[Int]]))
-    Scenario("UUID")(forAll(uuidDTO)(encodingInverseOfDecoding[UUID, String]))
-    Scenario("LocalDate")(forAll(localDateDTO)(encodingInverseOfDecoding[LocalDate, String]))
-    Scenario("LocalDateTime")(forAll(localDateTimeDTO)(encodingInverseOfDecoding[LocalDateTime, String]))
-    Scenario("Refined positive")(forAll(positiveNumberDTO)(encodingInverseOfDecoding[Int Refined Positive, Int]))
-  }
-
-  Feature("Default instances' invariants are checked when decoding") {
-    Scenario("Refined positive")(0.toDomain[Int Refined Positive] shouldBeLeft)
-    Scenario("UUID")("invalid uuid".toDomain[UUID] shouldBeLeft)
-    Scenario("LocalDate")("invalid date".toDomain[LocalDate] shouldBeLeft)
-    Scenario("LocalDateTime")("invalid date time".toDomain[LocalDateTime] shouldBeLeft)
-    Scenario("NonEmptyList")(List[Int]().toDomain[NonEmptyList[Int]] shouldBeLeft)
-  }
-
-  Feature("DTO auto generation") {
-    Scenario("Generating a DTO for a case class with one field") {
-      Given("a case class")
-      When("it has only one field")
-      And("it has a DTO instance")
-      Then("it should be possible to auto derive a DTO instance")
-      given DTO[Test1, Int] = DTOGenerators.caseClassDTO
-      And("decoding is the inverse of encoding")
-      forAll(test1)(decodingInverseOfEncoding[Test1, Int])
-      And("vice versa")
-      forAll(arbitrary[Int])(encodingInverseOfDecoding[Test1, Int])
-    }
-
-    Scenario("Generating a DTO between two compatible case classes") {
-      Given("two case classes")
-      When("they have the same number of fields")
-      And("there are instances to convert between fields")
-      given DTO[Test1, Int] = DTOGenerators.caseClassDTO
-      Then("it should be possible to auto derive a DTO instance")
-      given DTO[Test2, Test2DTO] = DTOGenerators.interCaseClassDTO
-      And("decoding is the inverse of encoding")
-      forAll(test2)(decodingInverseOfEncoding[Test2, Test2DTO])
-      And("vice versa")
-      forAll(test2DTO)(encodingInverseOfDecoding[Test2, Test2DTO])
+  "Default instances' decoding" should {
+    "be the inverse of encoding" in {
+      forAll(decodingInverseOfEncoding[Int, Int])
+      forAll(decodingInverseOfEncoding[String, String])
+      forAll(decodingInverseOfEncoding[Double, Double])
+      forAll(decodingInverseOfEncoding[List[Int], List[Int]])
+      forAll(nonEmpty)(decodingInverseOfEncoding[NonEmptyList[Int], List[Int]])
+      forAll(uuid)(decodingInverseOfEncoding[UUID, String])
+      forAll(localDate)(decodingInverseOfEncoding[LocalDate, String])
+      forAll(localDateTime)(decodingInverseOfEncoding[LocalDateTime, String])
+      forAll(positiveNumber)(decodingInverseOfEncoding[Int Refined Positive, Int])
     }
   }
 
-  Feature("Compile-time checks during auto generation") {
-    Scenario("Generating a DTO between case classes with a different number of fields") {
-      Given("two case classes")
-      When("they have a different number of fields")
-      Then("it should be impossible to auto derive a DTO instance")
-      "val instance = DTOGenerators.interCaseClassDTO[Test1, Test2]" shouldNot compile
+  "Default instances' encoding" should {
+    "be the inverse of decoding" in {
+      forAll(encodingInverseOfDecoding[Int, Int])
+      forAll(encodingInverseOfDecoding[String, String])
+      forAll(encodingInverseOfDecoding[Double, Double])
+      forAll(encodingInverseOfDecoding[List[Int], List[Int]])
+      forAll(nonEmptyDTO)(encodingInverseOfDecoding[NonEmptyList[Int], List[Int]])
+      forAll(uuidDTO)(encodingInverseOfDecoding[UUID, String])
+      forAll(localDateDTO)(encodingInverseOfDecoding[LocalDate, String])
+      forAll(localDateTimeDTO)(encodingInverseOfDecoding[LocalDateTime, String])
+      forAll(positiveNumberDTO)(encodingInverseOfDecoding[Int Refined Positive, Int])
     }
+  }
 
-    Scenario("Generating a DTO between case classes with fields that can not converted with a DTO instance") {
-      Given("two case classes")
-      When("they have the same number of fields")
-      And("there is no DTO instance to convert between fields")
-      Then("it should be impossible to auto derive a DTO instance")
-      "val instance = DTOGenerators.interCaseClassDTO[Test2, Test2DTO]" shouldNot compile
+  "Default instances' invariants" should {
+    "be checked when decoding" in {
+      0.toDomain[Int Refined Positive].shouldBeLeft
+      "invalid uuid".toDomain[UUID].shouldBeLeft
+      "invalid date".toDomain[LocalDate].shouldBeLeft
+      "invalid date time".toDomain[LocalDateTime].shouldBeLeft
+      List[Int]().toDomain[NonEmptyList[Int]].shouldBeLeft
     }
+  }
 
-    Scenario("Generating a DTO for a case class with one field that can not be converted with a DTO instance") {
-      Given("a case class")
-      When("it has only one field")
-      And("it does not have a DTO instance for that field")
-      Then("it should be impossible to auto derive a DTO instance")
-      "val instance = DTOGenerators.caseClassDTO[Test1, Test2]" shouldNot compile
+  "DTO auto-generation" when {
+    "used for case class with one field" should {
+      "generate a correct instance" in {
+        given DTO[Test1, Int] = DTOGenerators.caseClassDTO
+        forAll(test1)(decodingInverseOfEncoding[Test1, Int])
+        forAll(arbitrary[Int])(encodingInverseOfDecoding[Test1, Int])
+      }
+      "be checked at compile-time" in {
+        "val instance = DTOGenerators.caseClassDTO[Test1, Test2]" shouldNot compile
+      }
+    }
+    "used with a pair of compatible case classes" should {
+      "generate a correct instance" in {
+        given DTO[Test1, Int] = DTOGenerators.caseClassDTO
+        given DTO[Test2, Test2DTO] = DTOGenerators.interCaseClassDTO
+        forAll(test2)(decodingInverseOfEncoding[Test2, Test2DTO])
+        forAll(test2DTO)(encodingInverseOfDecoding[Test2, Test2DTO])
+      }
+      "be checked at compile-time" in {
+        "val instance = DTOGenerators.interCaseClassDTO[Test1, Test2]" shouldNot compile
+        "val instance = DTOGenerators.interCaseClassDTO[Test2, Test2DTO]" shouldNot compile
+      }
     }
   }
