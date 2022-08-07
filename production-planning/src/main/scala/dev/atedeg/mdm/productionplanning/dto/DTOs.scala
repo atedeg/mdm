@@ -13,7 +13,6 @@ import dev.atedeg.mdm.utils.serialization.DTO
 import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
-// incoming events
 final case class NewOrderReceivedDTO(order: OrderDTO)
 final case class OrderDTO(orderID: String, requiredBy: String, orderedProducts: List[OrderedProductDTO])
 final case class OrderedProductDTO(product: ProductDTO, quantity: Int)
@@ -23,7 +22,6 @@ object NewOrderReceivedDTO:
   private given DTO[Order, OrderDTO] = interCaseClassDTO
   private given DTO[OrderedProduct, OrderedProductDTO] = interCaseClassDTO
 
-// outgoing events
 final case class ProductionPlanReadyDTO(productionPlan: ProductionPlanDTO)
 final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])
 final case class ProductToProduceDTO(product: ProductDTO, quantity: Int)
