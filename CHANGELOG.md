@@ -1,3 +1,10 @@
+# [1.0.0-beta.10](https://github.com/atedeg/mdm/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-08-07)
+
+
+### Features
+
+* add production DTOs ([c146b48](https://github.com/atedeg/mdm/commit/c146b489d0fbdaf803bc415c4520f00ae16450c6))
+
 # [1.0.0-beta.9](https://github.com/atedeg/mdm/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-08-07)
 
 
