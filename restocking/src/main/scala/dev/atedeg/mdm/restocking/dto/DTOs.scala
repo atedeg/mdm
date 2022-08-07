@@ -1,6 +1,6 @@
 package dev.atedeg.mdm.restocking.dto
 
-import dev.atedeg.mdm.products.utils.IngredientDTO.given
+import dev.atedeg.mdm.products.dto.IngredientDTO.given
 import dev.atedeg.mdm.restocking.*
 import dev.atedeg.mdm.restocking.IncomingEvent.*
 import dev.atedeg.mdm.utils.serialization.DTO
