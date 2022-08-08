@@ -27,7 +27,6 @@ type SafeAction[Event, Result] = Writer[List[Event], Result]
 type SafeActionTwoEvents[Event1, Event2, Result] = WriterT[[A] =>> Writer[List[Event2], A], List[Event1], Result]
 
 extension [Event1, Event2, Result](action: SafeActionTwoEvents[Event1, Event2, Result])
-
   def execute: (List[Event1], List[Event2], Result) =
     val (e2, (e1, res)) = action.run.run
     (e1, e2, res)
