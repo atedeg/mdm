@@ -13,11 +13,8 @@ final case class RequestedProductDTO(product: ProductDTO, quantity: Int, require
 final case class OrderMilkDTO(quintals: Int)
 
 object ReceivedOrderDTO:
-  import dev.atedeg.mdm.milkplanning.dto.RequestedProductDTO.given
   given DTO[ReceivedOrder, ReceivedOrderDTO] = interCaseClassDTO
-
-object RequestedProductDTO:
-  given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
+  private given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
   private given DTO[Quantity, Int] = caseClassDTO
 
 object OrderMilkDTO:
