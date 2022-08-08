@@ -31,7 +31,7 @@ type SafeActionTwoEvents[Event1, Event2, Result] = WriterT[[A] =>> Writer[List[E
  * An action which performs `IO`, reads an immutable state `C` and can either fail with an error `E`
  * or produce a result `R`.
  */
-type ServerAction[C, E, R] = EitherT[[A] =>> ReaderT[IO, C, A], E, R]
+type ServerAction[Config, Error, Result] = EitherT[[A] =>> ReaderT[IO, Config, A], Error, Result]
 
 extension [Event1, Event2, Result](action: SafeActionTwoEvents[Event1, Event2, Result])
   def execute: (List[Event1], List[Event2], Result) =
@@ -49,6 +49,14 @@ extension [Error, Event, Result, State](action: ActionWithState[Error, Event, Re
 
 extension [Error, Event, Result](action: Action[Error, Event, Result])
   /**
-   * `a.execute(s)` runs the [[Action action]] a returning all the emitted events and its return value.
+   * `a.execute(s)` runs the [[Action action]] `a` returning all the emitted events and its return value.
    */
   def execute: (List[Event], Either[Error, Result]) = action.value.run(())
+
+import cats.effect.unsafe.implicits.global
+extension [Config, Error, Result](sa: ServerAction[Config, Error, Result])
+  /**
+   * `sa.unsafeExecute(config)` runs the [[ServerAction server action]] with a configuration.
+   * @note Don't use it in production!
+   */
+  def unsafeExecute(config: Config): Either[Error, Result] = sa.value.run(config).unsafeRunSync()
