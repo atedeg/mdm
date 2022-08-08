@@ -1,8 +1,7 @@
 package dev.atedeg.mdm.restocking.api
 
 import cats.Monad
-import cats.data.{ EitherT, Kleisli, ReaderT }
-import cats.effect.IO
+import cats.effect.LiftIO
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.products.dto.IngredientDTO.given
@@ -12,32 +11,33 @@ import dev.atedeg.mdm.restocking.Stock
 import dev.atedeg.mdm.restocking.api.dto.RemainingMilkDTO
 import dev.atedeg.mdm.restocking.dto.{ OrderMilkDTO, ProductionStartedDTO, StockDTO }
 import dev.atedeg.mdm.restocking.dto.StockDTO.given
+import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
-type App[C, E, R] = EitherT[[A] =>> ReaderT[IO, C, A], E, R]
-final case class DBClient(cs: String)
-
-def remaningQuintalsOfMilkHandler: App[DBClient, String, RemainingMilkDTO] =
+final case class DBClient()
+def remaningQuintalsOfMilkHandler[M[_]: Monad: LiftIO: CanRead[DBClient]: CanRaise[String]]: M[RemainingMilkDTO] =
   for
     remainingMilkDTO <- readQuintalsFromDB
-    remainingMilk <- remainingMilkDTO.toDomain[RemainingMilk].toEitherT
+    remainingMilk <- remainingMilkDTO.toDomain[RemainingMilk].getOrRaise
   yield remainingMilk.toDTO[RemainingMilkDTO]
 
-def orderMilkHandler(orderMilkDTO: OrderMilkDTO): EitherT[IO, String, Unit] =
+def orderMilkHandler[M[_]: Monad: LiftIO: CanRaise[String]](orderMilkDTO: OrderMilkDTO): M[Unit] =
   for
-    orderMilk <- orderMilkDTO.toDomain[OrderMilk].toEitherT
+    orderMilk <- orderMilkDTO.toDomain[OrderMilk].getOrRaise
     _ <- makeMilkOrder(orderMilk.toDTO[OrderMilkDTO])
   yield ()
 
-def productionStartedHandler(productionStartedDTO: ProductionStartedDTO): EitherT[IO, String, Unit] =
+def productionStartedHandler[M[_]: Monad: LiftIO: CanRaise[String]](
+    productionStartedDTO: ProductionStartedDTO,
+): M[Unit] =
   for
-    productionStarted <- productionStartedDTO.toDomain[ProductionStarted].toEitherT
-    stock <- readStockFromDB >>= (_.toDomain[Stock].toEitherT)
+    productionStarted <- productionStartedDTO.toDomain[ProductionStarted].getOrRaise
+    stock <- readStockFromDB >>= (_.toDomain[Stock].getOrRaise)
     newStock = consumeIngredients(stock)(productionStarted.ingredients)
     _ <- writeStockToDB(newStock.toDTO[StockDTO])
   yield ()
 
-private def readQuintalsFromDB: App[DBClient, String, RemainingMilkDTO] = ???
-private def makeMilkOrder(orderMilkDTO: OrderMilkDTO): EitherT[IO, String, Unit] = ???
-private def readStockFromDB: EitherT[IO, String, StockDTO] = ???
-private def writeStockToDB(newStock: StockDTO): EitherT[IO, String, Unit] = ???
+private def readQuintalsFromDB[M[_]: Monad: LiftIO]: M[RemainingMilkDTO] = ???
+private def makeMilkOrder[M[_]: Monad: LiftIO](orderMilkDTO: OrderMilkDTO): M[Unit] = ???
+private def readStockFromDB[M[_]: Monad: LiftIO]: M[StockDTO] = ???
+private def writeStockToDB[M[_]: Monad: LiftIO](newStock: StockDTO): M[Unit] = ???
