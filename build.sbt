@@ -71,6 +71,7 @@ val commonSettings = Seq(
     "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.0.3",
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.0.3",
   ),
+  dockerEnvVars := Map("PORT" -> "8080", "HOST" -> "0.0.0.0"),
 )
 
 addCommandAlias("ubidocGenerate", "clean; unidoc; ubidoc; clean; unidoc")
@@ -149,8 +150,14 @@ lazy val `client-orders` = project
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val restocking = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("restocking"))
   .settings(commonSettings)
+  .settings(
+    Docker / packageName := packageName.value,
+    Docker / version := version.value,
+    dockerExposedPorts := Seq(8080),
+  )
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `production-planning` = project
