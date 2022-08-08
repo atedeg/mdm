@@ -37,7 +37,7 @@ def productionStartedHandler[M[_]: Monad: LiftIO: CanRaise[String]](
     _ <- writeStockToDB(newStock.toDTO[StockDTO])
   yield ()
 
-private def readQuintalsFromDB[M[_]: Monad: LiftIO]: M[RemainingMilkDTO] = ???
-private def makeMilkOrder[M[_]: Monad: LiftIO](orderMilkDTO: OrderMilkDTO): M[Unit] = ???
-private def readStockFromDB[M[_]: Monad: LiftIO]: M[StockDTO] = ???
-private def writeStockToDB[M[_]: Monad: LiftIO](newStock: StockDTO): M[Unit] = ???
+private def readQuintalsFromDB[M[_]: Monad: LiftIO]: M[RemainingMilkDTO] = RemainingMilkDTO(10).pure
+private def makeMilkOrder[M[_]: Monad: LiftIO](orderMilkDTO: OrderMilkDTO): M[Unit] = ().pure
+private def readStockFromDB[M[_]: Monad: LiftIO]: M[StockDTO] = Map("Milk" -> 10.2).pure
+private def writeStockToDB[M[_]: Monad: LiftIO](newStock: StockDTO): M[Unit] = ().pure
