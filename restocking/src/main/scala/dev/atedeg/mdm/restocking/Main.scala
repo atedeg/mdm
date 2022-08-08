@@ -17,7 +17,7 @@ object Main extends IOApp:
   private val swaggerEndpoint = SwaggerInterpreter().fromEndpoints[IO](
     RemainingQuintalsOfMilkEndpoint.remainingQuintalsOfMilkEndpoint :: Nil,
     "Restocking",
-    "1.0.0-beta.11", // TODO: dynamic version from build.sbt (?)
+    Properties.envOrElse("VERSION", "v1-beta"),
   )
   private val swaggerRoute = Http4sServerInterpreter[IO]().toRoutes(swaggerEndpoint)
 
