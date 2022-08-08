@@ -59,6 +59,16 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-core" % "2.8.0",
     "org.typelevel" %% "cats-mtl" % "1.3.0",
     "org.typelevel" %% "shapeless3-deriving" % "3.1.0",
+    "org.http4s" %% "http4s-blaze-server" % "0.23.12",
+    "org.http4s" %% "http4s-circe" % "0.23.14",
+    "org.http4s" %% "http4s-dsl" % "0.23.14",
+    "io.circe" %% "circe-generic" % "0.14.2",
+    "io.circe" %% "circe-core" % "0.14.2",
+    "io.circe" %% "circe-generic" % "0.14.2",
+    "io.circe" %% "circe-parser" % "0.14.2",
+    "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.0.3",
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.0.3",
+    "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.0.3",
   ),
 )
 
