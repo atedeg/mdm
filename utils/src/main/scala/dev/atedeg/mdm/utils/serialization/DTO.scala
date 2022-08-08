@@ -29,6 +29,14 @@ object DTO:
   given DTO[Double, Double] = idDTO
   given DTO[String, String] = idDTO
 
+  given mapDTO[KE, KD, VE, VD](using DTO[KE, KD])(using DTO[VE, VD]): DTO[Map[KE, VE], Map[KD, VD]] with
+    override def elemToDto(e: Map[KE, VE]): Map[KD, VD] = e.map(_.bimap(_.toDTO[KD], _.toDTO[VD]))
+    override def dtoToElem(dto: Map[KD, VD]): Either[String, Map[KE, VE]] =
+      for
+        keys <- dto.keys.toList.traverse(_.toDomain[KE])
+        values <- dto.values.toList.traverse(_.toDomain[VE])
+      yield keys.zip(values).toMap
+
   given listDTO[E, D](using DTO[E, D]): DTO[List[E], List[D]] with
     override def dtoToElem(dto: List[D]): Either[String, List[E]] = dto.traverse(_.toDomain)
     override def elemToDto(e: List[E]): List[D] = e.map(_.toDTO)
