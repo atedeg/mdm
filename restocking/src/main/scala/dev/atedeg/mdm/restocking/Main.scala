@@ -1,0 +1,36 @@
+package dev.atedeg.mdm.restocking
+
+import scala.concurrent.ExecutionContext
+import scala.util.Properties
+
+import cats.effect.{ ExitCode, IO, IOApp }
+import cats.syntax.all.*
+import org.http4s.HttpRoutes
+import org.http4s.blaze.server.BlazeServerBuilder
+import org.http4s.server.Router
+import sttp.tapir.server.http4s.Http4sServerInterpreter
+import sttp.tapir.swagger.bundle.SwaggerInterpreter
+
+import dev.atedeg.mdm.restocking.api.endpoints.RemainingQuintalsOfMilkEndpoint
+
+object Main extends IOApp:
+  private val swaggerEndpoint = SwaggerInterpreter().fromEndpoints[IO](
+    RemainingQuintalsOfMilkEndpoint.remainingQuintalsOfMilkEndpoint :: Nil,
+    "Restocking",
+    "1.0.0-beta.11", // TODO: dynamic version from build.sbt (?)
+  )
+  private val swaggerRoute = Http4sServerInterpreter[IO]().toRoutes(swaggerEndpoint)
+
+  private val routes: HttpRoutes[IO] = RemainingQuintalsOfMilkEndpoint.remainingQuintalsOfMilkRoute <+> swaggerRoute
+
+  @SuppressWarnings(Array("org.wartremover.warts.GlobalExecutionContext"))
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  override def run(args: List[String]): IO[ExitCode] =
+    BlazeServerBuilder[IO]
+      .bindHttp(Properties.envOrElse("PORT", "8080").toInt, Properties.envOrElse("HOST", "localhost"))
+      .withExecutionContext(ec)
+      .withHttpApp(Router("/" -> routes).orNotFound)
+      .resource
+      .use(_ => IO.println("Started") >> IO.never[Unit])
+      .as(ExitCode.Success)
