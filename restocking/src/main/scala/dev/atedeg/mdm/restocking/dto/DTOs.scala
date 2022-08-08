@@ -10,6 +10,7 @@ import dev.atedeg.mdm.utils.serialization.DTOOps.*
 final case class OrderMilkDTO(quintalsOfMilk: Int)
 final case class ProductionStartedDTO(quintalsOfIngredients: List[QuintalsOfIngredientDTO])
 final case class QuintalsOfIngredientDTO(quintals: Double, ingredient: String)
+type StockDTO = Map[String, Double]
 
 object OrderMilkDTO:
   given DTO[OrderMilk, OrderMilkDTO] = interCaseClassDTO
@@ -21,3 +22,8 @@ object ProductionStartedDTO:
 object QuintalsOfIngredientDTO:
   given DTO[QuintalsOfIngredient, QuintalsOfIngredientDTO] = interCaseClassDTO
   private given DTO[WeightInQuintals, Double] = caseClassDTO
+
+object StockDTO:
+  import dev.atedeg.mdm.products.dto.IngredientDTO.given
+  given DTO[Stock, StockDTO] = DTO.mapDTO
+  private given DTO[StockedQuantity, Double] = caseClassDTO
