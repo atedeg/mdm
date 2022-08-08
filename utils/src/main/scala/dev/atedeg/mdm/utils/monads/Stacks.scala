@@ -1,6 +1,7 @@
 package dev.atedeg.mdm.utils.monads
 
-import cats.data.{ EitherT, Reader, Writer, WriterT }
+import cats.data.{ EitherT, Reader, ReaderT, Writer, WriterT }
+import cats.effect.IO
 
 private type Reading[State] = [A] =>> Reader[State, A]
 private type EmittingT[M[_], Event] = [A] =>> WriterT[M, List[Event], A]
@@ -25,6 +26,12 @@ type SafeAction[Event, Result] = Writer[List[Event], Result]
  * The same as a [[SafeAction safe action]] but with two events.
  */
 type SafeActionTwoEvents[Event1, Event2, Result] = WriterT[[A] =>> Writer[List[Event2], A], List[Event1], Result]
+
+/**
+ * An action which performs `IO`, reads an immutable state `C` and can either fail with an error `E`
+ * or produce a result `R`.
+ */
+type ServerAction[C, E, R] = EitherT[[A] =>> ReaderT[IO, C, A], E, R]
 
 extension [Event1, Event2, Result](action: SafeActionTwoEvents[Event1, Event2, Result])
   def execute: (List[Event1], List[Event2], Result) =
