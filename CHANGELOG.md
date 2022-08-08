@@ -1,3 +1,16 @@
+# [1.0.0-beta.11](https://github.com/atedeg/mdm/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-08-08)
+
+
+### Bug Fixes
+
+* fix date time formatter ([73de3fd](https://github.com/atedeg/mdm/commit/73de3fdff5e37030aa2006e3073e2e0aa7dc0a1c))
+
+
+### Features
+
+* add DTOs for milk-planning BC ([84ff35c](https://github.com/atedeg/mdm/commit/84ff35ce01367bc561c09db785170f5691f28ac2))
+* add DTOs for product and cheesetype ([bf3711a](https://github.com/atedeg/mdm/commit/bf3711a0fdc9bc6e9c98f0bc068d241b9643b737))
+
 # [1.0.0-beta.10](https://github.com/atedeg/mdm/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-08-07)
 
 
