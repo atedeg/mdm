@@ -42,3 +42,8 @@ enum OutgoingEvent:
    * An event emitted when a new [[IncomingOrder incoming order]] is received and processed.
    */
   case OrderProcessed(incomingOrder: IncomingOrder)
+
+  /**
+   * An event emitted when a [[Product product]] is successfully palletized for an [[Order.InProgressoOrder order]].
+   */
+  case ProductPalletized(product: Product, quantity: Quantity)
