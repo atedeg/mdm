@@ -36,7 +36,7 @@ object CheeseTypeDTO:
       case "casatella" => Casatella.asRight[String]
       case "caciotta" => Caciotta.asRight[String]
       case "ricotta" => Ricotta.asRight[String]
-      case _ => "Unknown `CheeseType`: '$s'".asLeft[CheeseType]
+      case _ => s"Unknown `CheeseType`: '$dto'".asLeft[CheeseType]
 
     override def elemToDto(e: CheeseType): String = e match
       case Squacquerone => "squacquerone"
