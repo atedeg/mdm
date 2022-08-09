@@ -27,7 +27,7 @@ object ReceivedOrderDTO:
   given DTO[ReceivedOrder, ReceivedOrderDTO] = interCaseClassDTO
   private given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
   private given DTO[Quantity, Int] = caseClassDTO
-  
+
 object RequestedProductDTO:
   given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
   private given DTO[Quantity, Int] = caseClassDTO
