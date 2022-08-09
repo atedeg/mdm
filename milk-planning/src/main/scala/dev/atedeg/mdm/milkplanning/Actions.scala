@@ -21,7 +21,7 @@ import dev.atedeg.mdm.utils.monads.{ emit, thenReturn, when, Emits }
  */
 def estimateQuintalsOfMilk[M[_]: Emits[OrderMilk]: Monad](
     milkOfPreviousYear: QuintalsOfMilk,
-    requestedProductsForWeek: NonEmptyList[RequestedProduct],
+    requestedProductsForWeek: List[RequestedProduct],
     currentStock: Stock,
     recipeBook: RecipeBook,
     stockedMilk: QuintalsOfMilk,
@@ -31,7 +31,7 @@ def estimateQuintalsOfMilk[M[_]: Emits[OrderMilk]: Monad](
   when(estimatedMilk.quintals > 0)(emit(OrderMilk(estimatedMilk): OrderMilk)).thenReturn(estimatedMilk)
 
 private def milkNeededForProducts(
-    requestedProducts: NonEmptyList[RequestedProduct],
+    requestedProducts: List[RequestedProduct],
     stock: Stock,
     recipeBook: RecipeBook,
 ): QuintalsOfMilk =

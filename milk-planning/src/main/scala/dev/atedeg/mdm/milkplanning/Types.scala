@@ -31,12 +31,12 @@ final case class Yield(n: PositiveDecimal)
 /**
  * It defines, for each [[Product product]], the [[Yield yield]] of the milk.
  */
-type RecipeBook = CheeseType => Yield
+type RecipeBook = Map[CheeseType, Yield]
 
 /**
  * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].
  */
-type Stock = Product => StockedQuantity
+type Stock = Map[Product, StockedQuantity]
 
 /**
  * A quantity of a stocked [[Product product]], it may also be zero.
