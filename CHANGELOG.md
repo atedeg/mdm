@@ -1,3 +1,13 @@
+# [1.0.0-beta.12](https://github.com/atedeg/mdm/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2022-08-09)
+
+
+### Features
+
+* add stock repository ([6d62e93](https://github.com/atedeg/mdm/commit/6d62e93c119e25a592e896373df813df67b14782))
+* add StockDTO ([cffaa9f](https://github.com/atedeg/mdm/commit/cffaa9f4bb42e000e27aa4905daeb6c47b0c59c5))
+* create logic handlers ([16b6648](https://github.com/atedeg/mdm/commit/16b6648ac9c1680529e4e6bee089be02f41448e4))
+* creates api endpoints specifications ([6ff71ab](https://github.com/atedeg/mdm/commit/6ff71ab44f86aa59df6049928f6dd115c452b60a))
+
 # [1.0.0-beta.11](https://github.com/atedeg/mdm/compare/v1.0.0-beta.10...v1.0.0-beta.11) (2022-08-08)
 
 
