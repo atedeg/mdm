@@ -16,25 +16,18 @@ import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
 def remaningQuintalsOfMilkHandler[M[_]: Monad: LiftIO: CanRead[StockRepository]: CanRaise[String]]
-    : M[RemainingMilkDTO] =
-  for
-    remainingMilkDTO <- readState >>= (_.getQuintals)
-    remainingMilk <- remainingMilkDTO.toDomain[RemainingMilk].getOrRaise
-  yield remainingMilk.toDTO[RemainingMilkDTO]
+    : M[RemainingMilkDTO] = (readState >>= (_.getQuintals) >>= validate).map(_.toDTO[RemainingMilkDTO])
 
 def orderMilkHandler[M[_]: Monad: LiftIO: CanRaise[String]](orderMilkDTO: OrderMilkDTO): M[Unit] =
-  for
-    orderMilk <- orderMilkDTO.toDomain[OrderMilk].getOrRaise
-    _ <- makeMilkOrder(orderMilk.toDTO[OrderMilkDTO])
-  yield ()
+  validate(orderMilkDTO) >>= (o => makeMilkOrder(o.toDTO[OrderMilkDTO]))
 
 def productionStartedHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[StockRepository]](
     productionStartedDTO: ProductionStartedDTO,
 ): M[Unit] =
   for
     stockRepository <- readState
-    productionStarted <- productionStartedDTO.toDomain[ProductionStarted].getOrRaise
-    stock <- stockRepository.getStock >>= (_.toDomain[Stock].getOrRaise)
+    productionStarted <- validate(productionStartedDTO)
+    stock <- stockRepository.getStock >>= validate
     newStock = consumeIngredients(stock)(productionStarted.ingredients)
     _ <- stockRepository.writeStock(newStock.toDTO[StockDTO])
   yield ()
