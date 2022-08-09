@@ -122,8 +122,14 @@ lazy val utils = project
   )
 
 lazy val `milk-planning` = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("milk-planning"))
   .settings(commonSettings)
+  .settings(
+    Docker / packageName := packageName.value,
+    Docker / version := version.value,
+    dockerExposedPorts := Seq(8080),
+  )
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val production = project
