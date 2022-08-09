@@ -13,7 +13,7 @@ import dev.atedeg.mdm.restocking.dto.{ ProductionStartedDTO, QuintalsOfIngredien
 import dev.atedeg.mdm.utils.monads.*
 
 trait Mocks:
-  @SuppressWarnings(Array("org.wartremover.warts.Var"))
+  @SuppressWarnings(Array("org.wartremover.warts.Var", "scalafix:DisableSyntax.var"))
   var inMemoryStockDTO: Option[StockDTO] = None
   val stockRepository: StockRepository = new StockRepository:
     override def getQuintals[M[_]: Monad: LiftIO]: M[RemainingMilkDTO] = RemainingMilkDTO(10).pure
