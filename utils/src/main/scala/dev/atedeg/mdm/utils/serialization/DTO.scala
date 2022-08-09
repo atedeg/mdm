@@ -1,17 +1,18 @@
 package dev.atedeg.mdm.utils.serialization
 
-import java.time.{ LocalDate, LocalDateTime }
+import cats.Monad
+
+import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import scala.compiletime.*
 import scala.deriving.*
 import scala.util.Try
-
 import cats.data.NonEmptyList
 import cats.syntax.all.*
 import eu.timepit.refined.api.Refined
-
 import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.monads.*
 
 trait DTO[E, D]:
   def elemToDto(e: E): D
@@ -20,6 +21,7 @@ trait DTO[E, D]:
 object DTOOps:
   extension [D](dto: D) def toDomain[E](using d: DTO[E, D]): Either[String, E] = d.dtoToElem(dto)
   extension [E](e: E) def toDTO[D](using d: DTO[E, D]) = d.elemToDto(e)
+  def validate[D, E, M[_]: Monad: CanRaise[String]](dto: D)(using DTO[E, D]): M[E] = dto.toDomain[E].getOrRaise 
 
 object DTO:
   import DTOGenerators.*
