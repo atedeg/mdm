@@ -1,3 +1,15 @@
+# [1.0.0-beta.13](https://github.com/atedeg/mdm/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2022-08-09)
+
+
+### Bug Fixes
+
+* fix format string ([cafb5be](https://github.com/atedeg/mdm/commit/cafb5be9fbf252a06e1e93dbb59269248d4f783f))
+
+
+### Features
+
+* implement milk-planning API ([640f00c](https://github.com/atedeg/mdm/commit/640f00c651b20847bef97a8ff0b15a277c26f45b))
+
 # [1.0.0-beta.12](https://github.com/atedeg/mdm/compare/v1.0.0-beta.11...v1.0.0-beta.12) (2022-08-09)
 
 
