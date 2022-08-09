@@ -44,6 +44,11 @@ def raise[M[_], E, A](e: E)(using R: Raise[M, E]): M[A] = R.raise(e)
 def readState[C, M[_]: Monad: CanRead[C]](implicit A: Ask[M, C]): M[C] = A.ask
 
 /**
+ * Gets a view of the current state applying a function `f` to it.
+ */
+def readStateView[C, M[_]: Monad: CanRead[C], C1](f: C => C1): M[C1] = readState.map(f)
+
+/**
  * `unless(cond)(a)` performs the monadic action `a` if the condition `cond` is false.
  */
 def unless[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Unit] = M.unlessA(cond)(action)
