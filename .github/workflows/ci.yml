@@ -74,6 +74,12 @@ jobs:
           token: ${{ steps.atedeg-bot.outputs.token }}
           fetch-depth: 0
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2.0.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Release
         uses: atedeg/scala-release@v1.0.3
         with:
