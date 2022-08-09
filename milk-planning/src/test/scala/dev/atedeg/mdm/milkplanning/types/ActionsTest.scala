@@ -37,14 +37,14 @@ class ActionsTest extends AnyFeatureSpec with GivenWhenThen with Matchers with M
       Given("the quintals of milk of the previous year for the same period")
       val qomPreviousYear = 12.quintalsOfMilk
       And("a list of products to be produced")
-      val requestedProducts = NonEmptyList.of(
+      val requestedProducts = List(
         RequestedProduct(Squacquerone(100), Quantity(500), LocalDateTime.now()),
         RequestedProduct(Squacquerone(250), Quantity(300), LocalDateTime.now()),
         RequestedProduct(Ricotta(350), Quantity(50), LocalDateTime.now()),
         RequestedProduct(Caciotta(500), Quantity(100), LocalDateTime.now()),
       )
       And("an empty stock")
-      val currentStock: Stock = _ => StockedQuantity(0)
+      val currentStock: Stock = Map.empty.withDefaultValue(StockedQuantity(0))
       And("there is no milk in stock")
       val stockedMilk = QuintalsOfMilk(0)
       When("estimating the necessary quintals of milk")
