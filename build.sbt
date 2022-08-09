@@ -75,7 +75,13 @@ val commonSettings = Seq(
     "org.slf4j" % "slf4j-api" % "1.7.36",
     "org.slf4j" % "slf4j-simple" % "1.7.36",
   ),
+)
+
+val commonDockerSettings = Seq(
+  dockerBaseImage := "eclipse-temurin:18.0.2_9-jre",
   dockerEnvVars := Map("PORT" -> "8080", "HOST" -> "0.0.0.0"),
+  Docker / packageName := packageName.value,
+  Docker / version := version.value,
 )
 
 addCommandAlias("ubidocGenerate", "clean; unidoc; ubidoc; clean; unidoc")
@@ -129,9 +135,8 @@ lazy val `milk-planning` = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("milk-planning"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
-    Docker / packageName := packageName.value,
-    Docker / version := version.value,
     dockerExposedPorts := Seq(8080),
   )
   .dependsOn(utils, `products-shared-kernel`)
@@ -169,9 +174,8 @@ lazy val restocking = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("restocking"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
-    Docker / packageName := packageName.value,
-    Docker / version := version.value,
     dockerExposedPorts := Seq(8080),
   )
   .dependsOn(utils, `products-shared-kernel`)
