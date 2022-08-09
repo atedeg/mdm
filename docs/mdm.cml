@@ -14,6 +14,7 @@ ContextMap MDM {
 	ProductionPlanning [D, ACL] <- [U] Stocking
 	Stocking [D, CF] <- [U] Production
 	Restocking [D] <- [U, OHS, PL] Production
+	MilkPlanning [D, ACL] <- [U] Stocking
 }
 
 BoundedContext MilkPlanning
