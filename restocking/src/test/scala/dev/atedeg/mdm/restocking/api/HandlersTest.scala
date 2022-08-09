@@ -33,11 +33,9 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
 
   "The `productionStartedHandler`" should {
     "write the new stock to DB" in {
-      val handler: ServerAction[StockRepository, String, Unit] = productionStartedHandler(
-        ProductionStartedDTO(
-          List(QuintalsOfIngredientDTO(10.0, "milk")),
-        ),
-      )
+      val consumedIngredients = List(QuintalsOfIngredientDTO(10.0, "milk"))
+      val productionStartedDTO = ProductionStartedDTO(consumedIngredients)
+      val handler: ServerAction[StockRepository, String, Unit] = productionStartedHandler(productionStartedDTO)
       handler.unsafeExecute(stockRepository)
       inMemoryStockDTO should contain(Map("milk" -> 10.0, "salt" -> 3.0, "rennet" -> 30.5))
     }
