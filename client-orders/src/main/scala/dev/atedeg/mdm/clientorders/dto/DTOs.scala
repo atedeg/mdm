@@ -55,3 +55,8 @@ final case class IncomingOrderDTO(
 object OrderProcessedDTO:
   given DTO[OrderProcessed, OrderProcessedDTO] = interCaseClassDTO
   private given DTO[IncomingOrder, IncomingOrderDTO] = interCaseClassDTO
+
+final case class ProductPalletizedDTO(product: ProductDTO, quantity: Int)
+object ProductPalletizedDTO:
+  given DTO[ProductPalletized, ProductPalletizedDTO] = interCaseClassDTO
+  private given DTO[Quantity, Int] = caseClassDTO

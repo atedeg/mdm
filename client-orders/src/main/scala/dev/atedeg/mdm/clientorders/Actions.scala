@@ -10,7 +10,7 @@ import cats.syntax.all.*
 
 import dev.atedeg.mdm.clientorders.InProgressOrderLine.*
 import dev.atedeg.mdm.clientorders.OrderCompletionError.*
-import dev.atedeg.mdm.clientorders.OutgoingEvent.OrderProcessed
+import dev.atedeg.mdm.clientorders.OutgoingEvent.{ OrderProcessed, ProductPalletized }
 import dev.atedeg.mdm.clientorders.PalletizationError.*
 import dev.atedeg.mdm.clientorders.utils.*
 import dev.atedeg.mdm.clientorders.utils.QuantityOps.*
@@ -60,7 +60,10 @@ def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
  * where the corresponding [[Order.InProgressOrderLine line]] has been updated with the
  * [[Order.Quantity specified quantity]].
  */
-def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity: Quantity, product: Product)(
+def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad: Emits[ProductPalletized]](
+    quantity: Quantity,
+    product: Product,
+)(
     inProgressOrder: InProgressOrder,
 ): M[InProgressOrder] =
   val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
@@ -71,6 +74,7 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad](quantity
       case Incomplete(_, _, `product`, _) => updatedLine
       case l @ _ => l
     }
+    _ <- emit(ProductPalletized(product, quantity): ProductPalletized)
   yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
 
 private def hasProduct(product: Product)(ol: InProgressOrderLine): Boolean = ol match
