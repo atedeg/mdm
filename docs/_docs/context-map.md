@@ -32,6 +32,9 @@ title: Context Map
   `Production` informs `Restocking` when some raw materials are consumed.
   `Production` is an upstream Open-Host Service and must expose a published language as the `Restocking` downstream bounded context
   is going to be generic and we will not be able to freely change its API.
+- `MilkPlanning [D, ACL] <- [U] Stocking`  
+  `MilkPlanning` asks `Stocking` for the amount of products in stock.
+  Since `MilkPlanning` is a downstream core bounded context, and Anti-Corruption Layer is required.
 
 There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
 This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
