@@ -70,6 +70,10 @@ val commonSettings = Seq(
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.0.3",
     "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.0.3",
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.0.3",
+    "org.typelevel" %% "log4cats-core" % "2.4.0",
+    "org.typelevel" %% "log4cats-slf4j" % "2.4.0",
+    "org.slf4j" % "slf4j-api" % "1.7.36",
+    "org.slf4j" % "slf4j-simple" % "1.7.36",
   ),
   dockerEnvVars := Map("PORT" -> "8080", "HOST" -> "0.0.0.0"),
 )
@@ -146,6 +150,7 @@ lazy val `products-shared-kernel` = project
   .dependsOn(utils)
 
 lazy val stocking = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("stocking"))
   .settings(commonSettings)
   .settings(
