@@ -30,20 +30,24 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
   Feature("Missing stock") {
     Scenario("There are missing products from the desired stock") {
       Given("An available stock")
-      val available = Map(
-        squacquerone -> AvailableQuantity(10),
-        casatella -> AvailableQuantity(20),
-        ricotta -> AvailableQuantity(30),
-        stracchino -> AvailableQuantity(40),
-        caciotta -> AvailableQuantity(50),
+      val available = AvailableStock(
+        Map(
+          squacquerone -> AvailableQuantity(10),
+          casatella -> AvailableQuantity(20),
+          ricotta -> AvailableQuantity(30),
+          stracchino -> AvailableQuantity(40),
+          caciotta -> AvailableQuantity(50),
+        ),
       )
       And("a desired stock")
-      val desired = Map(
-        squacquerone -> DesiredQuantity(20),
-        casatella -> DesiredQuantity(30),
-        ricotta -> DesiredQuantity(40),
-        stracchino -> DesiredQuantity(50),
-        caciotta -> DesiredQuantity(60),
+      val desired = DesiredStock(
+        Map(
+          squacquerone -> DesiredQuantity(20),
+          casatella -> DesiredQuantity(30),
+          ricotta -> DesiredQuantity(40),
+          stracchino -> DesiredQuantity(50),
+          caciotta -> DesiredQuantity(60),
+        ),
       )
       When("someone asks how many products are missing to reach the desired stock")
       val missingSquacquerone = getMissingCountFromProductStock(available, desired)(squacquerone)
@@ -60,9 +64,9 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
     }
     Scenario("There are more products than needed in the desired stock") {
       Given("An available stock")
-      val available = Map(squacquerone -> AvailableQuantity(20))
+      val available = AvailableStock(Map(squacquerone -> AvailableQuantity(20)))
       And("a desired stock")
-      val desired = Map(squacquerone -> DesiredQuantity(10))
+      val desired = DesiredStock(Map(squacquerone -> DesiredQuantity(10)))
       When("someone asks how many products are missing to reach the desired stock")
       val missing = getMissingCountFromProductStock(available, desired)(squacquerone)
       Then("the missing quantity should be zero")
@@ -70,18 +74,18 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
     }
     Scenario("Removal from stock with enough available products") {
       Given("An available stock")
-      val available = Map(squacquerone -> AvailableQuantity(10))
+      val available = AvailableStock(Map(squacquerone -> AvailableQuantity(10)))
       And("a quantity to remove from stock")
       val toRemove = Quantity(5)
       When("someone removes the product from the stock")
       val action: Action[NotEnoughStock, Unit, AvailableStock] = removeFromStock(available)(squacquerone, toRemove)
       Then("the stock should be updated")
       val (_, result) = action.execute
-      result.value shouldEqual Map(squacquerone -> AvailableQuantity(5))
+      result.value shouldEqual AvailableStock(Map(squacquerone -> AvailableQuantity(5)))
     }
     Scenario("Removal from stock with not enough available products") {
       Given("An available stock")
-      val available = Map(squacquerone -> AvailableQuantity(10))
+      val available = AvailableStock(Map(squacquerone -> AvailableQuantity(10)))
       And("a quantity to remove from stock that is greater than the available one")
       val toRemove = Quantity(50)
       When("someone removes the product from the stock")

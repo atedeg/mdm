@@ -7,6 +7,7 @@ import cats.syntax.all.*
 import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.products.utils.given
+import dev.atedeg.mdm.stocking.*
 import dev.atedeg.mdm.stocking.Error.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
@@ -20,8 +21,8 @@ def getMissingCountFromProductStock(
     availableStock: AvailableStock,
     desiredStock: DesiredStock,
 )(product: Product): MissingQuantity =
-  if availableStock(product).n >= desiredStock(product).n then MissingQuantity(0)
-  else MissingQuantity(desiredStock(product).n.toNonNegative - availableStock(product).n)
+  if availableStock.as(product).n >= desiredStock.ds(product).n then MissingQuantity(0)
+  else MissingQuantity(desiredStock.ds(product).n.toNonNegative - availableStock.as(product).n)
 
 /**
  * Removes the given quantity of a certain [[Product product]] from the [[AvailableStock stock]], giving the new current [[AvailableStock stock]].
@@ -29,9 +30,9 @@ def getMissingCountFromProductStock(
 def removeFromStock[M[_]: Monad: CanRaise[NotEnoughStock]](
     stock: AvailableStock,
 )(product: Product, quantity: Quantity): M[AvailableStock] =
-  (stock(product).n > quantity.n)
-    .otherwiseRaise(NotEnoughStock(product, quantity, stock(product)): NotEnoughStock)
-    .thenReturn(stock + (product -> AvailableQuantity(stock(product).n - quantity.n)))
+  (stock.as(product).n > quantity.n)
+    .otherwiseRaise(NotEnoughStock(product, quantity, stock.as(product)): NotEnoughStock)
+    .thenReturn(AvailableStock(stock.as + (product -> AvailableQuantity(stock.as(product).n - quantity.n))))
 
 /**
  * Approves a batch after quality assurance.
