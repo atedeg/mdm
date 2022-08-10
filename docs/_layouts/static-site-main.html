@@ -18,3 +18,13 @@ layout: base
         {% endif %}
     </nav>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({
+    logLevel: "error", // [1]
+    securityLevel: "loose", // [2]
+    theme: (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ?
+        "dark" :
+        "default" // [3]
+});
+</script>
