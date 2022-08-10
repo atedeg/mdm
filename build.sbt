@@ -148,6 +148,11 @@ lazy val `products-shared-kernel` = project
 lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
+  .settings(
+    Docker / packageName := packageName.value,
+    Docker / version := version.value,
+    dockerExposedPorts := Seq(8080),
+  )
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `client-orders` = project
