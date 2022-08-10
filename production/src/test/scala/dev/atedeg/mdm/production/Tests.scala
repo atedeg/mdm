@@ -49,7 +49,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
     Scenario("A production is started") {
       Given("a production that has to be started")
       And("a recipe book")
-      val recipeBook = Map(CheeseType.Caciotta -> Recipe(allIngredients.map(10 of _))).get
+      val recipeBook = RecipeBook(Map(CheeseType.Caciotta -> Recipe(allIngredients.map(10 of _))))
       When("it is started")
       val startAction: Action[MissingRecipe, StartProduction, Production.InProgress] =
         startProduction(recipeBook)(production)
@@ -65,7 +65,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
     Scenario("A production is started with no recipe") {
       Given("a production that has to be started")
       And("has no recipe")
-      val emptyRecipeBook = Map[CheeseType, Recipe]().get
+      val emptyRecipeBook = RecipeBook(Map[CheeseType, Recipe]())
       When("it is started")
       val startAction: Action[MissingRecipe, StartProduction, Production.InProgress] =
         startProduction(emptyRecipeBook)(production)

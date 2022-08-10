@@ -57,7 +57,7 @@ final case class BatchID(ID: UUID)
 /**
  * Associates to each [[CheeseType cheese type]] the [[Recipe recipe]] to produce a quintal of it.
  */
-type RecipeBook = CheeseType => Option[Recipe]
+final case class RecipeBook(recipeBook: Map[CheeseType, Recipe])
 
 /**
  * A list of [[QuintalsOfIngredient ingredients and the respective quintals]] needed to produce a quintal of a product.
