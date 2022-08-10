@@ -31,12 +31,12 @@ final case class NewBatchDTO(batchID: String, cheeseType: String, readyFrom: Str
 object NewBatchDTO:
   given DTO[NewBatch, NewBatchDTO] = interCaseClassDTO
 
-final case class AvailableStockDTO(as: List[(ProductDTO, Int)])
+final case class AvailableStockDTO(availableStock: List[(ProductDTO, Int)])
 object AvailableStockDTO:
   given DTO[AvailableStock, AvailableStockDTO] = interCaseClassDTO
   private given DTO[AvailableQuantity, Int] = caseClassDTO
 
-final case class DesiredStockDTO(ds: List[(ProductDTO, Int)])
+final case class DesiredStockDTO(desiredStock: List[(ProductDTO, Int)])
 object DesiredStockDTO:
   given DTO[DesiredStock, DesiredStockDTO] = interCaseClassDTO
   private given DTO[DesiredQuantity, Int] = caseClassDTO
@@ -51,7 +51,7 @@ object QualityAssuredBatchPassedDTO:
 
 final case class QualityAssuredBatchFailedDTO(id: String, cheeseType: String)
 object QualityAssuredBatchFailedDTO:
-  given DTO[QualityAssuredBatch.Failed, QualityAssuredBatchFailedDTO] = interCaseClassDTO  
+  given DTO[QualityAssuredBatch.Failed, QualityAssuredBatchFailedDTO] = interCaseClassDTO
 
 final case class BatchReadyForQualityAssuranceDTO(id: String, cheeseType: String)
 object BatchReadyForQualityAssuranceDTO:

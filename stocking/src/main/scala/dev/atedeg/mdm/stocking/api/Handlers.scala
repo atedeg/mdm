@@ -58,4 +58,4 @@ def rejectBatchHandler[M[_]: Monad: LiftIO: CanRead[BatchesRepository]: CanRaise
     batchReady <- repository.readReadyForQA(batchID) >>= validate
     rejectedBatch = rejectBatch(batchReady)
     _ <- repository.rejectBatch(rejectedBatch.toDTO)
-  yield ()  
+  yield ()
