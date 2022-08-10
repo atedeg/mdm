@@ -17,7 +17,8 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
 
-import dev.atedeg.mdm.clientorders.OutgoingEvent.OrderProcessed
+import dev.atedeg.mdm.clientorders.OutgoingEvent.{ OrderProcessed, ProductPalletized }
+import dev.atedeg.mdm.clientorders.dto.ProductPalletizedDTO
 import dev.atedeg.mdm.clientorders.utils.*
 import dev.atedeg.mdm.products.{ CheeseType, Grams, Product }
 import dev.atedeg.mdm.products.Product.*
@@ -55,12 +56,14 @@ trait OrderMocks extends PriceListMock, CustomerMock, LocationMock:
   val incomingOrder: IncomingOrder = IncomingOrder(orderId, orderLines, customer, date, location)
 
   val inProgressCompleteOrder: InProgressOrder =
-    def palletizeAll[M[_]: Monad: CanRaise[PalletizationError]](inProgressOrder: InProgressOrder): M[InProgressOrder] =
+    def palletizeAll[M[_]: Monad: CanRaise[PalletizationError]: Emits[ProductPalletized]](
+        inProgressOrder: InProgressOrder,
+    ): M[InProgressOrder] =
       palletizeProductForOrder(Quantity(100), Caciotta(500))(inProgressOrder)
         >>= palletizeProductForOrder(Quantity(100), Caciotta(1000))
 
     val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
-    val palletizeAction: Action[PalletizationError, Unit, InProgressOrder] = palletizeAll(inProgressOrder)
+    val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] = palletizeAll(inProgressOrder)
     palletizeAction.execute._2.value
 
   val completedOrder: CompletedOrder =
@@ -105,10 +108,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       And("a product that is not requested by the order")
       val productNotInOrder = Ricotta(350)
       When("the operator tries to palletize it")
-      val palletizeAction: Action[PalletizationError, Unit, InProgressOrder] =
+      val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] =
         palletizeProductForOrder(Quantity(10), productNotInOrder)(inProgressOrder)
       Then("a ProductNotInOrder error should be raised")
-      val (_, result) = palletizeAction.execute
+      val (events, result) = palletizeAction.execute
+      events shouldBe empty
       result.left.value shouldBe ProductNotInOrder(productNotInOrder)
     }
 
@@ -118,10 +122,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator tries to palletize it in a quantity greater than the required one")
-      val palletizeAction: Action[PalletizationError, Unit, InProgressOrder] =
+      val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] =
         palletizeProductForOrder(Quantity(1000), productInOrder)(inProgressOrder)
       Then("a PalletizedMoreThanRequired error should be raised")
-      val (_, result) = palletizeAction.execute
+      val (events, result) = palletizeAction.execute
+      events shouldBe empty
       result.left.value shouldBe PalletizedMoreThanRequired(MissingQuantity(100))
     }
 
@@ -131,10 +136,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator palletizes it in the exact required quantity")
-      val palletizeAction: Action[PalletizationError, Unit, InProgressOrder] =
+      val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] =
         palletizeProductForOrder(Quantity(100), productInOrder)(inProgressOrder)
       Then("the corresponding order line is marked as completed")
-      val (_, result) = palletizeAction.execute
+      val (events, result) = palletizeAction.execute
+      events should contain(ProductPalletized(productInOrder, Quantity(100)))
       result.value.orderLines.toList should contain allOf (
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(1000), 10_000.euroCents),
         InProgressOrderLine.Complete(Quantity(100), Caciotta(500), 5000.euroCents),
@@ -147,10 +153,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator palletizes it in a quantity lower than the required one")
-      val palletizeAction: Action[PalletizationError, Unit, InProgressOrder] =
+      val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] =
         palletizeProductForOrder(Quantity(20), productInOrder)(inProgressOrder)
       Then("the corresponding order line is updated")
-      val (_, result) = palletizeAction.execute
+      val (events, result) = palletizeAction.execute
+      events should contain(ProductPalletized(productInOrder, Quantity(20)))
       result.value.orderLines.toList should contain allOf (
         InProgressOrderLine.Incomplete(PalletizedQuantity(0), Quantity(100), Caciotta(1000), 10_000.euroCents),
         InProgressOrderLine.Incomplete(PalletizedQuantity(20), Quantity(100), Caciotta(500), 5000.euroCents),
