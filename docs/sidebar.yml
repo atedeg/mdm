@@ -12,3 +12,4 @@ subsection:
           - page: bounded-contexts/production.md
           - page: bounded-contexts/stocking.md
           - page: bounded-contexts/restocking.md
+  - page: quality-assurance.md
