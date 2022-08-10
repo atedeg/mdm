@@ -25,3 +25,8 @@ enum IncomingEvent:
    * the [[Product products]] that need to be produced.
    */
   case ProductionPlanReady(productionPlan: ProductionPlan)
+
+  /**
+   * Fired when a [[Production.InProgress production]] is terminated by a smart machine.
+   */
+  case ProductionEnded(productionID: ProductionID)
