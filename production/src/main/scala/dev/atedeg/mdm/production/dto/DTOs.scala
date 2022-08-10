@@ -1,10 +1,13 @@
 package dev.atedeg.mdm.production.dto
 
+import java.time.LocalDateTime
+
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.production.*
 import dev.atedeg.mdm.production.IncomingEvent.*
 import dev.atedeg.mdm.production.OutgoingEvent.*
+import dev.atedeg.mdm.products.CheeseType
 import dev.atedeg.mdm.products.dto.CheeseTypeDTO.given
 import dev.atedeg.mdm.products.dto.IngredientDTO.given
 import dev.atedeg.mdm.products.dto.ProductDTO
@@ -28,13 +31,13 @@ object StartProductionDTO:
   private given DTO[QuintalsOfIngredient, QuintalsOfIngredientDTO] = interCaseClassDTO
   private given DTO[WeightInQuintals, Double] = caseClassDTO
 
-final case class ProductionEndedDTO(productionID: String, batchID: String)
-object ProductionEndedDTO:
-  given DTO[OutgoingEvent.ProductionEnded, ProductionEndedDTO] = interCaseClassDTO
+final case class NewBatchDTO(batchID: String, cheeseType: String, readyFrom: String)
+object NewBatchDTO:
+  given DTO[NewBatch, NewBatchDTO] = interCaseClassDTO
 
-final case class IncomingProductionEndedDTO(productionID: String)
-object IncomingProductionEndedDTO:
-  given DTO[IncomingEvent.ProductionEnded, IncomingProductionEndedDTO] = interCaseClassDTO
+final case class ProductionEndedDTO(productionID: String)
+object ProductionEndedDTO:
+  given DTO[ProductionEnded, ProductionEndedDTO] = interCaseClassDTO
 
 final case class ProductionPlanReadyDTO(productionPlan: ProductionPlanDTO)
 final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])

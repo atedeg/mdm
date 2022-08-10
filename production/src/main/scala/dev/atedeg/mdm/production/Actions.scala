@@ -1,5 +1,6 @@
 package dev.atedeg.mdm.production
 
+import java.time.{ LocalDate, LocalDateTime }
 import java.util.UUID
 
 import OutgoingEvent.*
@@ -41,11 +42,16 @@ def startProduction[M[_]: Monad: CanRaise[MissingRecipe]: Emits[StartProduction]
 /**
  * Ends a [[Production.InProgress production]] by assigning it a [[BatchID batch ID]].
  */
-def endProduction[M[_]: Monad: Emits[ProductionEnded]](production: Production.InProgress): M[Production.Ended] =
+def endProduction[M[_]: Monad: Emits[NewBatch]](ripeningDays: CheeseTypeRipeningDays)(
+    production: Production.InProgress,
+): M[Production.Ended] =
   val batchID = generateBatchID
   val producedProduct = production.productInProduction
   val unitsProduced = production.unitsInProduction
-  emit(ProductionEnded(production.ID, batchID): ProductionEnded)
+  val cheeseType = production.productInProduction.cheeseType
+  val days = ripeningDays.value(cheeseType).days.value.toLong
+  val readyBy = LocalDate.now.plusDays(days)
+  emit(NewBatch(batchID, cheeseType, readyBy): NewBatch)
     .thenReturn(Production.Ended(production.ID, batchID, producedProduct, unitsProduced))
 
 private def generateBatchID: BatchID = BatchID(UUID.randomUUID)

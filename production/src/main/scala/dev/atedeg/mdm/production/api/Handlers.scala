@@ -7,7 +7,7 @@ import cats.syntax.all.*
 
 import dev.atedeg.mdm.production.*
 import dev.atedeg.mdm.production.IncomingEvent.*
-import dev.atedeg.mdm.production.OutgoingEvent.{ ProductionEnded, StartProduction }
+import dev.atedeg.mdm.production.OutgoingEvent.*
 import dev.atedeg.mdm.production.api.repositories.RecipeBookRepository
 import dev.atedeg.mdm.production.dto.*
 import dev.atedeg.mdm.production.dto.given
@@ -31,14 +31,14 @@ def handleProductionPlanReady[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRa
   yield ()
 
 def handleProductionEnded[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRaise[String]](
-    productionEnded: IncomingProductionEndedDTO,
+    productionEnded: ProductionEndedDTO,
 ): M[Unit] =
   for
     config <- readState
     productionID <- validate(productionEnded).map(_.productionID)
     production <- config.productionsRepository.readInProgressProduction(productionID.toDTO) >>= validate
-    action: SafeAction[ProductionEnded, Production.Ended] = endProduction(production)
+    action: SafeAction[NewBatch, Production.Ended] = endProduction(???)(production) // FIXME: ripening days
     (events, result) = action.execute
-    _ <- events.map(_.toDTO[ProductionEndedDTO]).traverse(config.emitter.emitEnded)
+    _ <- events.map(_.toDTO[NewBatchDTO]).traverse(config.emitter.emitNewBatch)
     _ <- config.productionsRepository.updateToEnded(result.toDTO[EndedDTO])
   yield ()
