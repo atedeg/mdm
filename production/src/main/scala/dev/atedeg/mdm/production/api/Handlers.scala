@@ -36,8 +36,9 @@ def handleProductionEnded[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRaise[
   for
     config <- readState
     productionID <- validate(productionEnded).map(_.productionID)
+    cheeseTypeRipeningDays <- config.ripeningDaysRepository.read >>= validate
     production <- config.productionsRepository.readInProgressProduction(productionID.toDTO) >>= validate
-    action: SafeAction[NewBatch, Production.Ended] = endProduction(???)(production) // FIXME: ripening days
+    action: SafeAction[NewBatch, Production.Ended] = endProduction(cheeseTypeRipeningDays)(production)
     (events, result) = action.execute
     _ <- events.map(_.toDTO[NewBatchDTO]).traverse(config.emitter.emitNewBatch)
     _ <- config.productionsRepository.updateToEnded(result.toDTO[EndedDTO])

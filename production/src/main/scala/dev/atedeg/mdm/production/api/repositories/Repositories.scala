@@ -13,3 +13,6 @@ trait ProductionsRepository:
   def writeInProgressProductions[M[_]: Monad: LiftIO](productions: List[InProgressDTO]): M[Unit]
   def readInProgressProduction[M[_]: Monad: LiftIO: CanRaise[String]](productionID: String): M[InProgressDTO]
   def updateToEnded[M[_]: Monad: LiftIO](production: EndedDTO): M[Unit]
+
+trait CheeseTypeRipeningDaysRepository:
+  def read[M[_]: Monad: LiftIO]: M[CheeseTypeRipeningDaysDTO]
