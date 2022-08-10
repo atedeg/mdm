@@ -1,16 +1,17 @@
 package dev.atedeg.mdm.utils.serialization
 
-import cats.Monad
-
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{ LocalDate, LocalDateTime }
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import scala.compiletime.*
 import scala.deriving.*
 import scala.util.Try
+
+import cats.Monad
 import cats.data.NonEmptyList
 import cats.syntax.all.*
 import eu.timepit.refined.api.Refined
+
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
 
@@ -21,7 +22,7 @@ trait DTO[E, D]:
 object DTOOps:
   extension [D](dto: D) def toDomain[E](using d: DTO[E, D]): Either[String, E] = d.dtoToElem(dto)
   extension [E](e: E) def toDTO[D](using d: DTO[E, D]) = d.elemToDto(e)
-  def validate[D, E, M[_]: Monad: CanRaise[String]](dto: D)(using DTO[E, D]): M[E] = dto.toDomain[E].getOrRaise 
+  def validate[D, E, M[_]: Monad: CanRaise[String]](dto: D)(using DTO[E, D]): M[E] = dto.toDomain[E].getOrRaise
 
 object DTO:
   import DTOGenerators.*
@@ -30,6 +31,14 @@ object DTO:
   given DTO[Int, Int] = idDTO
   given DTO[Double, Double] = idDTO
   given DTO[String, String] = idDTO
+
+  given mapListDTO[KE, KD, VE, VD](using DTO[KE, KD])(using DTO[VE, VD]): DTO[Map[KE, VE], List[(KD, VD)]] with
+    override def elemToDto(e: Map[KE, VE]): List[(KD, VD)] = e.toList.map(_.bimap(_.toDTO[KD], _.toDTO[VD]))
+    override def dtoToElem(dto: List[(KD, VD)]): Either[String, Map[KE, VE]] =
+      for
+        keys <- dto.map(_._1).traverse(_.toDomain[KE])
+        values <- dto.map(_._2).traverse(_.toDomain[VE])
+      yield keys.zip(values).toMap
 
   given mapDTO[KE, KD, VE, VD](using DTO[KE, KD])(using DTO[VE, VD]): DTO[Map[KE, VE], Map[KD, VD]] with
     override def elemToDto(e: Map[KE, VE]): Map[KD, VD] = e.map(_.bimap(_.toDTO[KD], _.toDTO[VD]))
