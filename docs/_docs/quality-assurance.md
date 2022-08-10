@@ -55,7 +55,7 @@ Our workflow concerning semantic-release is organized in the following steps:
 2. The `release-notes-generator` plugin generates the changelog with the changes since the last tag
 3. The `changelog` plugin updates the `CHANGELOG.md` file in the repo with the changelog generated at the step above
 4. With the plugin `exec` we specify the commands needed in order to publish all the artefacts and the documentation site
-   - The first command releases all the `jar`s to [_Maven Central_](https://www.sonatype.com)
+   - The first command releases all the `jar`s to [_Maven Central_](https://search.maven.org/search?q=dev.atedeg.mdm)
    - The second command generates the documentation site
    - The third command publishes the `Dockerfile` of each sub project to the [Docker Hub](https://hub.docker.com/)
 5. The `git` plugin pushes the updated `CHANGELOG.md` into the repo
