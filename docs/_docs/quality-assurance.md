@@ -62,3 +62,40 @@ Our workflow concerning semantic-release is organized in the following steps:
 6. The `github` plugin generates the release and comments all the issues closed since the last tag
 
 For a more in-depth description take a look at the file [`.releaserc.yml`](https://github.com/atedeg/mdm/blob/main/.releaserc.yml).
+
+## Scalafmt
+
+The tool performs code formatting over the entire code base, helping the team to have a uniform code style.
+[Scalafmt](https://scalameta.org/scalafmt/) is available via an [sbt plugin](https://github.com/scalameta/sbt-scalafmt)
+that provides several tasks to format the code or check if the code is formatted properly.
+Specifically, the `scalaftmCheckAll` task is used in CI/CD to check if the pushed code is formatted properly, in the case of unformatted code,
+the workflow fails to prevent the merge of unformatted code.
+
+For more details about the rules used by the team, please take a look at the
+[`.scalafmt.conf`](https://github.com/atedeg/mdm/blob/main/.scalafmt.conf) configuration file.
+
+## Scalafix
+
+Scalafix helps the developers refactoring the code, spot bad programming practices, and linting the code.
+
+The tool is available via an [sbt plugin](https://github.com/scalacenter/sbt-scalafix) which provides a task to check the project.
+The team has agreed on using all the rules except for `UniversalEquality` because of a problem with scala 3.
+
+The task mentioned above is used in CI/CD to enforce the rules and prevent the merge of code with any kind o problems.
+
+For more details about the rules used by the team, please take a look at the 
+[`.scalafix.conf`](https://github.com/atedeg/mdm/blob/main/.scalafix.conf) configuration file.
+
+## Wartremover
+
+[Wartremover](https://www.wartremover.org/) helps scala developers by removing some of the language’s nastier features.
+Its main goal is to help you write safe and correct software without having to constantly double-check yourself.
+
+Wartremover is available via an [sbt plugin](https://github.com/wartremover/wartremover)
+which provides some tasks to check the correctness of the project.
+
+The team has agreed to use all warts except for `Overloading` and `Equals` because of scala 3.
+The former wart was disabled because generates false positives in some extension methods on different types but with the same method name.
+The latter was disabled because of some limitations with the new ADT syntax in scala 3.
+
+Again, in CI/CD the task is executed to enforce the code quality and prevent the merge of problematic code.
