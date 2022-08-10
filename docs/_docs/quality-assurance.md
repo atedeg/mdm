@@ -9,19 +9,20 @@ This section will review the quality assurance practices adopted by the team.
 
 ## Conventional Commits
 
-We adopts [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) as the convention for commit messages.
+We decide to adopts [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) as the convention for commit messages.
 It's a lightweight convention on top of commit messages which provides an easy set of rules for creating an explicit commit history, which makes it
 easier to write automated tools on top.
 
 The adoption of this standard forces a particular format for commit messages to be followed, so it is quite easy to get it wrong and produce messages
 that do not comply with that format.
-Therefore, it would be useful to have a check that rejects all those commits that do not comply with the standard; in this regard, an sbt plugin has
-been developed that, taking advantage of git hooks, performs commit checking and in case they do not comply with conventional commits, rejects them.
+Therefore, it would be useful to have a check that rejects all those commits that do not comply with the standard;
+in this regard, we developed an sbt plugin that, by automatically creating a git hook,
+allows to check all commits and reject them in case they do not comply with the conventional commits standard.
 
 Although there are other similar tools such as [`husky` + `commitlint`](https://github.com/conventional-changelog/commitlint), these are not native
-to sbt and thus require manual intervention to be activated. In fact, if you have these tools available but then they do not "activate" automatically,
-then they become useless. What we want to achieve is that as soon as a new user clones the repository and imports the project, then they have already
-activated commit check. This is what our `sbt-conventional-commits` plugin does, for more information see the
+to sbt and thus require manual intervention to be activated. However, one could forget to activate these tools rendering them useless.
+What we wanted to achieve is that as soon as a new user clones the repository and imports the project, they already have the commit check enabled.
+This is what our `sbt-conventional-commits` plugin does, for more information see the
 [plugin documentation](https://github.com/nicolasfara/sbt-conventional-commits).
 
 > Initially, a gradle plugin was developed to check commit messages.
@@ -29,21 +30,20 @@ activated commit check. This is what our `sbt-conventional-commits` plugin does,
 
 ## Semantic release
 
-Assigning versions to code is a controversial activity. People often assign versions based on intuition or even worse by going randomly.
-This is precisely why the [SemVer](https://semver.org/) standard was made.
+Assigning versions to code is a controversial activity. People often assign versions based on intuition or, even worse, randomly.
+This is precisely why the [SemVer](https://semver.org/) standard was made:
 SemVer provides guidelines on how to properly assign a version based on some rules.
-Even following the SemVer guidelines there remains the problem of figuring out which version to assign: identifying the extent of the changes made
+Even following the SemVer guidelines there is still the problem of figuring out which version to assign: identifying the extent of the changes made
 between versions to determine the new version is not an easy task. Doing so requires re-reading the commit history and getting an idea of what was
 changed and no one typically wants to do that.
-In addition, this kind of task is complicated by the fact that many commit messages may be ambiguous or may not reflect the actual changes.
+In addition, this kind of task is complicated by the fact that many commit messages may be ambiguous or may not precisely reflect the actual changes.
 
-If a standard was adopted for commit messages, such as `conventional-commit`, then it would be much easier to determine the extent of changes by
-analyzing only commit messages.
-Also, by following a standard for messages, automated tools would be able to automatically analyze and determine the version to be assigned.
+By adopting a convention for commit messages, such as `conventional-commit`, then it is much easier to determine the extent of changes by simply
+analyzing commit messages. Moreover, automated tools can automatically perform this task and determine the version to be assigned.
 
-Tools like [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) automate version assignment as well as manage the release
-of artifacts. This removes the immediate connection between human emotions and version numbers, strictly following the SemVer specification and 
-communicating the impact of changes to consumers.
+Tools like [`semantic-release`](https://semantic-release.gitbook.io/semantic-release/) automate version assignment and automatically manage the release
+of artifacts. Strictly following the SemVer specification, there is no longer room for human intervention in assigning version numbers that are
+determined automatically and can reliably and consistently communicate the impact of changes to consumers.
 This tool, in addition to automatically determining the version to be assigned, can generate (and update) the CHANGELOG file reporting in an organized
 manner all the changes made in the various versions; it interacts with GitHub issues and PRs by creating comments concerning the releases made.
 
@@ -51,14 +51,14 @@ Automating the entire process of versioning and releasing artifacts gives the ab
 project management tasks, minimizing the possibility of errors.
 
 Our workflow concerning semantic-release is organized in the following steps:
-1. The `commit-analyzer` plugin analyze the commits messages from the last tag to the latest commit in oder to determinate the version bump to apply
-2. The `release-notes-generator` plugin generate the changelog with the modifications since the last tag
-3. The `changelog` plugin update the `CHANGELOG.md` file in the repo with the changelog generate at the step above
+1. The `commit-analyzer` plugin analyzes the commit messages from the last tag to the latest commit in oder to determinate the version bump to apply
+2. The `release-notes-generator` plugin generates the changelog with the changes since the last tag
+3. The `changelog` plugin updates the `CHANGELOG.md` file in the repo with the changelog generated at the step above
 4. With the plugin `exec` we specify the commands needed in order to publish all the artefacts and the documentation site
-   - The first command release all the `jar`s to the _Maven Central_
-   - The second command generate the documentation site
-   - The third command publish the `Dockerfile` of each sub project to the [docker hub](https://hub.docker.com/)
-5. The `git` plugin push the updated `CHANGELOG.md` into the repo
-6. The plugin `github` generate the release and comments all the issue closed since the last tag
+   - The first command releases all the `jar`s to [_Maven Central_](https://www.sonatype.com)
+   - The second command generates the documentation site
+   - The third command publishes the `Dockerfile` of each sub project to the [Docker Hub](https://hub.docker.com/)
+5. The `git` plugin pushes the updated `CHANGELOG.md` into the repo
+6. The `github` plugin generates the release and comments all the issues closed since the last tag
 
 For a more in-depth description take a look at the file [`.releaserc.yml`](https://github.com/atedeg/mdm/blob/main/.releaserc.yml).
