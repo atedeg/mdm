@@ -33,13 +33,13 @@ final case class MissingQuantity(n: NonNegativeNumber)
  * in a certain [[AvailableQuantity quantity]] (that could also be zero if the
  * product is out-of-stock).
  */
-final case class AvailableStock(as: Map[Product, AvailableQuantity])
+final case class AvailableStock(availableStock: Map[Product, AvailableQuantity])
 
 /**
  * The [[DesiredQuantity desired quantity]] of each [[Product product]] that should
  * always be in stock in order to have a safe margin to keep order fulfillment going.
  */
-final case class DesiredStock(ds: Map[Product, DesiredQuantity])
+final case class DesiredStock(desiredStock: Map[Product, DesiredQuantity])
 
 /**
  * A batch of products of a certain [[CheeseType type]], uniquely identified by an [[BatchID ID]],

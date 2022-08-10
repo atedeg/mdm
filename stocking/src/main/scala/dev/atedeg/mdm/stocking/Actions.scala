@@ -21,18 +21,23 @@ def getMissingCountFromProductStock(
     availableStock: AvailableStock,
     desiredStock: DesiredStock,
 )(product: Product): MissingQuantity =
-  if availableStock.as(product).n >= desiredStock.ds(product).n then MissingQuantity(0)
-  else MissingQuantity(desiredStock.ds(product).n.toNonNegative - availableStock.as(product).n)
+  if availableStock.availableStock(product).n >= desiredStock.desiredStock(product).n then MissingQuantity(0)
+  else MissingQuantity(desiredStock.desiredStock(product).n.toNonNegative - availableStock.availableStock(product).n)
 
 /**
- * Removes the given quantity of a certain [[Product product]] from the [[AvailableStock stock]], giving the new current [[AvailableStock stock]].
+ * Removes the given quantity of a certain [[Product product]] from the [[AvailableStock stock]], giving the
+ * new current [[AvailableStock stock]].
  */
 def removeFromStock[M[_]: Monad: CanRaise[NotEnoughStock]](
     stock: AvailableStock,
 )(product: Product, quantity: Quantity): M[AvailableStock] =
-  (stock.as(product).n > quantity.n)
-    .otherwiseRaise(NotEnoughStock(product, quantity, stock.as(product)): NotEnoughStock)
-    .thenReturn(AvailableStock(stock.as + (product -> AvailableQuantity(stock.as(product).n - quantity.n))))
+  (stock.availableStock(product).n > quantity.n)
+    .otherwiseRaise(NotEnoughStock(product, quantity, stock.availableStock(product)): NotEnoughStock)
+    .thenReturn(
+      AvailableStock(
+        stock.availableStock + (product -> AvailableQuantity(stock.availableStock(product).n - quantity.n)),
+      ),
+    )
 
 /**
  * Approves a batch after quality assurance.
