@@ -66,3 +66,8 @@ object InProgressDTO:
 final case class EndedDTO(id: String, batchID: String, product: ProductDTO, units: Int)
 object EndedDTO:
   given DTO[Production.Ended, EndedDTO] = interCaseClassDTO
+
+final case class CheeseTypeRipeningDaysDTO(value: Map[String, Int])
+object CheeseTypeRipeningDaysDTO:
+  given DTO[CheeseTypeRipeningDays, CheeseTypeRipeningDaysDTO] = interCaseClassDTO
+  private given DTO[RipeningDays, Int] = caseClassDTO
