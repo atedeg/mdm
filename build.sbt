@@ -99,6 +99,7 @@ lazy val root = project
     sonatypeProfileName := "dev.atedeg",
     ScalaUnidoc / unidoc / target := file("target/site"),
     Compile / doc / scalacOptions := Seq(
+      "-Ygenerate-inkuire",
       "-project",
       "MDM - Mambelli Domain Model",
       "-project-version",
