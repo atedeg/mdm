@@ -6,5 +6,5 @@ import dev.atedeg.mdm.production.api.repositories.*
 final case class Configuration(
     recipeBookRepository: RecipeBookRepository,
     productionsRepository: ProductionsRepository,
-    emitter: StartProductionEmitter,
+    emitter: Emitter,
 )

@@ -13,8 +13,9 @@ import dev.atedeg.mdm.utils.serialization.DTO
 import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
+given DTO[ProductionID, String] = caseClassDTO
+
 private object Common:
-  given DTO[ProductionID, String] = caseClassDTO
   given DTO[BatchID, String] = caseClassDTO
   given DTO[NumberOfUnits, Int] = caseClassDTO
 
@@ -29,7 +30,11 @@ object StartProductionDTO:
 
 final case class ProductionEndedDTO(productionID: String, batchID: String)
 object ProductionEndedDTO:
-  given DTO[ProductionEnded, ProductionEndedDTO] = interCaseClassDTO
+  given DTO[OutgoingEvent.ProductionEnded, ProductionEndedDTO] = interCaseClassDTO
+
+final case class IncomingProductionEndedDTO(productionID: String)
+object IncomingProductionEndedDTO:
+  given DTO[IncomingEvent.ProductionEnded, IncomingProductionEndedDTO] = interCaseClassDTO
 
 final case class ProductionPlanReadyDTO(productionPlan: ProductionPlanDTO)
 final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])
