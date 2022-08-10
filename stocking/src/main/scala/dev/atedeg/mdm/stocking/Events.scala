@@ -25,7 +25,7 @@ enum IncomingEvent:
   /**
    * Received when a [[Product product]] is removed from the stock.
    */
-  case ProductRemovedFromStock(quantity: DesiredQuantity, product: Product)
+  case ProductRemovedFromStock(quantity: Quantity, product: Product)
 
   /**
    * Received when a [[Batch.Aging batch]] is created.
