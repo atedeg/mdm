@@ -12,6 +12,7 @@ title: Context Map
   Moreover, `ClientOrders` is going to be a *generic* bounded context, as reported in the Core Domain Chart.
 - `MilkPlanning [D, ACL]  <- [U] Restocking`  
   `MilkPlanning` asks to `Restocking` the remaining quantity of milk and informs `Restocking` to place an order for the required amount of milk.
+  In addition it asks to `Restocking` the quantity of milk used in the previous year. 
   `MilkPlanning` is a downstream core domain since `Restocking` provides a service to it and the latter is going to be a generic bounded context, as 
   reported in the Core Domain Chart. For all these reasons `MilkPlanning` has an Anti-Corruption Layer on its side.
 - `Production [D, CF] <- [U] ProductionPlanning`  
