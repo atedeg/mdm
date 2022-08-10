@@ -1,5 +1,6 @@
 package dev.atedeg.mdm.production
 
+import java.time.LocalDate
 import java.util.UUID
 
 import OutgoingEvent.*
@@ -26,6 +27,9 @@ trait Mocks:
   private val productionID = ProductionID(UUID.randomUUID)
   val production: Production.ToStart = Production.ToStart(productionID, Product.Caciotta(500), NumberOfUnits(10_000))
   val allIngredients: NonEmptyList[Ingredient] = NonEmptyList.of(Milk, Cream, Rennet, Salt, Probiotics)
+  val ripeningDays: CheeseTypeRipeningDays = CheeseTypeRipeningDays(
+    Map.empty[CheeseType, RipeningDays].withDefaultValue(RipeningDays(0)),
+  )
 
 class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
 
@@ -84,13 +88,13 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
         production.unitsToProduce,
       )
       When("it is ended")
-      val endAction: SafeAction[ProductionEnded, Production.Ended] = endProduction(productionInProgress)
+      val endAction: SafeAction[NewBatch, Production.Ended] = endProduction(ripeningDays)(productionInProgress)
       val (events, result) = endAction.execute
       Then("it should emit an event to notify that the production ended")
       result shouldBe a[Production.Ended]
       result.ID shouldBe productionInProgress.ID
       result.producedUnits shouldBe productionInProgress.unitsInProduction
       result.producedProduct shouldBe productionInProgress.productInProduction
-      events should contain(ProductionEnded(result.ID, result.batchID))
+      events should contain(NewBatch(result.batchID, production.productToProduce.cheeseType, LocalDate.now))
     }
   }

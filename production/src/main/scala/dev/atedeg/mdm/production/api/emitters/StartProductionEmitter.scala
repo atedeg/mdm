@@ -7,4 +7,4 @@ import dev.atedeg.mdm.production.dto.*
 
 trait Emitter:
   def emitStart[M[_]: Monad: LiftIO](message: StartProductionDTO): M[Unit]
-  def emitEnded[M[_]: Monad: LiftIO](message: ProductionEndedDTO): M[Unit]
+  def emitNewBatch[M[_]: Monad: LiftIO](message: NewBatchDTO): M[Unit]

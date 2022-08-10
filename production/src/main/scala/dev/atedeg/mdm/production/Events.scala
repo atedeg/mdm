@@ -1,6 +1,10 @@
 package dev.atedeg.mdm.production
 
+import java.time.{ LocalDate, LocalDateTime }
+
 import cats.data.NonEmptyList
+
+import dev.atedeg.mdm.products.CheeseType
 
 /**
  * The events that may be produced by the bounded context.
@@ -17,7 +21,7 @@ enum OutgoingEvent:
    * Fired when a [[Production.InProgress production]] is terminated, given a
    * [[BatchID batch ID]] and sent to the refrigeration room.
    */
-  case ProductionEnded(productionID: ProductionID, batchID: BatchID)
+  case NewBatch(batchID: BatchID, cheeseType: CheeseType, readyFrom: LocalDate)
 
 enum IncomingEvent:
   /**

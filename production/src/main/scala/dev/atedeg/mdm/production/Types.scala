@@ -73,3 +73,13 @@ final case class QuintalsOfIngredient(quintals: WeightInQuintals, ingredient: In
  * A weight expressed in quintals.
  */
 final case class WeightInQuintals(n: PositiveDecimal) derives Times
+
+/**
+ * For each [[CheeseType cheese type]] associates it its ripening days.
+ */
+final case class CheeseTypeRipeningDays(value: Map[CheeseType, RipeningDays])
+
+/**
+ * The number of days a [[CheeseType cheese type]] has to ripend before being ready.
+ */
+final case class RipeningDays(days: NonNegativeNumber)
