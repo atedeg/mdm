@@ -32,7 +32,7 @@ def startProduction[M[_]: Monad: CanRaise[MissingRecipe]: Emits[StartProduction]
   val typeToProduce = production.productToProduce.cheeseType
   val gramsOfSingleUnit = production.productToProduce.weight
   for
-    recipe <- recipeBook(typeToProduce) ifMissingRaise MissingRecipe(typeToProduce)
+    recipe <- recipeBook.recipeBook.get(typeToProduce) ifMissingRaise MissingRecipe(typeToProduce)
     quintalsToProduce = (production.unitsToProduce.n * gramsOfSingleUnit.n).toDecimal / 100_000
     neededIngredients = recipe.lines.map(_ * quintalsToProduce)
     _ <- emit(StartProduction(neededIngredients): StartProduction)
