@@ -1,6 +1,13 @@
 package dev.atedeg.mdm.stocking.types
 
-import cats.data.{Writer, WriterT}
+import java.util.UUID
+
+import cats.data.{ Writer, WriterT }
+import org.scalatest.EitherValues.*
+import org.scalatest.GivenWhenThen
+import org.scalatest.featurespec.AnyFeatureSpec
+import org.scalatest.matchers.should.Matchers
+
 import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.stocking.*
@@ -8,12 +15,6 @@ import dev.atedeg.mdm.stocking.Error.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.monads.*
-import org.scalatest.EitherValues.*
-import org.scalatest.GivenWhenThen
-import org.scalatest.featurespec.AnyFeatureSpec
-import org.scalatest.matchers.should.Matchers
-
-import java.util.UUID
 
 trait Mocks:
   val batchID: BatchID = BatchID(UUID.randomUUID())
