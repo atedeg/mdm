@@ -1,8 +1,8 @@
 tables:
   - name: "stocking-ul"
     rows:
-      - type: "AvailableStock"
-      - type: "DesiredStock"
+      - class: "AvailableStock"
+      - class: "DesiredStock"
       - class: "AvailableQuantity"
       - class: "DesiredQuantity"
       - class: "MissingQuantity"
@@ -14,6 +14,7 @@ tables:
   - name: "stocking-outgoing"
     rows:
       - case: "OutgoingEvent.ProductStocked"
+      - case: "OutgoingEvent.ProductPalletized"
   - name: "stocking-incoming"
     rows:
       - case: "IncomingEvent.BatchReadyForQualityAssurance"
