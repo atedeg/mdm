@@ -7,6 +7,7 @@ import dev.atedeg.mdm.productionplanning.IncomingEvent.*
 import dev.atedeg.mdm.productionplanning.OutgoingEvent.*
 import dev.atedeg.mdm.productionplanning.dto.OrderIDDTO.given
 import dev.atedeg.mdm.productionplanning.dto.QuantityDTO.given
+import dev.atedeg.mdm.products.Product
 import dev.atedeg.mdm.products.dto.CheeseTypeDTO.given
 import dev.atedeg.mdm.products.dto.ProductDTO
 import dev.atedeg.mdm.products.dto.ProductDTO.given
@@ -14,9 +15,9 @@ import dev.atedeg.mdm.utils.serialization.DTO
 import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
-final case class NewOrderReceivedDTO(order: OrderDTO)
 final case class OrderDTO(orderID: String, requiredBy: String, orderedProducts: List[OrderedProductDTO])
-final case class OrderedProductDTO(product: ProductDTO, quantity: Int)
+object OrderDTO:
+  given DTO[Order, OrderDTO] = interCaseClassDTO
 
 private object QuantityDTO:
   given DTO[Quantity, Int] = caseClassDTO
@@ -24,21 +25,24 @@ private object QuantityDTO:
 private object OrderIDDTO:
   given DTO[OrderID, String] = caseClassDTO
 
+final case class NewOrderReceivedDTO(order: OrderDTO)
 object NewOrderReceivedDTO:
   given DTO[NewOrderReceived, NewOrderReceivedDTO] = interCaseClassDTO
-  private given DTO[Order, OrderDTO] = interCaseClassDTO
 
+final case class OrderedProductDTO(product: ProductDTO, quantity: Int)
 object OrderedProductDTO:
   given DTO[OrderedProduct, OrderedProductDTO] = interCaseClassDTO
 
 final case class ProductionPlanReadyDTO(productionPlan: ProductionPlanDTO)
-final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])
 final case class ProductToProduceDTO(product: ProductDTO, quantity: Int)
+
+final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])
+object ProductionPlanDTO:
+  given DTO[ProductionPlan, ProductionPlanDTO] = interCaseClassDTO
+  given DTO[ProductToProduce, ProductToProduceDTO] = interCaseClassDTO
 
 object ProductionPlanReadyDTO:
   given DTO[ProductionPlanReady, ProductionPlanReadyDTO] = interCaseClassDTO
-  given DTO[ProductionPlan, ProductionPlanDTO] = interCaseClassDTO
-  given DTO[ProductToProduce, ProductToProduceDTO] = interCaseClassDTO
 
 final case class OrderDelayedDTO(orderID: String, newDeliveryDate: String)
 object OrderDelayedDTO:
@@ -48,3 +52,8 @@ final case class CheeseTypeRipeningDaysDTO(value: Map[String, Int])
 object CheeseTypeRipeningDaysDTO:
   given DTO[CheeseTypeRipeningDays, CheeseTypeRipeningDaysDTO] = interCaseClassDTO
   private given DTO[RipeningDays, Int] = caseClassDTO
+
+final case class StockDTO(value: Map[ProductDTO, Int])
+object StockDTO:
+  given DTO[Stock, StockDTO] = interCaseClassDTO
+  private given DTO[StockedQuantity, Int] = caseClassDTO
