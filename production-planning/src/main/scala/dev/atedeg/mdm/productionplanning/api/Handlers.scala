@@ -14,7 +14,6 @@ import dev.atedeg.mdm.productionplanning.api.repositories.ReceivedOrderRepositor
 import dev.atedeg.mdm.productionplanning.dto.*
 import dev.atedeg.mdm.productionplanning.dto.NewOrderReceivedDTO.given
 import dev.atedeg.mdm.productionplanning.dto.OrderDTO.given
-import dev.atedeg.mdm.productionplanning.dto.OrderedProductDTO.given
 import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTO
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
@@ -24,7 +23,7 @@ def handleOrderReceived[M[_]: Monad: LiftIO: CanRead[ReceivedOrderRepository]: C
 ): M[Unit] =
   for
     newOrder <- validate(incomingOrderDTO.toNewOrderReceivedDTO)
-    _ <- readState >>= (_.saveNewOrder(newOrder.order.orderedProducts.toDTO[List[OrderedProductDTO]]))
+    _ <- readState >>= (_.saveNewOrder(newOrder.order.toDTO[OrderDTO]))
   yield ()
 
 def handleSendProductionPlan[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRaise[String]]: M[Unit] =
