@@ -53,7 +53,7 @@ object CheeseTypeRipeningDaysDTO:
   given DTO[CheeseTypeRipeningDays, CheeseTypeRipeningDaysDTO] = interCaseClassDTO
   private given DTO[RipeningDays, Int] = caseClassDTO
 
-final case class StockDTO(value: Map[ProductDTO, Int])
-object StockDTO:
-  given DTO[Stock, StockDTO] = interCaseClassDTO
-  private given DTO[StockedQuantity, Int] = caseClassDTO
+final case class MissingProductsDTO(missingProducts: Map[ProductDTO, Int])
+object MissingProductsDTO:
+  given DTO[MissingProducts, MissingProductsDTO] = interCaseClassDTO
+  private given DTO[MissingQuantity, Int] = caseClassDTO

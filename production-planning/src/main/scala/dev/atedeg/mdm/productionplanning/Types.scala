@@ -26,14 +26,14 @@ final case class ProductToProduce(product: Product, quantity: Quantity)
 final case class Quantity(n: PositiveNumber) derives Plus, Times
 
 /**
- * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].
+ * The [[Product products]] missing from the stock in a given [[MissingQuantity quantity]].
  */
-final case class Stock(stock: Map[Product, StockedQuantity])
+final case class MissingProducts(missingProducts: Map[Product, MissingQuantity])
 
 /**
- * A quantity of a stocked [[Product product]], it may also be zero.
+ * A quantity of a missing [[Product product]].
  */
-final case class StockedQuantity(n: NonNegativeNumber)
+final case class MissingQuantity(n: NonNegativeNumber)
 
 /**
  * A set of requested [[Product product]] with the [[Quantity quantities]] that have to be produced by the given

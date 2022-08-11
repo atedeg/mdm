@@ -48,11 +48,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
       And("the production plan of the previous year for the same day")
       val productsToProduce = NonEmptyList.of(prodToProd1, prodToProd2, prodToProd3)
       val previousProductionPlan = ProductionPlan(productsToProduce)
-      And("an empty stock")
-      val stock: Stock = Stock(Map.empty)
+      And("no missing products")
+      val missingProducts: MissingProducts = MissingProducts(Map.empty)
       When("creating the production plan")
       val productionPlanCreation: SafeActionTwoEvents[ProductionPlanReady, OrderDelayed, ProductionPlan] =
-        createProductionPlan(stock, cheeseTypeRipeningDays)(previousProductionPlan, orders)
+        createProductionPlan(missingProducts, cheeseTypeRipeningDays)(previousProductionPlan, orders)
       val (events1, events2, productionPlan) = productionPlanCreation.execute
       Then("the result is the same production plan emitted in the event")
       events1 should not be empty
@@ -73,10 +73,10 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
         Order(order3ID, requiredBy2, orderedProducts3),
       )
       And("the production plan of the previous year for the same day")
-      And("an empty stock")
+      And("no missing products")
       When("creating the production plan")
       val productionPlanCreation2: SafeActionTwoEvents[ProductionPlanReady, OrderDelayed, ProductionPlan] =
-        createProductionPlan(stock, cheeseTypeRipeningDays)(previousProductionPlan, orders2)
+        createProductionPlan(missingProducts, cheeseTypeRipeningDays)(previousProductionPlan, orders2)
       val (e1, e2, pp) = productionPlanCreation2.execute
       Then("Should delay the order containing the Cacciotta product")
       e1 should not be empty

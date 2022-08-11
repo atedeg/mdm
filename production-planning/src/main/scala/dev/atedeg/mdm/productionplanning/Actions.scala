@@ -24,14 +24,19 @@ import dev.atedeg.mdm.utils.monads.*
  * to satisfy the order by the required date, it emits an [[OrderDelayed order delayed]] event.
  */
 def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderDelayed]](
-    stock: Stock,
+    missingProducts: MissingProducts,
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
 )(
     previousProductionPlan: ProductionPlan,
     orders: List[Order],
 ): M[ProductionPlan] = for
   _ <- orders.traverse(checkDeliverabilityOfOrder(cheeseTypeRipeningDays))
-  productsToProduce = magicAIProductsToProduceEstimator(orders, previousProductionPlan, cheeseTypeRipeningDays, stock)
+  productsToProduce = magicAIProductsToProduceEstimator(
+    orders,
+    previousProductionPlan,
+    cheeseTypeRipeningDays,
+    missingProducts,
+  )
   productionPlan = ProductionPlan(productsToProduce)
   _ <- emit(ProductionPlanReady(productionPlan): ProductionPlanReady)
 yield productionPlan
@@ -50,7 +55,7 @@ private def magicAIProductsToProduceEstimator(
     orders: List[Order],
     previousProductionPlan: ProductionPlan,
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
-    stock: Stock,
+    missingProducts: MissingProducts,
 ): NonEmptyList[ProductToProduce] =
   // This is a mock, ideally that would be estimated by an intelligent agent or some heuristics.
   NonEmptyList.of(ProductToProduce(Product.Caciotta(500), Quantity(5)))
