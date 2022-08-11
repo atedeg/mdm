@@ -25,6 +25,11 @@ release process succeeded without fails.
 This workflow leads us to add features and fixes by PRs (Pull Requests) allowing code review and comments before the merge.
 In this way, each team member will have awareness of the others' code ensuring an overview of the project.
 
+In addition, this type of workflow makes classic branch develop totally unnecessary:
+having a robust test suite joint with the use of semantic-release, allows you to merge directly to main (or beta)
+and only relevant changes trigger a new release without having to worry about when to make a new one
+(as opposed to what happens when you have to deal with develop).
+
 An example of the workflow adopted by the team is shown in the image below.
 
 ```mermaid
