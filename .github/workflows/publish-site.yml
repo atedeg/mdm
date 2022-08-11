@@ -1,0 +1,38 @@
+name: Publish site
+
+on:
+  workflow_run:
+    workflows: [Build test and deploy]
+    types:
+      - completed
+
+jobs:
+  publish-site:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup atedeg-bot
+        id: atedeg-bot
+        uses: tibdex/github-app-token@v1.6.0
+        with:
+          app_id: ${{ secrets.ATEDEG_BOT_APP_ID }}
+          private_key: ${{ secrets.ATEDEG_BOT_PRIVATE_KEY }}
+
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          token: ${{ steps.atedeg-bot.outputs.token }}
+          fetch-depth: 0
+
+      - name: Build documentation site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          export LAST_VERSION=`git describe --tags --abbrev=0 | sed -e 's/^v*//'`
+          sbt 'set ThisBuild / version := System.getenv("LAST_VERSION")' ubidocGenerate
+
+      - name: Deploy site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        with:
+          GITHUB_TOKEN: ${{ steps.atedeg-bot.outputs.token }}
+          BRANCH: gh-pages
+          FOLDER: target/site
