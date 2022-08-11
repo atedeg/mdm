@@ -2,6 +2,7 @@ package dev.atedeg.mdm.productionplanning.api.acl
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import scala.util.Try
 
 import cats.data.NonEmptyList
 
@@ -25,8 +26,10 @@ extension (iol: IncomingOrderLineDTO)
 
 extension (io: IncomingOrderDTO)
   def toNewOrderDTO: OrderDTO =
-    val date = LocalDateTime.parse(io.deliveryDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME).toLocalDate
-    OrderDTO(io.id, date.toDTO[String], io.orderLines.map(_.toOrderedProductDTO))
+    val date =
+      Try(LocalDateTime.parse(io.deliveryDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME).toLocalDate.toDTO[String])
+        .getOrElse(io.deliveryDate)
+    OrderDTO(io.id, date, io.orderLines.map(_.toOrderedProductDTO))
 
 extension (io: IncomingOrderDTO) def toNewOrderReceivedDTO: NewOrderReceivedDTO = NewOrderReceivedDTO(io.toNewOrderDTO)
 
