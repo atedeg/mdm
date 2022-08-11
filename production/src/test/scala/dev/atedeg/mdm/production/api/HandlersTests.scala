@@ -67,11 +67,12 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
     action.unsafeExecute(configuration)
 
     "write the new productions to the DB" in {
-      savedInProgressProductions.size shouldBe 1
-      @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
-      val savedProduction = savedInProgressProductions.head
-      savedProduction.product shouldBe ProductDTO("ricotta", 350)
-      savedProduction.units shouldBe 1000
+      savedInProgressProductions match
+        case Nil => fail("No productions were saved")
+        case List(saved) =>
+          saved.product shouldBe ProductDTO("ricotta", 350)
+          saved.units shouldBe 1000
+        case _ => fail("Saved more productions than expected")
     }
     "emit all the domain events" in {
       emittedStarts shouldBe List(StartProductionDTO(List(QuintalsOfIngredientDTO(35, "milk"))))
@@ -84,18 +85,19 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
     val action: ServerAction[Configuration, String, Unit] = handleProductionEnded(productionEndedDTO)
     action.unsafeExecute(configuration)
     "update the production in the DB" in {
-      ended shouldBe defined
-      @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-      val updatedProduction = ended.get
-      updatedProduction.id shouldBe productionID
-      updatedProduction.product shouldBe ProductDTO("ricotta", 350)
-      updatedProduction.units shouldBe 30
+      ended match
+        case None => fail("The production was not updated")
+        case Some(updated) =>
+          updated.id shouldBe productionID
+          updated.product shouldBe ProductDTO("ricotta", 350)
+          updated.units shouldBe 30
     }
     "emit all the domain events" in {
-      emittedNews.size shouldBe 1
-      @SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
-      val emitted = emittedNews.head
-      emitted.cheeseType shouldBe "ricotta"
-      emitted.readyFrom shouldBe LocalDate.now.toDTO[String]
+      emittedNews match
+        case Nil => fail("No event was emitted")
+        case List(emitted) =>
+          emitted.cheeseType shouldBe "ricotta"
+          emitted.readyFrom shouldBe LocalDate.now.toDTO[String]
+        case _ => fail("Emitted more events than expected")
     }
   }
