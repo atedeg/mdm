@@ -6,6 +6,7 @@ import dev.atedeg.mdm.productionplanning.api.repositories.*
 final case class Configuration(
     receivedOrderRepository: ReceivedOrderRepository,
     ripeningDaysRepository: RipeningDaysRepository,
+    productionPlanRepository: ProductionPlanRepository,
     productionPlanReadyEmitter: ProductionPlanReadyEmitter,
     orderDelayedEmitter: OrderDelayedEmitter,
 )

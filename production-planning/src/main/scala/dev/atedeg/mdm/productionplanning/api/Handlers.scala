@@ -14,6 +14,7 @@ import dev.atedeg.mdm.productionplanning.api.repositories.ReceivedOrderRepositor
 import dev.atedeg.mdm.productionplanning.dto.*
 import dev.atedeg.mdm.productionplanning.dto.NewOrderReceivedDTO.given
 import dev.atedeg.mdm.productionplanning.dto.OrderDTO.given
+import dev.atedeg.mdm.productionplanning.dto.ProductionPlanDTO.given
 import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTO
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
@@ -31,14 +32,14 @@ def handleSendProductionPlan[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRai
     config <- readState
     missingProducts <- getMissingProductsFromStock >>= validate
     cheeseTypeRipeningDays <- config.ripeningDaysRepository.getRipeningDays >>= validate
-    previousProductionPlan <- getPreviousYearProductionPlan >>= validate
+    previousProductionPlan <- config.productionPlanRepository.getPreviuosYearProductionPlan >>= (_.traverse(validate))
     orders <- config.receivedOrderRepository.getOrders >>= validate[List[OrderDTO], List[Order], M]
     action: SafeActionTwoEvents[ProductionPlanReady, OrderDelayed, ProductionPlan] =
       createProductionPlan(missingProducts, cheeseTypeRipeningDays)(previousProductionPlan, orders)
-    (events1, events2, _) = action.execute
+    (events1, events2, plan) = action.execute
+    _ <- config.productionPlanRepository.saveProductionPlan(plan.toDTO[ProductionPlanDTO])
     _ <- events2.map(_.toDTO[OrderDelayedDTO]).traverse(config.orderDelayedEmitter.emit)
     _ <- events1.map(_.toDTO[ProductionPlanReadyDTO]).traverse(config.productionPlanReadyEmitter.emit)
   yield ()
 
 private def getMissingProductsFromStock[M[_]: Monad: LiftIO]: M[MissingProductsDTO] = ???
-private def getPreviousYearProductionPlan[M[_]: Monad: LiftIO]: M[ProductionPlanDTO] = ???
