@@ -1,3 +1,19 @@
+# [1.0.0-beta.16](https://github.com/atedeg/mdm/compare/v1.0.0-beta.15...v1.0.0-beta.16) (2022-08-11)
+
+
+### Bug Fixes
+
+* date dto in prod planning acl ([aad6bff](https://github.com/atedeg/mdm/commit/aad6bfffabedd03b771e2cb4d7d837fbebde09cb))
+* in handleOrderReceived use order instead of ordered product ([facbaba](https://github.com/atedeg/mdm/commit/facbaba0a5425d995487316220dfd0088262efe8))
+* progate date error in prod plan acl ([3740f91](https://github.com/atedeg/mdm/commit/3740f91dd846f0b512512dfe4b8fa09ddbdf0687))
+
+
+### Features
+
+* add desired stock to dto stock dto in prod plan acl ([9b4c9c5](https://github.com/atedeg/mdm/commit/9b4c9c559d893851760a16496b6ba7f539cad0ab))
+* add order received and production plan send handlers ([2893046](https://github.com/atedeg/mdm/commit/2893046c2221774f577cd824e784853f77f31ea3))
+* save the production plan ([3457eaa](https://github.com/atedeg/mdm/commit/3457eaae70eb52288aaaf5df77593e2435c8c288))
+
 # [1.0.0-beta.15](https://github.com/atedeg/mdm/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2022-08-11)
 
 
