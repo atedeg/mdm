@@ -4,6 +4,7 @@ import java.util.UUID
 
 import cats.Monad
 import cats.effect.LiftIO
+import cats.instances.ordering
 import cats.syntax.all.*
 
 import dev.atedeg.mdm.clientorders.*
@@ -47,4 +48,17 @@ def productPalletizedForOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanR
     _ <- events.map(_.toDTO[ProductPalletizedDTO]).traverse(config.emitter.emitProductPalletized)
     updatedOrder <- result.leftMap(e => s"Palletization error: $e").getOrRaise
     _ <- config.orderRepository.writeInProgressOrder(updatedOrder.toDTO)
+  yield ()
+
+def orderCompletedHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
+    orderCompletedDTO: OrderCompletedDTO,
+): M[Unit] =
+  for
+    config <- readState
+    orderCompleted <- validate(orderCompletedDTO)
+    order <- config.orderRepository.readInProgressOrder(orderCompleted.orderID.id.toDTO) >>= validate
+    action: Action[OrderCompletionError, Unit, CompletedOrder] = completeOrder(order)
+    (_, result) = action.execute
+    completedOrder <- result.leftMap(e => s"Order completion error: $e").getOrRaise
+    _ <- config.orderRepository.updateOrderToCompleted(completedOrder.toDTO)
   yield ()

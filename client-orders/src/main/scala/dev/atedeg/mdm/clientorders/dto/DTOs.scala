@@ -103,3 +103,16 @@ final case class ProductPalletizedDTO(product: ProductDTO, quantity: Int)
 object ProductPalletizedDTO:
   given DTO[ProductPalletized, ProductPalletizedDTO] = interCaseClassDTO
   private given DTO[Quantity, Int] = caseClassDTO
+
+final case class CompletedOrderDTO(
+    id: String,
+    orderLines: List[CompletedOrderLineDTO],
+    customer: CustomerDTO,
+    deliveryDate: String,
+    deliveryLocation: LocationDTO,
+    totalPrice: Int,
+)
+final case class CompletedOrderLineDTO(quantity: Int, product: ProductDTO, price: Int)
+object CompletedOrderDTO:
+  given DTO[CompletedOrder, CompletedOrderDTO] = interCaseClassDTO
+  private given DTO[CompleteOrderLine, CompletedOrderLineDTO] = interCaseClassDTO
