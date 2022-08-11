@@ -57,17 +57,20 @@ tables:
       - type: "RecipeBook"
       - class: "Recipe"
       - class: "QuintalsOfIngredient"
+      - class: "CheeseTypeRipeningDays"
+      - class: "RipeningDays"
   - name: "production-outgoing"
     termName: "Event"
     definitionName: "Description"
     rows:
       - case: "OutgoingEvent.StartProduction"
-      - case: "OutgoingEvent.ProductionEnded"
+      - case: "OutgoingEvent.NewBatch"
   - name: "production-incoming"
     termName: "Event"
     definitionName: "Description"
     rows:
       - case: "IncomingEvent.ProductionPlanReady"
+      - case: "IncomingEvent.ProductionEnded"
 
   - name: "restocking-ul"
     rows:
