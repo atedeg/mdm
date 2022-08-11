@@ -27,7 +27,7 @@ def createProductionPlan[M[_]: Monad: Emits[ProductionPlanReady]: CanEmit[OrderD
     missingProducts: MissingProducts,
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
 )(
-    previousProductionPlan: ProductionPlan,
+    previousProductionPlan: Option[ProductionPlan],
     orders: List[Order],
 ): M[ProductionPlan] = for
   _ <- orders.traverse(checkDeliverabilityOfOrder(cheeseTypeRipeningDays))
@@ -53,7 +53,7 @@ private def checkDeliverabilityOfOrder[M[_]: Monad: CanEmit[OrderDelayed]](
 
 private def magicAIProductsToProduceEstimator(
     orders: List[Order],
-    previousProductionPlan: ProductionPlan,
+    previousProductionPlan: Option[ProductionPlan],
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
     missingProducts: MissingProducts,
 ): NonEmptyList[ProductToProduce] =

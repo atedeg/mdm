@@ -34,5 +34,4 @@ extension (io: IncomingOrderDTO)
 extension (io: IncomingOrderDTO) def toNewOrderReceivedDTO: NewOrderReceivedDTO = NewOrderReceivedDTO(io.toNewOrderDTO)
 
 final case class DesiredStockDTO(desiredStock: List[(ProductDTO, Int)])
-extension (ds: DesiredStockDTO)
-  def toMissingProductsInStock: MissingProductsDTO = MissingProductsDTO(ds.desiredStock.toMap)
+extension (ds: DesiredStockDTO) def toMissingProductsDTO: MissingProductsDTO = MissingProductsDTO(ds.desiredStock.toMap)

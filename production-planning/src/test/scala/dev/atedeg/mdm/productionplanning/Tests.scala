@@ -47,7 +47,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
       val orders = List.fill(3)(Order(OrderID(UUID.randomUUID), requiredBy, orderedProducts))
       And("the production plan of the previous year for the same day")
       val productsToProduce = NonEmptyList.of(prodToProd1, prodToProd2, prodToProd3)
-      val previousProductionPlan = ProductionPlan(productsToProduce)
+      val previousProductionPlan = Some(ProductionPlan(productsToProduce))
       And("no missing products")
       val missingProducts: MissingProducts = MissingProducts(Map.empty)
       When("creating the production plan")
