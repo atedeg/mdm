@@ -28,3 +28,17 @@ object OrdersEndpoint:
       action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )
+
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
+  val palletizeProductForOrder: PublicEndpoint[ProductPalletizedForOrderDTO, String, Unit, Any] =
+    endpoint.post
+      .in("order" / "palletize")
+      .in(jsonBody[ProductPalletizedForOrderDTO].description("TODO"))
+      .errorOut(stringBody)
+
+  val palletizeProductRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
+    palletizeProductForOrder.serverLogic { p =>
+      val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(p)
+      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+    },
+  )
