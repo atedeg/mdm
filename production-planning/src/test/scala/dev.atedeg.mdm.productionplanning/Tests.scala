@@ -49,7 +49,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with Mocks:
       val productsToProduce = NonEmptyList.of(prodToProd1, prodToProd2, prodToProd3)
       val previousProductionPlan = ProductionPlan(productsToProduce)
       And("an empty stock")
-      val stock: Stock = _ => StockedQuantity(0)
+      val stock: Stock = Stock(Map.empty)
       When("creating the production plan")
       val productionPlanCreation: SafeActionTwoEvents[ProductionPlanReady, OrderDelayed, ProductionPlan] =
         createProductionPlan(stock, cheeseTypeRipeningDays)(previousProductionPlan, orders)

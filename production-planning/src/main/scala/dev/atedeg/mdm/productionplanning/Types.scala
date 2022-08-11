@@ -28,7 +28,7 @@ final case class Quantity(n: PositiveNumber) derives Plus, Times
 /**
  * It defines, for each [[Product product]], the [[StockedQuantity quantity in stock]].
  */
-type Stock = Product => StockedQuantity
+final case class Stock(stock: Map[Product, StockedQuantity])
 
 /**
  * A quantity of a stocked [[Product product]], it may also be zero.
