@@ -112,7 +112,7 @@ tables:
       - class: "IncomingOrderLine"
       - class: "Customer"
       - class: "Location"
-      - type: "PriceList"
+      - class: "PriceList"
       - class: "PricedOrder"
       - class: "PricedOrderLine"
       - class: "InProgressOrder"
