@@ -19,6 +19,7 @@ import dev.atedeg.mdm.stocking.api.repositories.{ BatchesRepository, StockReposi
 import dev.atedeg.mdm.stocking.dto.*
 import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.monads.ServerAction
+import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
 trait Mocks:
   val product: ProductDTO = ProductDTO("caciotta", 500)
@@ -32,11 +33,11 @@ trait Mocks:
       ().pure
     override def readDesiredStock[M[_]: Monad: LiftIO]: M[DesiredStockDTO] = desiredStock.pure
 
-  @SuppressWarnings(Array("org.wartremover.warts.MutableDataStructures"))
-  val agingBatches: mutable.ListBuffer[AgingBatchDTO] = mutable.ListBuffer()
+  @SuppressWarnings(Array("org.wartremover.warts.Var", "scalafix:DisableSyntax.var"))
+  var agingBatches: List[AgingBatchDTO] = List[AgingBatchDTO]()
   val batchesRepository: BatchesRepository = new BatchesRepository:
     override def addNewBatch[M[_]: Monad: LiftIO](agingBatch: AgingBatchDTO): M[Unit] =
-      agingBatches.addOne(agingBatch)
+      agingBatches = agingBatch :: agingBatches
       ().pure
 
     override def readReadyForQA[M[_]: Monad: LiftIO: CanRaise[String]](
@@ -64,10 +65,20 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
 
   "The `handleNewBatch`" should {
     "add a batch to the aging ones" in {
-      val newBatch = NewBatchDTO(s"${UUID.randomUUID}", "caciotta", s"${LocalDateTime.now}")
+      val id = UUID.randomUUID.toDTO[String]
+      val date = LocalDateTime.now.toDTO[String]
+      val newBatch = NewBatchDTO(id, "caciotta", date)
       val handler: ServerAction[BatchesRepository, String, Unit] = handleNewBatch(newBatch)
       handler.unsafeExecute(batchesRepository)
       val agingBatchRes = AgingBatchDTO(newBatch.batchID, newBatch.cheeseType, newBatch.readyFrom)
-      agingBatches.toList should contain(agingBatchRes)
+      agingBatches should contain(agingBatchRes)
+    }
+  }
+
+  "The `handleProductsInStockRequest`" should {
+    "return the same value it reads from the DB" in {
+      val handler: ServerAction[StockRepository, String, AvailableStockDTO] = handleProductsInStockRequest
+      val res = handler.unsafeExecute(stockRepository)
+      res.value shouldBe availableStock
     }
   }
