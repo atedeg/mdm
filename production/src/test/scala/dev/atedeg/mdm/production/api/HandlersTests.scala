@@ -48,7 +48,7 @@ trait Mocks:
       CheeseTypeRipeningDaysDTO(Map("ricotta" -> 0)).pure
 
   val emitter: Emitter = new Emitter:
-    override def emitStart[M[_]: Monad: LiftIO](message: StartProductionDTO): M[Unit] =
+    override def emitStartProduction[M[_]: Monad: LiftIO](message: StartProductionDTO): M[Unit] =
       emittedStarts = message :: emittedStarts
       ().pure
     override def emitNewBatch[M[_]: Monad: LiftIO](message: NewBatchDTO): M[Unit] =
