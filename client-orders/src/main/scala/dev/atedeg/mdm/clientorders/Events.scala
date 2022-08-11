@@ -15,7 +15,6 @@ enum IncomingEvent:
    * An [[IncomingEvent event]] which is received when an [[Order.IncomingOrder order]] is made.
    */
   case OrderReceived(
-      id: OrderID,
       orderLines: NonEmptyList[IncomingOrderLine],
       customer: Customer,
       deliveryDate: LocalDateTime,

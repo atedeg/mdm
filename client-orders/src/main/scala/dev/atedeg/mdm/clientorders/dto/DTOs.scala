@@ -27,7 +27,6 @@ import Commons.*
 import Commons.given
 
 final case class OrderReceivedDTO(
-    id: String,
     orderLines: List[IncomingOrderLineDTO],
     customer: CustomerDTO,
     deliveryDate: String,
