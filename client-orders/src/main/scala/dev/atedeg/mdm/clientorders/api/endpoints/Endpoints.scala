@@ -61,7 +61,11 @@ object OrdersEndpoint:
   val getTransportDocumentEndpoint: PublicEndpoint[String, String, TransportDocumentDTO, Any] =
     endpoint.get
       .in("order")
-      .in(path[String].description("The ID of the order for which the transport document is requested"))
+      .in(
+        path[String]
+          .description("The ID of the order for which the transport document is requested")
+          .name("order-id"),
+      )
       .in("ddt")
       .out(jsonBody[TransportDocumentDTO].description("The transport document for the given order"))
       .errorOut(stringBody)
