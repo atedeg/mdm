@@ -8,6 +8,10 @@ import cats.syntax.all.*
 import org.http4s.HttpRoutes
 import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.server.Router
+import org.typelevel.log4cats.LoggerFactory
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jFactory
+import org.typelevel.log4cats.slf4j.loggerFactoryforSync
 import sttp.tapir.server.http4s.Http4sServerInterpreter
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
@@ -23,10 +27,13 @@ object Main extends IOApp:
 
   private val routes: HttpRoutes[IO] = RemainingQuintalsOfMilkEndpoint.remainingQuintalsOfMilkRoute <+> swaggerRoute
 
+  implicit val logging: LoggerFactory[IO] = Slf4jFactory[IO]
+  private val logger: SelfAwareStructuredLogger[IO] = LoggerFactory[IO].getLogger
+
   override def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO]
       .bindHttp(Properties.envOrElse("PORT", "8080").toInt, Properties.envOrElse("HOST", "localhost"))
       .withHttpApp(Router("/" -> routes).orNotFound)
       .resource
-      .use(_ => IO.println("Started") >> IO.never[Unit])
+      .use(_ => logger.info("Server started") >> IO.never[Unit])
       .as(ExitCode.Success)
