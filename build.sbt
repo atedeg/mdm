@@ -44,7 +44,7 @@ ThisBuild / scalafixDependencies ++= Seq(
 )
 
 ThisBuild / semanticdbEnabled := true
-ThisBuild / scalacOptions ++= Seq("-language:implicitConversions")
+ThisBuild / scalacOptions ++= Seq("-language:implicitConversions", "-feature", "-Xfatal-warnings")
 
 lazy val startupTransition: State => State = "conventionalCommits" :: _
 Global / onLoad := startupTransition compose (Global / onLoad).value
