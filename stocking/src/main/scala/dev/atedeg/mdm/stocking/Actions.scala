@@ -31,13 +31,11 @@ def getMissingCountFromProductStock(
 def removeFromStock[M[_]: Monad: CanRaise[NotEnoughStock]](
     stock: AvailableStock,
 )(product: Product, quantity: Quantity): M[AvailableStock] =
-  (stock.availableStock(product).n > quantity.n)
-    .otherwiseRaise(NotEnoughStock(product, quantity, stock.availableStock(product)): NotEnoughStock)
-    .thenReturn(
-      AvailableStock(
-        stock.availableStock + (product -> AvailableQuantity(stock.availableStock(product).n - quantity.n)),
-      ),
-    )
+  for
+    _ <- (stock.availableStock(product).n > quantity.n)
+      .otherwiseRaise(NotEnoughStock(product, quantity, stock.availableStock(product)): NotEnoughStock)
+    updatedStock = stock.availableStock.updatedWith(product)(_.map(q => AvailableQuantity(q.n - quantity.n)))
+  yield AvailableStock(updatedStock)
 
 /**
  * Approves a batch after quality assurance.
