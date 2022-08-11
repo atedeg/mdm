@@ -27,10 +27,10 @@ def handleOrderReceived[M[_]: Monad: LiftIO: CanRead[ReceivedOrderRepository]: C
     _ <- readState >>= (_.saveNewOrder(newOrder.order.orderedProducts.toDTO[List[OrderedProductDTO]]))
   yield ()
 
-def handleProductionPlanSend[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRaise[String]]: M[Unit] =
+def handleSendProductionPlan[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRaise[String]]: M[Unit] =
   for
     config <- readState
-    stock <- getCurrentStock >>= validate
+    stock <- getMissingProductsFromStock >>= validate
     cheeseTypeRipeningDays <- config.ripeningDaysRepository.getRipeningDays >>= validate
     previousProductionPlan <- getPreviousYearProductionPlan >>= validate
     orders <- config.receivedOrderRepository.getOrders >>= validate[List[OrderDTO], List[Order], M]
@@ -41,5 +41,5 @@ def handleProductionPlanSend[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRai
     _ <- events1.map(_.toDTO[ProductionPlanReadyDTO]).traverse(config.productionPlanReadyEmitter.emit)
   yield ()
 
-private def getCurrentStock[M[_]: Monad: LiftIO]: M[StockDTO] = ???
+private def getMissingProductsFromStock[M[_]: Monad: LiftIO]: M[StockDTO] = ???
 private def getPreviousYearProductionPlan[M[_]: Monad: LiftIO]: M[ProductionPlanDTO] = ???

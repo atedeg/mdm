@@ -26,3 +26,6 @@ extension (io: IncomingOrderDTO)
     OrderDTO(io.id, io.deliveryDate, io.orderLines.map(_.toOrderedProductDTO))
 
 extension (io: IncomingOrderDTO) def toNewOrderReceivedDTO: NewOrderReceivedDTO = NewOrderReceivedDTO(io.toNewOrderDTO)
+
+final case class DesiredStockDTO(desiredStock: List[(ProductDTO, Int)])
+extension (ds: DesiredStockDTO) def toMissingProductsInStock: StockDTO = StockDTO(ds.desiredStock.toMap)
