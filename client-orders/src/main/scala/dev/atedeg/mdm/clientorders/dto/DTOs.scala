@@ -23,6 +23,7 @@ private object Commons:
   given DTO[IncomingOrderLine, IncomingOrderLineDTO] = interCaseClassDTO
   given DTO[PriceInEuroCents, Int] = caseClassDTO
   given DTO[PalletizedQuantity, Int] = caseClassDTO
+  given DTO[WeightInKilograms, Double] = caseClassDTO
 
 import Commons.*
 import Commons.given
@@ -125,7 +126,7 @@ final case class TransportDocumentDTO(
     transportDocumentLines: List[TransportDocumentLineDTO],
     totalWeight: Double,
 )
-final case class TransportDocumentLineDTO(quantity: Int, product: ProductDTO, price: Int)
+final case class TransportDocumentLineDTO(quantity: Int, product: ProductDTO)
 object TransportDocumentDTO:
   given DTO[TransportDocument, TransportDocumentDTO] = interCaseClassDTO
   private given DTO[TransportDocumentLine, TransportDocumentLineDTO] = interCaseClassDTO
