@@ -24,8 +24,8 @@ import dev.atedeg.mdm.utils.serialization.DTOOps.*
 trait Mocks:
   val product: ProductDTO = ProductDTO("caciotta", 500)
   @SuppressWarnings(Array("org.wartremover.warts.Var", "scalafix:DisableSyntax.var"))
-  var availableStock: AvailableStockDTO = AvailableStockDTO(List((product, 5)))
-  val desiredStock: DesiredStockDTO = DesiredStockDTO(List((product, 2)))
+  var availableStock: AvailableStockDTO = AvailableStockDTO(List(ProductAvailableQuantityDTO(product, 5)))
+  val desiredStock: DesiredStockDTO = DesiredStockDTO(List(ProductDesiredQuantityDTO(product, 2)))
   val stockRepository: StockRepository = new StockRepository:
     override def readStock[M[_]: Monad: LiftIO]: M[AvailableStockDTO] = availableStock.pure
     override def writeStock[M[_]: Monad: LiftIO](updatedStock: AvailableStockDTO): M[Unit] =
@@ -52,7 +52,7 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
       val productPalletized = ProductPalletizedDTO(product, 1)
       val handler: ServerAction[StockRepository, String, Unit] = handleRemovalFromStock(productPalletized)
       handler.unsafeExecute(stockRepository)
-      availableStock shouldBe AvailableStockDTO(List((product, 4)))
+      availableStock shouldBe AvailableStockDTO(List(ProductAvailableQuantityDTO(product, 4)))
     }
   }
   "The `handleDesiredStockRequest`" should {

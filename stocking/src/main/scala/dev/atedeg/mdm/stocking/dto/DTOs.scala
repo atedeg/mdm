@@ -1,5 +1,6 @@
 package dev.atedeg.mdm.stocking.dto
 
+import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.products.dto.CheeseTypeDTO.given
 import dev.atedeg.mdm.products.dto.ProductDTO
 import dev.atedeg.mdm.stocking.*
@@ -31,14 +32,18 @@ final case class NewBatchDTO(batchID: String, cheeseType: String, readyFrom: Str
 object NewBatchDTO:
   given DTO[NewBatch, NewBatchDTO] = interCaseClassDTO
 
-final case class AvailableStockDTO(availableStock: List[(ProductDTO, Int)])
+final case class AvailableStockDTO(availableStock: List[ProductAvailableQuantityDTO])
+final case class ProductAvailableQuantityDTO(product: ProductDTO, availableQuantity: Int)
 object AvailableStockDTO:
   given DTO[AvailableStock, AvailableStockDTO] = interCaseClassDTO
+  private given DTO[(Product, AvailableQuantity), ProductAvailableQuantityDTO] = interCaseClassDTO
   private given DTO[AvailableQuantity, Int] = caseClassDTO
 
-final case class DesiredStockDTO(desiredStock: List[(ProductDTO, Int)])
+final case class DesiredStockDTO(desiredStock: List[ProductDesiredQuantityDTO])
+final case class ProductDesiredQuantityDTO(product: ProductDTO, desiredQuantity: Int)
 object DesiredStockDTO:
   given DTO[DesiredStock, DesiredStockDTO] = interCaseClassDTO
+  private given DTO[(Product, DesiredQuantity), ProductDesiredQuantityDTO] = interCaseClassDTO
   private given DTO[DesiredQuantity, Int] = caseClassDTO
 
 final case class AgingBatchDTO(batchID: String, cheeseType: String, readyFrom: String)
