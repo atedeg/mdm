@@ -1,4 +1,4 @@
-package dev.atedeg.mdm.productionplanning.types
+package dev.atedeg.mdm.productionplanning
 
 import java.time.LocalDate
 import java.util.UUID
