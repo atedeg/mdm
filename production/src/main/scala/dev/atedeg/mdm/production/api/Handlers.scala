@@ -25,7 +25,7 @@ def handleProductionPlanReady[M[_]: Monad: LiftIO: CanRead[Configuration]: CanRa
     action: Action[MissingRecipe, StartProduction, NonEmptyList[Production.InProgress]] =
       productions.traverse(startProduction(recipeBook))
     (events, res) = action.execute
-    _ <- events.map(_.toDTO[StartProductionDTO]).traverse(config.emitter.emitStart)
+    _ <- events.map(_.toDTO[StartProductionDTO]).traverse(config.emitter.emitStartProduction)
     productions <- res.leftMap(m => s"Missing recipe: $m").getOrRaise
     _ <- config.productionsRepository.writeInProgressProductions(productions.toDTO)
   yield ()

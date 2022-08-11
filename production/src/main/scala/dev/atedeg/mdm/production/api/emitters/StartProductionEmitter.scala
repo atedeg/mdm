@@ -6,5 +6,5 @@ import cats.effect.LiftIO
 import dev.atedeg.mdm.production.dto.*
 
 trait Emitter:
-  def emitStart[M[_]: Monad: LiftIO](message: StartProductionDTO): M[Unit]
+  def emitStartProduction[M[_]: Monad: LiftIO](message: StartProductionDTO): M[Unit]
   def emitNewBatch[M[_]: Monad: LiftIO](message: NewBatchDTO): M[Unit]
