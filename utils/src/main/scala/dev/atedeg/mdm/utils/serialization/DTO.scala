@@ -69,7 +69,7 @@ object DTO:
       Try(LocalDate.parse(dto, DateTimeFormatter.ISO_LOCAL_DATE)).toEither.leftMap(_ => s"Invalid date: $dto")
 
   given DTO[LocalDateTime, String] with
-    override def elemToDto(e: LocalDateTime): String = s"$e"
+    override def elemToDto(e: LocalDateTime): String = e.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     override def dtoToElem(dto: String): Either[String, LocalDateTime] =
       Try(LocalDateTime.parse(dto, DateTimeFormatter.ISO_LOCAL_DATE_TIME)).toEither.leftMap(_ => s"Invalid date: $dto")
 
