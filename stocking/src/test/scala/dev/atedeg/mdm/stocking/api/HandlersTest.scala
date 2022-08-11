@@ -34,7 +34,7 @@ trait Mocks:
     override def readDesiredStock[M[_]: Monad: LiftIO]: M[DesiredStockDTO] = desiredStock.pure
 
   @SuppressWarnings(Array("org.wartremover.warts.Var", "scalafix:DisableSyntax.var"))
-  var agingBatches: List[AgingBatchDTO] = List[AgingBatchDTO]()
+  var agingBatches: List[AgingBatchDTO] = Nil
   val batchesRepository: BatchesRepository = new BatchesRepository:
     override def addNewBatch[M[_]: Monad: LiftIO](agingBatch: AgingBatchDTO): M[Unit] =
       agingBatches = agingBatch :: agingBatches
