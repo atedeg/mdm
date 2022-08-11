@@ -20,7 +20,8 @@ object RemainingQuintalsOfMilkEndpoint:
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   val remainingQuintalsOfMilkEndpoint: PublicEndpoint[Unit, String, RemainingMilkDTO, Any] =
     endpoint.get
-      .in("remaining-quintals-of-milk")
+      .in("milk")
+      .description("Get the remaining quintals of milk")
       .out(jsonBody[RemainingMilkDTO].description("The quintals of milk remaining in stock"))
       .errorOut(stringBody)
 
