@@ -88,7 +88,7 @@ final case class Longitude(value: DecimalInClosedRange[-180.0, 180.0])
 /**
  * Associates to each [[Product product]] its [[PriceInEuroCents unitary price]].
  */
-type PriceList = Product => PriceInEuroCents
+final case class PriceList(priceList: Map[Product, PriceInEuroCents])
 
 /**
  * A price expressed in cents, the smallest currency unit for euros.

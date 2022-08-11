@@ -40,9 +40,11 @@ trait LocationMock:
 
 trait PriceListMock:
 
-  val priceList: Product => PriceInEuroCents = Map(
-    Caciotta(1000) -> 100.euroCents,
-    Caciotta(500) -> 50.euroCents,
+  val priceList: PriceList = PriceList(
+    Map(
+      Caciotta(1000) -> 100.euroCents,
+      Caciotta(500) -> 50.euroCents,
+    ),
   )
 
 trait OrderMocks extends PriceListMock, CustomerMock, LocationMock:
@@ -82,7 +84,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       val (events, pricedOrder) = priceAction.execute
       Then("the priced is computed correctly")
       val expectedPrice =
-        incomingOrder.orderLines.map(ol => priceList(ol.product).n * ol.quantity.n).reduce(_ + _).euroCents
+        incomingOrder.orderLines.map(ol => priceList.priceList(ol.product).n * ol.quantity.n).reduce(_ + _).euroCents
       pricedOrder.totalPrice shouldBe expectedPrice
       And("an event is emitted")
       events shouldBe List(OrderProcessed(incomingOrder))

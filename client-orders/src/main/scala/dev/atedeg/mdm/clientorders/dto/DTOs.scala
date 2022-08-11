@@ -22,6 +22,7 @@ private object Commons:
   given DTO[CustomerName, String] = caseClassDTO
   given DTO[VATNumber, String] = caseClassDTO
   given DTO[IncomingOrderLine, IncomingOrderLineDTO] = interCaseClassDTO
+  given DTO[PriceInEuroCents, Int] = caseClassDTO
 
 import Commons.*
 import Commons.given
@@ -54,6 +55,24 @@ final case class IncomingOrderDTO(
 object OrderProcessedDTO:
   given DTO[OrderProcessed, OrderProcessedDTO] = interCaseClassDTO
   private given DTO[IncomingOrder, IncomingOrderDTO] = interCaseClassDTO
+
+final case class PriceListDTO(priceList: Map[ProductDTO, Int])
+object PriceListDTO:
+  given DTO[PriceList, PriceListDTO] = interCaseClassDTO
+
+final case class PricedOrderDTO(
+    id: String,
+    orderLines: List[PricedOrderLineDTO],
+    customer: CustomerDTO,
+    deliveryDate: String,
+    deliveryLocation: LocationDTO,
+    totalPrice: Int,
+)
+final case class PricedOrderLineDTO(quantity: Int, product: ProductDTO, totalPrice: Int)
+
+object PricedOrderDTO:
+  given DTO[PricedOrder, PricedOrderDTO] = interCaseClassDTO
+  private given DTO[PricedOrderLine, PricedOrderLineDTO] = interCaseClassDTO
 
 final case class ProductPalletizedDTO(product: ProductDTO, quantity: Int)
 object ProductPalletizedDTO:
