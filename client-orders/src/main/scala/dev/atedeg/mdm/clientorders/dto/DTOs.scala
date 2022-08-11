@@ -11,10 +11,6 @@ import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
 private object Commons:
-  final case class CustomerDTO(code: String, name: String, vatNumber: String)
-  final case class LocationDTO(latitude: Double, longitude: Double)
-  final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
-
   given DTO[OrderID, String] = caseClassDTO
   given DTO[Customer, CustomerDTO] = interCaseClassDTO
   given DTO[Location, LocationDTO] = interCaseClassDTO
@@ -37,6 +33,9 @@ final case class OrderReceivedDTO(
     deliveryDate: String,
     deliveryLocation: LocationDTO,
 )
+final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
+final case class CustomerDTO(code: String, name: String, vatNumber: String)
+final case class LocationDTO(latitude: Double, longitude: Double)
 object OrderReceivedDTO:
   given DTO[OrderReceived, OrderReceivedDTO] = interCaseClassDTO
 
