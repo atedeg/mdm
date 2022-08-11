@@ -34,12 +34,17 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
     _ <- config.orderRepository.writeInProgressOrder(inProgressOrder.toDTO)
   yield pricedOrder.id.id.toDTO[String]
 
-/*
 def productPalletizedForOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
     productPalletizedForOrderDTO: ProductPalletizedForOrderDTO,
 ): M[Unit] =
   for
     config <- readState
-
+    productPallettizedForOrder <- validate(productPalletizedForOrderDTO)
+    order <- config.orderRepository.readInProgressOrder(productPallettizedForOrder.orderID.id.toDTO)
+    action: Action[PalletizationError, ProductPalletized, InProgressOrder] =
+      palletizeProductForOrder(productPallettizedForOrder.quantity, productPallettizedForOrder.product)(order)
+    (events, result) = action.execute
+    _ <- events.map(_.toDTO[ProductPalletizedDTO]).traverse(config.emitter.emitProductPalletized)
+    updatedOrder <- result.leftMap(e => s"Palletization error: $e").getOrRaise
+    _ <- config.orderRepository.writeInProgressOrder(updatedOrder.toDTO)
   yield ()
- */
