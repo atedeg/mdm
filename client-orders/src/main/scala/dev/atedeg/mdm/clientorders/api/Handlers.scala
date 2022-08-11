@@ -40,7 +40,7 @@ def productPalletizedForOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanR
   for
     config <- readState
     productPallettizedForOrder <- validate(productPalletizedForOrderDTO)
-    order <- config.orderRepository.readInProgressOrder(productPallettizedForOrder.orderID.id.toDTO)
+    order <- config.orderRepository.readInProgressOrder(productPallettizedForOrder.orderID.id.toDTO) >>= validate
     action: Action[PalletizationError, ProductPalletized, InProgressOrder] =
       palletizeProductForOrder(productPallettizedForOrder.quantity, productPallettizedForOrder.product)(order)
     (events, result) = action.execute
