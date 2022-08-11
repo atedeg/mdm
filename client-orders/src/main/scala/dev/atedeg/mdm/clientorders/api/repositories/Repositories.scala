@@ -12,11 +12,11 @@ trait PriceListRepository:
 
 trait OrderRepository:
   def writeInProgressOrder[M[_]: Monad: LiftIO](inProgressOrder: InProgressOrderDTO): M[Unit]
-  def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrder]
+  def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrderDTO]
 
 final case class PriceListRepositoryDB(connectionString: String) extends PriceListRepository:
   override def read[M[_]: Monad: LiftIO]: M[PriceListDTO] = ???
 
 final case class OrderRepositoryDB(connectionString: String) extends OrderRepository:
   override def writeInProgressOrder[M[_]: Monad: LiftIO](inProgressOrder: InProgressOrderDTO): M[Unit] = ???
-  override def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrder] = ???
+  override def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrderDTO] = ???

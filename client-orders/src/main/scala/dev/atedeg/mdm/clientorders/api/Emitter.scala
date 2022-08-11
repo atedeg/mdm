@@ -11,4 +11,4 @@ trait Emitter:
 
 final case class EmitterMQ() extends Emitter:
   override def emitOrderProcessed[M[_]: Monad: LiftIO](orderProcessed: OrderProcessedDTO): M[Unit] = ???
-  override def emitProductPalletized[M[_]: Monad: LiftIO](orderPalletized: ProductPalletizedDTO): M[Unit] = ???
+  override def emitProductPalletized[M[_]: Monad: LiftIO](productPalletized: ProductPalletizedDTO): M[Unit] = ???

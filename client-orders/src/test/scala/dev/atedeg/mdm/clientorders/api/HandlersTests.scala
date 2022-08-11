@@ -8,10 +8,12 @@ import cats.Monad
 import cats.effect.LiftIO
 import cats.syntax.all.*
 import cats.syntax.validated
+import org.scalatest.*
 import org.scalatest.EitherValues.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import dev.atedeg.mdm.clientorders.InProgressOrder
 import dev.atedeg.mdm.clientorders.api.repositories.*
 import dev.atedeg.mdm.clientorders.dto.*
 import dev.atedeg.mdm.products.dto.ProductDTO
@@ -20,8 +22,19 @@ import dev.atedeg.mdm.utils.serialization.DTOOps.toDTO
 
 @SuppressWarnings(Array("org.wartremover.warts.Var", "scalafix:DisableSyntax.var"))
 trait Mocks:
-  var savedOrder: Option[InProgressOrderDTO] = None
+  var emittedProductPalletized: List[ProductPalletizedDTO] = Nil
   var emittedOrderProcessed: List[OrderProcessedDTO] = Nil
+  var savedOrder: Option[InProgressOrderDTO] = None
+
+  val incompleteOrderLine: IncompleteOrderLineDTO = IncompleteOrderLineDTO(0, 100, ProductDTO("ricotta", 350), 1000)
+  val oldInProgressOrder: InProgressOrderDTO = InProgressOrderDTO(
+    UUID.randomUUID.toDTO,
+    List(InProgressOrderLineDTO("incomplete", None, Some(incompleteOrderLine))),
+    CustomerDTO(UUID.randomUUID.toDTO, "foo", "IT01088260409"),
+    LocalDateTime.now.toDTO,
+    LocationDTO(12, 42),
+    1000,
+  )
 
   val priceListRepository: PriceListRepository = new PriceListRepository:
     override def read[M[_]: Monad: LiftIO]: M[PriceListDTO] = PriceListDTO(Map(ProductDTO("ricotta", 350) -> 100)).pure
@@ -30,15 +43,20 @@ trait Mocks:
     override def writeInProgressOrder[M[_]: Monad: LiftIO](inProgressOrder: InProgressOrderDTO): M[Unit] =
       savedOrder = Some(inProgressOrder)
       ().pure
+    override def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrderDTO] =
+      oldInProgressOrder.pure
 
   val emitter: Emitter = new Emitter:
     override def emitOrderProcessed[M[_]: Monad: LiftIO](orderProcessed: OrderProcessedDTO): M[Unit] =
       emittedOrderProcessed = orderProcessed :: emittedOrderProcessed
       ().pure
+    override def emitProductPalletized[M[_]: Monad: LiftIO](productPalletized: ProductPalletizedDTO): M[Unit] =
+      emittedProductPalletized = productPalletized :: emittedProductPalletized
+      ().pure
 
   val config: Configuration = Configuration(priceListRepository, orderRepository, emitter)
 
-class HandlersTest extends AnyWordSpec, Matchers, Mocks:
+class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
   "The `newOrderHandler`" should {
     val orderLines = List(IncomingOrderLineDTO(10, ProductDTO("ricotta", 350)))
     val customer = CustomerDTO(UUID.randomUUID.toDTO[String], "foo", "IT01088260409")
@@ -63,5 +81,31 @@ class HandlersTest extends AnyWordSpec, Matchers, Mocks:
           val incomplete = IncompleteOrderLineDTO(0, 10, ProductDTO("ricotta", 350), 1000)
           val orderLines = List(InProgressOrderLineDTO("incomplete", None, Some(incomplete)))
           o shouldBe InProgressOrderDTO(res.value, orderLines, customer, deliveryDate, deliveryLocation, 1000)
+    }
+  }
+
+class ProductPalletizedForOrderHandler extends AnyWordSpec, Matchers, Mocks:
+  "The `ProductPalletizedForOrderHandler`" should {
+    val dto = ProductPalletizedForOrderDTO(oldInProgressOrder.id, 10, ProductDTO("ricotta", 350))
+    val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(dto)
+    action.unsafeExecute(config)
+
+    "save the updated order" in {
+      savedOrder match
+        case None => fail("The order was not updated")
+        case Some(o) =>
+          val orderLine = o.orderLines(0)
+          orderLine.incompleteDTO match
+            case None => fail("The order was not updated correctly")
+            case Some(i) => i.actual shouldBe 10
+    }
+
+    "emit all the events" in {
+      emittedProductPalletized match
+        case Nil => fail("No events were emitted")
+        case List(e) =>
+          e.product shouldBe ProductDTO("ricotta", 350)
+          e.quantity shouldBe 10
+        case _ => fail("Emitted more events than expected")
     }
   }
