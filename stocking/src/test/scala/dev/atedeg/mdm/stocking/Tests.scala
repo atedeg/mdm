@@ -1,4 +1,4 @@
-package dev.atedeg.mdm.stocking.types
+package dev.atedeg.mdm.stocking
 
 import java.util.UUID
 
