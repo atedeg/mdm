@@ -39,7 +39,7 @@ yield productionPlan
 private def checkDeliverabilityOfOrder[M[_]: Monad: CanEmit[OrderDelayed]](
     cheeseTypeRipeningDays: CheeseTypeRipeningDays,
 )(order: Order): M[Unit] =
-  val ripeningDays = order.orderedProducts.map(_.product.cheeseType).map(cheeseTypeRipeningDays(_))
+  val ripeningDays = order.orderedProducts.map(_.product.cheeseType).map(cheeseTypeRipeningDays.value(_))
   val isDelayed = ripeningDays.map(productionInTime(_, order.requiredBy)).exists(_ === OrderStatus.Delayed)
   when(isDelayed) {
     val deliveryDate = newDeliveryDate(RipeningDays(ripeningDays.map(_.days).reduceLeft(max)))

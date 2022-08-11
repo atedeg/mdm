@@ -95,7 +95,7 @@ tables:
       - class: "StockedQuantity"
       - class: "Order"
       - class: "OrderedProduct"
-      - type: "CheeseTypeRipeningDays"
+      - class: "CheeseTypeRipeningDays"
       - class: "RipeningDays"
 
   - name: "production-planning-incoming"

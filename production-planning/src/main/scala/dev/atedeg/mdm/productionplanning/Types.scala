@@ -54,7 +54,7 @@ final case class OrderedProduct(product: Product, quantity: Quantity)
 /**
  * Defines how many [[RipeningDays days of ripening]] are needed for a given [[CheeseType type of cheese]].
  */
-type CheeseTypeRipeningDays = CheeseType => RipeningDays
+final case class CheeseTypeRipeningDays(value: Map[CheeseType, RipeningDays])
 
 /**
  * The number of days needed for the ripening process to be done.
