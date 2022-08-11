@@ -18,8 +18,8 @@ object OrdersEndpoint:
   val newOrderEndpoint: PublicEndpoint[OrderReceivedDTO, String, String, Any] =
     endpoint.post
       .in("order")
-      .in(jsonBody[OrderReceivedDTO].description("TODO"))
-      .out(stringBody)
+      .in(jsonBody[OrderReceivedDTO].description("The order that needs to be placed"))
+      .out(stringBody.description("The ID assigned to the placed order"))
       .errorOut(stringBody)
 
   val newOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
@@ -33,12 +33,42 @@ object OrdersEndpoint:
   val palletizeProductForOrder: PublicEndpoint[ProductPalletizedForOrderDTO, String, Unit, Any] =
     endpoint.post
       .in("order" / "palletize")
-      .in(jsonBody[ProductPalletizedForOrderDTO].description("TODO"))
+      .in(jsonBody[ProductPalletizedForOrderDTO].description("The product and quantity palletized for the given order"))
       .errorOut(stringBody)
 
   val palletizeProductRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     palletizeProductForOrder.serverLogic { p =>
       val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(p)
+      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+    },
+  )
+
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
+  val orderCompletedEndpoint: PublicEndpoint[OrderCompletedDTO, String, Unit, Any] =
+    endpoint.post
+      .in("order" / "complete")
+      .in(jsonBody[OrderCompletedDTO].description("The ID of the order that has been completed"))
+      .errorOut(stringBody)
+
+  val orderCompletedRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
+    orderCompletedEndpoint.serverLogic { o =>
+      val action: ServerAction[Configuration, String, Unit] = orderCompletedHandler(o)
+      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+    },
+  )
+
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
+  val getTransportDocumentEndpoint: PublicEndpoint[String, String, TransportDocumentDTO, Any] =
+    endpoint.get
+      .in("order")
+      .in(path[String].description("The ID of the order for which the transport document is requested"))
+      .in("ddt")
+      .out(jsonBody[TransportDocumentDTO].description("The transport document for the given order"))
+      .errorOut(stringBody)
+
+  val getTransportDocumentRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
+    getTransportDocumentEndpoint.serverLogic { o =>
+      val action: ServerAction[Configuration, String, TransportDocumentDTO] = getTransportDocumentHandler(o)
       action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )

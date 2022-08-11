@@ -63,6 +63,8 @@ def orderCompletedHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configu
     _ <- config.orderRepository.updateOrderToCompleted(completedOrder.toDTO)
   yield ()
 
-def getDDTHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](orderID: String): M[Unit] =
+def getTransportDocumentHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
+    orderID: String,
+): M[TransportDocumentDTO] =
   (readState >>= (_.orderRepository.readCompletedOrder(orderID)) >>= validate)
-    .map(o => createTransportDocument(o, weightOrder(o)))
+    .map(o => createTransportDocument(o, weightOrder(o)).toDTO)

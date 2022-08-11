@@ -116,3 +116,16 @@ final case class CompletedOrderLineDTO(quantity: Int, product: ProductDTO, price
 object CompletedOrderDTO:
   given DTO[CompletedOrder, CompletedOrderDTO] = interCaseClassDTO
   private given DTO[CompleteOrderLine, CompletedOrderLineDTO] = interCaseClassDTO
+
+final case class TransportDocumentDTO(
+    deliveryLocation: LocationDTO,
+    shippingLocation: LocationDTO,
+    customer: CustomerDTO,
+    shippingDate: String,
+    transportDocumentLines: List[TransportDocumentLineDTO],
+    totalWeight: Double,
+)
+final case class TransportDocumentLineDTO(quantity: Int, product: ProductDTO, price: Int)
+object TransportDocumentDTO:
+  given DTO[TransportDocument, TransportDocumentDTO] = interCaseClassDTO
+  private given DTO[TransportDocumentLine, TransportDocumentLineDTO] = interCaseClassDTO
