@@ -32,7 +32,7 @@ def processIncomingOrder[M[_]: Monad: Emits[OrderProcessed]](priceList: PriceLis
 
 private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder =
   val pricedOrderLines = incomingOrder.orderLines.map { case IncomingOrderLine(quantity, product) =>
-    val price = priceList(product).n * quantity.n
+    val price = priceList.priceList(product).n * quantity.n
     PricedOrderLine(quantity, product, price.euroCents)
   }
   val totalPrice = pricedOrderLines.map(_.totalPrice).reduce(_ + _)
