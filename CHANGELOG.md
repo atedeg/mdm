@@ -1,3 +1,21 @@
+# [1.0.0-beta.14](https://github.com/atedeg/mdm/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2022-08-11)
+
+
+### Bug Fixes
+
+* use format instead of to string ([330bd02](https://github.com/atedeg/mdm/commit/330bd0211bfeb1d6ebe51bccddfa727b6db4683a))
+* use to string for local date time conversionù ([cc57cca](https://github.com/atedeg/mdm/commit/cc57cca49b8dde3d9ba8ff705e23dc09c1d52222))
+
+
+### Features
+
+* add acl dtos ([d85d6c2](https://github.com/atedeg/mdm/commit/d85d6c2eb4ecbd1df20ec3b9f941ee1283a6d9a6))
+* add endpoints ([938dae6](https://github.com/atedeg/mdm/commit/938dae62581a74aca245b689f074ef3cda9e4517))
+* add handlers ([ed8a27d](https://github.com/atedeg/mdm/commit/ed8a27d634df701d5a51125b2823e2b75fae28d1))
+* add product palletized event to client orders bc ([4b8474c](https://github.com/atedeg/mdm/commit/4b8474c797f54bc8e7ddb7b25df37fd82844cfea))
+* add repositories ([344f266](https://github.com/atedeg/mdm/commit/344f2666adeefc268b16d7ab6d98f08ce94bed68))
+* available stock and desired stock are now case classes ([44ec364](https://github.com/atedeg/mdm/commit/44ec36436e2cc05b3ec604b6413529bea9c0b62b))
+
 # [1.0.0-beta.13](https://github.com/atedeg/mdm/compare/v1.0.0-beta.12...v1.0.0-beta.13) (2022-08-09)
 
 
