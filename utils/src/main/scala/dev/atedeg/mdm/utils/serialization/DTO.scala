@@ -32,13 +32,9 @@ object DTO:
   given DTO[Double, Double] = idDTO
   given DTO[String, String] = idDTO
 
-  given mapListDTO[KE, KD, VE, VD](using DTO[KE, KD])(using DTO[VE, VD]): DTO[Map[KE, VE], List[(KD, VD)]] with
-    override def elemToDto(e: Map[KE, VE]): List[(KD, VD)] = e.toList.map(_.bimap(_.toDTO[KD], _.toDTO[VD]))
-    override def dtoToElem(dto: List[(KD, VD)]): Either[String, Map[KE, VE]] =
-      for
-        keys <- dto.map(_._1).traverse(_.toDomain[KE])
-        values <- dto.map(_._2).traverse(_.toDomain[VE])
-      yield keys.zip(values).toMap
+  given mapListDTO[KE, VE, D](using DTO[(KE, VE), D]): DTO[Map[KE, VE], List[D]] with
+    override def elemToDto(e: Map[KE, VE]): List[D] = e.toList.map(_.toDTO[D])
+    override def dtoToElem(dto: List[D]): Either[String, Map[KE, VE]] = dto.traverse(_.toDomain[(KE, VE)]).map(_.toMap)
 
   given mapDTO[KE, KD, VE, VD](using DTO[KE, KD])(using DTO[VE, VD]): DTO[Map[KE, VE], Map[KD, VD]] with
     override def elemToDto(e: Map[KE, VE]): Map[KD, VD] = e.map(_.bimap(_.toDTO[KD], _.toDTO[VD]))
@@ -94,7 +90,6 @@ object DTOGenerators:
         val instance: DTO[t, D] = summonInline[DTO[t, D]]
         new DTO[E, D]:
           def elemToDto(e: E): D = instance.elemToDto(firstField(e))
-
           def dtoToElem(dto: D): Either[String, E] = instance.dtoToElem(dto).map(e => p.fromProduct(e *: EmptyTuple))
       case _ => compiletime.error("Can only derive for case classes with only one field")
 
