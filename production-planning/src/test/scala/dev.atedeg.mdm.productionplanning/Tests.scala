@@ -18,12 +18,14 @@ import dev.atedeg.mdm.utils.monads.*
 
 trait Mocks:
 
-  val cheeseTypeRipeningDays: CheeseTypeRipeningDays = Map(
-    CheeseType.Squacquerone -> RipeningDays(4),
-    CheeseType.Ricotta -> RipeningDays(0),
-    CheeseType.Caciotta -> RipeningDays(8),
-    CheeseType.Casatella -> RipeningDays(4),
-    CheeseType.Stracchino -> RipeningDays(5),
+  val cheeseTypeRipeningDays: CheeseTypeRipeningDays = CheeseTypeRipeningDays(
+    Map(
+      CheeseType.Squacquerone -> RipeningDays(4),
+      CheeseType.Ricotta -> RipeningDays(0),
+      CheeseType.Caciotta -> RipeningDays(8),
+      CheeseType.Casatella -> RipeningDays(4),
+      CheeseType.Stracchino -> RipeningDays(5),
+    ),
   )
 
   val prodToProd1: ProductToProduce = ProductToProduce(Product.Caciotta(500), Quantity(5))
