@@ -1,3 +1,18 @@
+# [1.0.0-beta.15](https://github.com/atedeg/mdm/compare/v1.0.0-beta.14...v1.0.0-beta.15) (2022-08-11)
+
+
+### Bug Fixes
+
+* change endpoint path parameter name ([7290b6a](https://github.com/atedeg/mdm/commit/7290b6a53dce5082f2737b50c71cb759133b9497))
+
+
+### Features
+
+* add endpoint to palletize product for order ([c1b1afd](https://github.com/atedeg/mdm/commit/c1b1afdc1fc63dd5e7940e39d46645e67cecde66))
+* add endpoint to place new orders ([5a6c2b0](https://github.com/atedeg/mdm/commit/5a6c2b03eb05eeef0673ceaa41cf170c14e488cd))
+* add endpoints to complete orders and get their transport document ([27973fe](https://github.com/atedeg/mdm/commit/27973fed4ec344b5827cb6dbf6e396813b24fac8))
+* add handler for incoming orders ([c076741](https://github.com/atedeg/mdm/commit/c07674154332e641e8adec4c2a85d80d71e55707))
+
 # [1.0.0-beta.14](https://github.com/atedeg/mdm/compare/v1.0.0-beta.13...v1.0.0-beta.14) (2022-08-11)
 
 
