@@ -45,6 +45,8 @@ trait Mocks:
       ().pure
     override def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrderDTO] =
       oldInProgressOrder.pure
+    override def readCompletedOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[CompletedOrderDTO] = ???
+    override def updateOrderToCompleted[M[_]: Monad: LiftIO: CanRaise[String]](order: CompletedOrderDTO): M[Unit] = ???
 
   val emitter: Emitter = new Emitter:
     override def emitOrderProcessed[M[_]: Monad: LiftIO](orderProcessed: OrderProcessedDTO): M[Unit] =
