@@ -5,8 +5,9 @@ layout: static-site-main
 
 # User stories
 
-During our event storming session we discussed with the domain experts and Raffaella (the factory owner).
-After sketching out the main subdomains, we came up with this set of user stories:
+During our event storming session we discussed with the domain experts and Raffaella
+(the factory owner). After sketching out the main subdomains, we came up with this set of user
+stories:
 
 ## Milk Planning
 1. **As** Raffaella  
@@ -16,7 +17,7 @@ After sketching out the main subdomains, we came up with this set of user storie
 ## Production Planning
 1. **As** Raffaella  
    **I want to** create a production plan for the day  
-   **so that** I can optimize the usage of the cheese making machines during the day
+   **so that** I can optimize the usage of the cheese-making machines during the day
 
 ## Client Orders
 1. **As** a customer  
@@ -27,7 +28,7 @@ After sketching out the main subdomains, we came up with this set of user storie
    **so that** I don't have to do it manually flipping through the price list
 3. **As** an operator  
    **I want to** palletize a product for an order  
-   **so that** I can set aside a produce for a client's order
+   **so that** I can set aside a product for a client's order
 4. **As** an operator  
    **I want to** mark an order as complete and ready to be shipped   
    **so that** it can be shipped to the customer
@@ -61,5 +62,5 @@ After sketching out the main subdomains, we came up with this set of user storie
    **I want to** report the result of quality assurance on a batch of cheeses  
    **so that** I can know which cheeses to pull off from the market
 3. **As** a worker  
-   **I want to** I want to weigh a cheese    
+   **I want to** weigh a cheese  
    **so that** I can print an appropriate label for it
