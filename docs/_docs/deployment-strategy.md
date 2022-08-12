@@ -5,32 +5,37 @@ layout: static-site-main
 
 # Deployment Strategy
 
-A good deployment strategy is crucial for the success of the project.
+A good deployment strategy is crucial for the success of a project.
 One of the main goals we want to achieve is the adoption of the continuous release strategy.
-This implies, from our point of view, having a robust test suite, an adequate DVCS workflow and tools to automate the releases.
-The DVCS workflow adopted is quite similar to `git-flow` but with substantial changes: we use the "feature branch" as intended,
-where each feature is well-isolated ad defined.
+We decided to adopt a continuous release strategy: this implied having a robust test suite,
+an adequate DVCS workflow and tools to automate the releases.
 
-A beta branch is used to publish a non-stable version of the software despite a beta-release will be triggered.
-The main branch is intended to be the only stable branch, where a push on this branch triggers a new stable release.
-The beta branch has been useful especially in the early stages of development as it generates pre-releases therefore
-to be considered unstable and subject to changes.
-To prevent mistakes like pushing on the wrong branch, some branch protection rules were defined.
-The branches covered by branch protection are main and beta, namely that triggers a release.
-Branch protection caused a problem that has been fixed: since no user can push directly on those branches,
-tools like `semantic-release` couldn't push stuff on those branches.
-To address this problem we created a team application `atedeg-bot` that has the push permission on those branches so that the
-release process succeeded without fails.
+## Adopted DVCS Workflow
 
-This workflow leads us to add features and fixes by PRs (Pull Requests) allowing code review and comments before the merge.
-In this way, each team member will have awareness of the others' code ensuring an overview of the project.
+The DVCS workflow we adopted is quite similar to `git-flow` but with substantial changes:
+we use the `feature` branch as intended, with each feature well-isolated and defined.
+Moreover, we used a `beta` branch to publish a non-stable version of the software; this can be
+quite handy as it generates pre-releases that can be beta-tested before releasing a stable version.
+Lastly, the `main` branch is intended to be the only stable branch: a push on this branch triggers
+a new stable release.
 
-In addition, this type of workflow makes classic branch develop totally unnecessary:
-having a robust test suite joint with the use of semantic-release, allows you to merge directly to main (or beta)
-and only relevant changes trigger a new release without having to worry about when to make a new one
-(as opposed to what happens when you have to deal with develop).
+We also added branch protection to the `main` and `beta` branches to prevent mistakes like pushing
+on the wrong branch and inadvertently triggering a release.
+These rules, however, also prevented tools like `semantic-release` from pushing on those branches.
+To overcome this issue we created a team application `atedeg-bot` that has the push permission on
+those branches so that the release process could succeed without failures.
 
-An example of the workflow adopted by the team is shown in the image below.
+We also added features and fixes by using GitHub's pull requests, allowing for code review and
+comments from other team members before the code could be merged.
+This way each team member can still have an overview of the other's work and point out possible
+problems or ideas to improve it.
+
+In addition, this type of workflow makes the classic `develop` branch unnecessary:
+having a robust test suite joint with the use of semantic-release, allows one to merge directly to
+`main` (or `beta`); only relevant changes trigger a new release without having to worry about when
+to make a new one (as opposed to what happens when one has to deal with the `develop` branch).
+
+An example of the workflow adopted by the team is shown in the image below:
 
 ```mermaid
 gitGraph
