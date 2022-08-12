@@ -14,3 +14,5 @@ subsection:
           - page: bounded-contexts/restocking.md
   - page: quality-assurance.md
   - page: deployment-strategy.md
+  - page: ci.md
+  
