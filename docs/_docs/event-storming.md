@@ -11,10 +11,6 @@ by having real domain experts available to explain the current business processe
 In addition, using this approach it was possible to bring together managers from different areas,
 who collaborated to correctly define the dynamics and problems concerning their communications.
 
-<iframe 
-src="https://www.youtube.com/embed/BvkPYtI8MF8?playlist=BvkPYtI8MF8&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1">
-</iframe>
-
 # Subdomains
 
 From the Event Storming session the following subdomains emerged:
