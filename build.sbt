@@ -7,6 +7,8 @@ ThisBuild / homepage := Some(url("https://github.com/atedeg/mdm"))
 ThisBuild / licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / versionScheme := Some("early-semver")
 
+ThisBuild / Docker / dockerUsername := Some("atedeg")
+
 ThisBuild / ubidoc / targetDirectory := baseDirectory.value / "_includes"
 ThisBuild / ubidoc / lookupDirectory := target.value / "site"
 
@@ -145,6 +147,7 @@ lazy val production = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("production"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
     dockerExposedPorts := Seq(8080),
   )
@@ -162,6 +165,7 @@ lazy val stocking = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("stocking"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
     dockerExposedPorts := Seq(8080),
   )
@@ -171,6 +175,7 @@ lazy val `client-orders` = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("client-orders"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
     dockerExposedPorts := Seq(8080),
   )
@@ -190,6 +195,7 @@ lazy val `production-planning` = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("production-planning"))
   .settings(commonSettings)
+  .settings(commonDockerSettings)
   .settings(
     dockerExposedPorts := Seq(8080),
   )
