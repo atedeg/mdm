@@ -142,9 +142,13 @@ lazy val `milk-planning` = project
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val production = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("production"))
-  .dependsOn(utils, `products-shared-kernel`)
   .settings(commonSettings)
+  .settings(
+    dockerExposedPorts := Seq(8080),
+  )
+  .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `products-shared-kernel` = project
   .in(file("products-shared-kernel"))
@@ -159,15 +163,17 @@ lazy val stocking = project
   .in(file("stocking"))
   .settings(commonSettings)
   .settings(
-    Docker / packageName := packageName.value,
-    Docker / version := version.value,
     dockerExposedPorts := Seq(8080),
   )
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `client-orders` = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("client-orders"))
   .settings(commonSettings)
+  .settings(
+    dockerExposedPorts := Seq(8080),
+  )
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val restocking = project
@@ -181,6 +187,10 @@ lazy val restocking = project
   .dependsOn(utils, `products-shared-kernel`)
 
 lazy val `production-planning` = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("production-planning"))
   .settings(commonSettings)
+  .settings(
+    dockerExposedPorts := Seq(8080),
+  )
   .dependsOn(utils, `products-shared-kernel`)
