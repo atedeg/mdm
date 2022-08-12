@@ -15,4 +15,6 @@ subsection:
   - page: quality-assurance.md
   - page: deployment-strategy.md
   - page: ci.md
+  - page: development-choices.md
+  - page: documentation.md
   
