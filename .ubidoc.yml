@@ -1,0 +1,135 @@
+tables:
+  - name: "stocking-ul"
+    rows:
+      - class: "AvailableStock"
+      - class: "DesiredStock"
+      - class: "AvailableQuantity"
+      - class: "DesiredQuantity"
+      - class: "MissingQuantity"
+      - enum: "Batch"
+      - enum: "QualityAssuredBatch"
+      - class: "BatchID"
+        name: "Batch ID"
+      - class: "LabelledProduct"
+  - name: "stocking-outgoing"
+    rows:
+      - case: "OutgoingEvent.ProductStocked"
+      - case: "OutgoingEvent.ProductPalletized"
+  - name: "stocking-incoming"
+    rows:
+      - case: "IncomingEvent.BatchReadyForQualityAssurance"
+      - case: "IncomingEvent.ProductRemovedFromStock"
+      - case: "IncomingEvent.NewBatch"
+  - name: "milk-planning-ul"
+    termName: "Term"
+    definitionName: "Definition"
+    rows:
+      - class: "ProcessedMilk"
+      - class: "QuintalsOfMilk"
+      - class: "Yield"
+      - type: "RecipeBook"
+      - type: "Stock"
+      - class: "StockedQuantity"
+      - class: "Quantity"
+      - class: "RequestedProduct"
+
+  - name: "milk-planning-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.ReceivedOrder"
+
+  - name: "milk-planning-outgoing"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "OutgoingEvent.OrderMilk"
+
+  - name: "production-ul"
+    rows:
+      - class: "ProductionPlan"
+      - class: "ProductionPlanItem"
+      - case: "Production.ToStart"
+        name: "Production To Start"
+      - case: "Production.InProgress"
+        name: "Production In Progress"
+      - case: "Production.Ended"
+        name: "Ended Production"
+      - type: "RecipeBook"
+      - class: "Recipe"
+      - class: "QuintalsOfIngredient"
+      - class: "CheeseTypeRipeningDays"
+      - class: "RipeningDays"
+  - name: "production-outgoing"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "OutgoingEvent.StartProduction"
+      - case: "OutgoingEvent.NewBatch"
+  - name: "production-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.ProductionPlanReady"
+      - case: "IncomingEvent.ProductionEnded"
+
+  - name: "restocking-ul"
+    rows:
+      - type: "Stock"
+      - class: "StockedMilk"
+      - class: "StockedQuantity"
+      - class: "QuintalsOfIngredient"
+      - class: "QuintalsOfMilk"
+  - name: "restocking-incoming"
+    termName: "Event"
+    definitionName: "Description"
+    rows:
+      - case: "IncomingEvent.OrderMilk"
+      - case: "IncomingEvent.ProductionStarted"
+  - name: "production-planning-ul"
+    rows:
+      - class: "ProductionPlan"
+      - class: "ProductToProduce"
+      - class: "Quantity"
+      - class: "MissingProducts"
+      - class: "MissingQuantity"
+      - class: "Order"
+      - class: "OrderedProduct"
+      - class: "CheeseTypeRipeningDays"
+      - class: "RipeningDays"
+
+  - name: "production-planning-incoming"
+    rows:
+      - case: "IncomingEvent.NewOrderReceived"
+  - name: "production-planning-outgoing"
+    rows:
+      - case: "OutgoingEvent.ProductionPlanReady"
+      - case: "OutgoingEvent.OrderDelayed"
+
+  - name: "client-orders-ul"
+    rows:
+      - class: "IncomingOrder"
+      - class: "IncomingOrderLine"
+      - class: "Customer"
+      - class: "Location"
+      - class: "PriceList"
+      - class: "PricedOrder"
+      - class: "PricedOrderLine"
+      - class: "InProgressOrder"
+      - enum: "InProgressOrderLine"
+      - class: "CompletedOrder"
+      - class: "CompleteOrderLine"
+      - class: "TransportDocument"
+      - class: "TransportDocumentLine"
+
+  - name: "client-orders-incoming"
+    rows:
+      - case: "IncomingEvent.OrderReceived"
+      - case: "IncomingEvent.ProductPalletizedForOrder"
+      - case: "IncomingEvent.OrderCompleted"
+
+  - name: "client-orders-outgoing"
+    rows:
+      - case: "OutgoingEvent.OrderProcessed"
+
+ignored: []

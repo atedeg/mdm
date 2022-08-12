@@ -10,10 +10,11 @@ ContextMap MDM {
 	ProductionPlanning [D, ACL] <- [U] ClientOrders 
 	MilkPlanning [D, ACL]  <- [U] Restocking 
 	Production [D, CF] <- [U] ProductionPlanning
-	ClientOrders [D] <- [U, OHS, PL] Stocking
+	Stocking [D, ACL] <- [U] ClientOrders
 	ProductionPlanning [D, ACL] <- [U] Stocking
 	Stocking [D, CF] <- [U] Production
-	Production [D, ACL] <- [U] Restocking
+	Restocking [D] <- [U, OHS, PL] Production
+	MilkPlanning [D, ACL] <- [U] Stocking
 }
 
 BoundedContext MilkPlanning

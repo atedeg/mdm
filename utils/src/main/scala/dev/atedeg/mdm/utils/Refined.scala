@@ -11,9 +11,26 @@ import math.Ordering.Implicits.infixOrderingOps
 
 type PositiveNumber = Int Refined Positive
 type PositiveDecimal = Double Refined Positive
-type NumberInClosedRange[L, U] = Int Refined Interval.Closed[L, U]
+type DecimalInClosedRange[L, U] = Double Refined Interval.Closed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
+
+extension [N: Numeric](n: N Refined Positive) def toNonNegative: N Refined NonNegative = coerce(n.value)
+
+extension [N, P <: Positive | NonNegative: ValidFor[N]: ValidFor[Double]](n: N Refined P)(using N: Numeric[N])
+  def toDecimal: Double Refined P = coerce(N.toDouble(n.value))
+
+extension [P <: Positive | NonNegative: ValidFor[Double]](d: Double Refined P)
+  def toNumber: NonNegativeNumber = coerce(d.value.toInt)
+
+given Conversion[PositiveNumber, NonNegativeNumber] with
+  override def apply(x: PositiveNumber): NonNegativeNumber = coerce(x.value)
+
+given Conversion[PositiveDecimal, NonNegativeDecimal] with
+  override def apply(x: PositiveDecimal): NonNegativeDecimal = coerce(x.value)
+
+given [N, P <: Positive | NonNegative: ValidFor[N]](using C: Ceil[N]): Ceil[N Refined P] with
+  override def toCeil(n: N Refined P): N Refined P = coerce(C.toCeil(n.value))
 
 // `T Refined P` has an order relation if `T` has an order relation
 given refinedOrd[N: Order, P]: Order[N Refined P] with
@@ -27,8 +44,11 @@ given refinedEq[N: Eq, P]: Eq[N Refined P] with
   override def eqv(x: N Refined P, y: N Refined P): Boolean = Eq[N].eqv(x.value, y.value)
 
 // Instances for the various numeric ops
+
+extension [N](n: N) def refined[P: ValidFor[N]]: Either[String, N Refined P] = refineV[P](n)
+
 @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = refineV[P](a).toOption.get
+def coerce[A, P](a: A)(using Validate[A, P]): A Refined P = a.refined.toOption.get
 
 private type ValidFor[N] = [P] =>> Validate[N, P]
 
@@ -52,3 +72,7 @@ given refinedMinus[N: Numeric, P <: NonNegative: ValidFor[N]](using Op: Minus[N]
 
   override def minus(x: N Refined P, y: N Refined P): N Refined P =
     coerce(if y.value > x.value then Numeric[N].zero else Op.minus(x.value, y.value))
+
+given refinedDistance[N, P <: NonNegative: ValidFor[N]](using D: Distance[N]): Distance[N Refined P] with
+
+  override def distance(x: N Refined P, y: N Refined P): N Refined P = coerce(D.distance(x.value, y.value))

@@ -1,6 +1,7 @@
 package dev.atedeg.mdm.utils.monads
 
-import cats.data.{ EitherT, Reader, WriterT }
+import cats.data.{ EitherT, Reader, ReaderT, Writer, WriterT }
+import cats.effect.IO
 
 private type Reading[State] = [A] =>> Reader[State, A]
 private type EmittingT[M[_], Event] = [A] =>> WriterT[M, List[Event], A]
@@ -16,6 +17,29 @@ type ActionWithState[Error, Event, Result, State] = EitherT[EmittingT[Reading[St
  */
 type Action[Error, Event, Result] = ActionWithState[Error, Event, Result, Unit]
 
+/**
+ * The same as an [[Action action]] but does not fail.
+ */
+type SafeAction[Event, Result] = Writer[List[Event], Result]
+
+/**
+ * The same as a [[SafeAction safe action]] but with two events.
+ */
+type SafeActionTwoEvents[Event1, Event2, Result] = WriterT[[A] =>> Writer[List[Event2], A], List[Event1], Result]
+
+/**
+ * An action which performs `IO`, reads an immutable state `C` and can either fail with an error `E`
+ * or produce a result `R`.
+ */
+type ServerAction[Config, Error, Result] = EitherT[[A] =>> ReaderT[IO, Config, A], Error, Result]
+
+extension [Event1, Event2, Result](action: SafeActionTwoEvents[Event1, Event2, Result])
+  def execute: (List[Event1], List[Event2], Result) =
+    val (e2, (e1, res)) = action.run.run
+    (e1, e2, res)
+
+extension [Event, Result](action: SafeAction[Event, Result]) def execute: (List[Event], Result) = action.run
+
 extension [Error, Event, Result, State](action: ActionWithState[Error, Event, Result, State])
   /**
    * `a.execute(s)` runs the [[ActionWithState action]] `a` with a state `s` returning all the
@@ -25,6 +49,14 @@ extension [Error, Event, Result, State](action: ActionWithState[Error, Event, Re
 
 extension [Error, Event, Result](action: Action[Error, Event, Result])
   /**
-   * `a.execute(s)` runs the [[Action action]] a returning all the emitted events and its return value.
+   * `a.execute(s)` runs the [[Action action]] `a` returning all the emitted events and its return value.
    */
   def execute: (List[Event], Either[Error, Result]) = action.value.run(())
+
+import cats.effect.unsafe.implicits.global
+extension [Config, Error, Result](sa: ServerAction[Config, Error, Result])
+  /**
+   * `sa.unsafeExecute(config)` runs the [[ServerAction server action]] with a configuration.
+   * @note Don't use it in production!
+   */
+  def unsafeExecute(config: Config): Either[Error, Result] = sa.value.run(config).unsafeRunSync()

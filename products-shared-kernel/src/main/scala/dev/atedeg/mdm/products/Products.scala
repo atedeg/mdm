@@ -1,10 +1,10 @@
 package dev.atedeg.mdm.products
 
+import cats.kernel.Eq
+
+import dev.atedeg.mdm.products.utils.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
-import eu.timepit.refined.api.{Refined, Validate}
-import eu.timepit.refined.predicates.all.Positive
-import eu.timepit.refined.refineV
 
 /**
  * A weight in grams.
@@ -25,11 +25,11 @@ enum CheeseType:
  * A [[CheeseType type of cheese]] with its respective [[Grams weight]].
  */
 enum Product(val cheeseType: CheeseType, val weight: Grams):
-  case Squacquerone(w: SquacqueroneWeightInGrams) extends Product(CheeseType.Squacquerone, toGrams(w))
-  case Casatella(w: CasatellaWeightInGrams) extends Product(CheeseType.Casatella, toGrams(w))
-  case Ricotta(w: RicottaWeightInGrams) extends Product(CheeseType.Ricotta, toGrams(w))
-  case Stracchino(w: StracchinoWeightInGrams) extends Product(CheeseType.Stracchino, toGrams(w))
-  case Caciotta(w: CaciottaWeightInGrams) extends Product(CheeseType.Caciotta, toGrams(w))
+  case Squacquerone(w: SquacqueroneWeightInGrams) extends Product(CheeseType.Squacquerone, coerceToGrams(w))
+  case Casatella(w: CasatellaWeightInGrams) extends Product(CheeseType.Casatella, coerceToGrams(w))
+  case Ricotta(w: RicottaWeightInGrams) extends Product(CheeseType.Ricotta, coerceToGrams(w))
+  case Stracchino(w: StracchinoWeightInGrams) extends Product(CheeseType.Stracchino, coerceToGrams(w))
+  case Caciotta(w: CaciottaWeightInGrams) extends Product(CheeseType.Caciotta, coerceToGrams(w))
 
 type SquacqueroneWeightsInGrams = (100, 250, 350, 800, 1000, 1500)
 type SquacqueroneWeightInGrams = OneOf[SquacqueroneWeightsInGrams]
@@ -50,3 +50,7 @@ val allStracchinoWeights = all[StracchinoWeightsInGrams]
 type CaciottaWeightsInGrams = (500, 1000)
 type CaciottaWeightInGrams = OneOf[CaciottaWeightsInGrams]
 val allCaciottaWeights = all[CaciottaWeightsInGrams]
+
+object Product:
+  def unapply(prod: Product): (CheeseType, Grams) = (prod.cheeseType, prod.weight)
+  given Eq[Product] = Eq.fromUniversalEquals

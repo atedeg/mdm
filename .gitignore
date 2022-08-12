@@ -1,9 +1,19 @@
+*.semanticdb
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea/
+.bloop/
 .bsp/
+
+# metals
+project/metals.sbt
+.metals
+
+# vs code
+.vscode
 
 # CMake
 cmake-build-*/
@@ -33,6 +43,8 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
+project/project/
+project/target/
 .history
 .cache
 .lib/
@@ -45,5 +57,5 @@ project/plugins/project/
 hs_err_pid*
 
 node_modules/
-
 _includes/
+*.semanticdb

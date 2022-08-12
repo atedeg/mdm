@@ -2,7 +2,8 @@ package dev.atedeg.mdm.utils.monads
 
 import cats.{ Monad, Traverse }
 import cats.data.NonEmptyList
-import cats.mtl.{ Raise, Tell }
+import cats.effect.{ IO, LiftIO }
+import cats.mtl.{ Ask, Raise, Tell }
 import cats.syntax.all.*
 
 /**
@@ -23,6 +24,11 @@ type Emits[Emitted] = [M[_]] =>> Tell[M, List[Emitted]]
 type CanRaise[Raised] = [M[_]] =>> Raise[M, Raised]
 
 /**
+ * Signals that a method can read a state `C`.
+ */
+type CanRead[C] = [F[_]] =>> Ask[F, C]
+
+/**
  * Emits an element of type `E` in a context `M[_]` that accumulates emitted elements in a list.
  */
 def emit[M[_], E](e: E)(using T: Tell[M, List[E]]): M[Unit] = T.tell(List(e))
@@ -33,6 +39,16 @@ def emit[M[_], E](e: E)(using T: Tell[M, List[E]]): M[Unit] = T.tell(List(e))
 def raise[M[_], E, A](e: E)(using R: Raise[M, E]): M[A] = R.raise(e)
 
 /**
+ * Reads the current global state in a context `M[_]` with a global state `C`.
+ */
+def readState[C, M[_]: Monad: CanRead[C]](implicit A: Ask[M, C]): M[C] = A.ask
+
+/**
+ * Gets a view of the current state applying a function `f` to it.
+ */
+def readStateView[C, M[_]: Monad: CanRead[C], C1](f: C => C1): M[C1] = readState.map(f)
+
+/**
  * `unless(cond)(a)` performs the monadic action `a` if the condition `cond` is false.
  */
 def unless[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Unit] = M.unlessA(cond)(action)
@@ -41,6 +57,13 @@ def unless[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Uni
  * `when(cond)(a)` performs the monadic action `a` if the condition `cond` holds true.
  */
 def when[M[_], A](cond: => Boolean)(action: => M[A])(using M: Monad[M]): M[Unit] = M.whenA(cond)(action)
+
+extension [A](a: IO[A]) def liftIO[F[_]](using L: LiftIO[F]): F[A] = L.liftIO(a)
+extension [A](a: => A) def performSyncIO[F[_]](using L: LiftIO[F]): F[A] = IO(a).liftIO
+extension [A, B](e: Either[A, B])
+  def getOrRaise[M[_]: Monad: CanRaise[A]]: M[B] = e match
+    case Left(err) => raise(err)
+    case Right(res) => res.pure
 
 extension [M[_]: Monad, A](ma: M[A])
   /**
@@ -62,7 +85,6 @@ extension [M[_]: Monad, A](ma: M[A])
   def ignore: M[Unit] = ma *> ().pure
 
 extension (condition: Boolean)
-
   /**
    * `cond.otherwiseRaise(err)` [[raise() raises]] the error `err` if the condition `cond` is false.
    */
@@ -70,7 +92,6 @@ extension (condition: Boolean)
     unless[M, Boolean](condition)(raise(error)).map(_ => condition)
 
 extension [A](a: Option[A])
-
   /**
    * `opt.ifMissingRaise(err)` [[raise() raises]] the error `err` if `opt` is `None`,
    * otherwise returns its value inside the context `M[_]`.
