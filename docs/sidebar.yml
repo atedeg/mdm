@@ -17,4 +17,5 @@ subsection:
   - page: ci.md
   - page: development-choices.md
   - page: documentation.md
+  - page: architecture.md
   
