@@ -3,7 +3,7 @@ title: Development choices
 layout: static-site-main
 ---
 
-# Domain Modelling Approach
+## Domain Modelling Approach
 
 While we were furthering our knowledge to better approach the development of the project we stumbled
 upon a very interesting [talk](https://www.youtube.com/watch?v=2JB1_e5wZmU) by Scott Wlaschin and
@@ -18,7 +18,7 @@ definitions of the main domain concepts; this way, we were able to skim through 
 with the domain experts to get precious feedback we could easily use to rework our ubiquitous
 language on the spot.
 
-# Action modelling through monads
+## Action modelling through monads
 
 All core domain actions take advantage of a _monadic encoding of side effects,_ ranging from failure
 with an exception, to emitting events to reading an immutable global state.
@@ -55,7 +55,7 @@ Using monads to model side effects proved useful in three distinct ways:
 > and easy-to-read code: thanks to these functions and Scala's for comprehension we can compose a
 > sequence of small actions to obtain more complex behaviour.
 
-# Make illegal states unrepresentable
+## Make illegal states unrepresentable
 
 Before starting the development of the project we also decided to fully embrace the
 _"make illegal states unrepresentable"_ philosophy while leveraging the features the Scala's
@@ -130,4 +130,3 @@ The main advantages we obtained from this approach were:
 
 TODO: aggiungere autogenerazione di boilerplate per i DTO
 TODO: aggiungere Tapir per gli endpoint
-
