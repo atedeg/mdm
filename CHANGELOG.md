@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/atedeg/mdm/compare/v1.0.0...v1.0.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* **docker:** remove docker from publishing stage ([2406253](https://github.com/atedeg/mdm/commit/24062531155b8db2ad998be20ea89495a4bc9726))
+
 # 1.0.0 (2022-08-12)
 
 
