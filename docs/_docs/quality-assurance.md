@@ -9,58 +9,79 @@ This section will review the quality assurance practices adopted by the team.
 
 ## Scalafmt
 
-The tool performs code formatting over the entire code base, helping the team to have a uniform code style.
-[Scalafmt](https://scalameta.org/scalafmt/) is available via an [sbt plugin](https://github.com/scalameta/sbt-scalafmt)
+[Scalafmt](https://scalameta.org/scalafmt/) is used to enforce a common code formatting convention
+across the entire code base, helping the team to have a uniform code style.
+
+The tool is available via an [sbt plugin](https://github.com/scalameta/sbt-scalafmt)
 that provides several tasks to format the code or check if the code is formatted properly.
-Specifically, the `scalaftmCheckAll` task is used in CI/CD to check if the pushed code is formatted properly, in the case of unformatted code,
-the workflow fails to prevent the merge of unformatted code.
+Specifically, the `scalaftmCheckAll` task is used in CI/CD to check if the pushed code is formatted
+properly; in the case of unformatted code, the workflow fails to prevent the merging of unformatted
+code.
 
 For more details about the rules used by the team, please take a look at the
 [`.scalafmt.conf`](https://github.com/atedeg/mdm/blob/main/.scalafmt.conf) configuration file.
 
 ## Scalafix
 
-Scalafix helps the developers refactoring the code, spot bad programming practices, and linting the code.
+[Scalafix](https://scalacenter.github.io/scalafix/) helps the developers automate day-to-day code
+health checks, spot bad programming practices, and linting the code. The team agreed on using all
+the linting rules.
 
-The tool is available via an [sbt plugin](https://github.com/scalacenter/sbt-scalafix) which provides a task to check the project.
-The team has agreed on using all the rules except for `UniversalEquality` because of a problem with scala 3.
-
-The task mentioned above is used in CI/CD to enforce the rules and prevent the merge of code with any kind o problems.
+The tool is available via an [sbt plugin](https://github.com/scalacenter/sbt-scalafix) which
+provides a task to check the project. This task is used in CI/CD to enforce the rules and prevent
+the merging of code if the check spots any kind of problems.
 
 For more details about the rules used by the team, please take a look at the
 [`.scalafix.conf`](https://github.com/atedeg/mdm/blob/main/.scalafix.conf) configuration file.
 
 ## Wartremover
 
-[Wartremover](https://www.wartremover.org/) helps scala developers by removing some of the language’s nastier features.
-Its main goal is to help you write safe and correct software without having to constantly double-check yourself.
+[Wartremover](https://www.wartremover.org/), as stated in its site, helps scala developers
+write safe and correct software by removing some of the language’s nastier features.
 
-Wartremover is available via an [sbt plugin](https://github.com/wartremover/wartremover)
-which provides some tasks to check the correctness of the project.
+Initially, the team agreed on using all the built-in warts; however, during the development, the
+team decided to disable two warts project-wise:
 
-The team has agreed to use all warts except for `Overloading` and `Equals` because of scala 3.
-The former wart was disabled because generates false positives in some extension methods on different types but with the same method name.
-The latter was disabled because of some limitations with the new ADT syntax in scala 3.
+- [`Overloading`](https://www.wartremover.org/doc/warts.html#overloading): we wanted to overload
+  some simple operators like `+`, `-`, etc. to make the code easier to read and less verbose.
+  We agreed that the benefits would outweigh the cons of disabling the wart.
+- [`Equals`](https://www.wartremover.org/doc/warts.html#equals): this wart proved to be quite
+  limiting with regard to the
+  [new ADT syntax in Scala 3](https://docs.scala-lang.org/scala3/book/types-adts-gadts.html).
+  When enabled, it would also reject safe pattern matching on an ADT.
+  Since the use of `==` was also disabled by a scalafix rule, we decided to remove this wart as it
+  did not provide any additional guarantee.
 
-Again, in CI/CD the task is executed to enforce the code quality and prevent the merge of problematic code.
+The tool is available via an [sbt plugin](https://github.com/wartremover/wartremover) which provides
+some tasks to check the correctness of the project.
+Again, in CI/CD the task is executed to enforce the code quality and prevent the merging of
+problematic code.
 
 ## ~~Scoverage~~ JaCoCo & Codecov
 
-Regarding code coverage, it was initially decided to use Scoverage.
-However, for Scala 3 it is still not fully compatible: the use of Scala 3.2.0-RC1 or higher is mandatory.
-Although a test was done with Scala 3.2.0-RC2, due to macros used in the project, Scoverage crashes badly.
-For convenience, we fell back to JaCoCo, which while not designed to operate directly with scala, produces an acceptable coverage report.
-Nevertheless, JaCoCo has several limitations in using it with Scala, so the reports it generates are inaccurate and unreliable.
-Unfortunately, at the time of writing, there are no alternatives to Scoverage and JaCoCo.
+Regarding code coverage, it was initially decided to use
+[Scoverage](https://github.com/scoverage/scalac-scoverage-plugin).
+However, for Scala 3 it is still not fully compatible: the use of Scala 3.2.0-RC1 or higher is
+mandatory.
+We tried using  Scala 3.2.0-RC2; however, Scoverage kept crashing badly, apparently due to its
+current lack of support for macros.
+For convenience, we fell back to JaCoCo, which despite not being designed to operate directly with
+Scala, could still produce an acceptable coverage report.
+We found JaCoCo to be quite underwhelming with the reports sometimes being completely inaccurate or
+unreliable. Unfortunately, at the time of writing, there are no alternatives to Scoverage and
+JaCoCo.
 
-The reports generated by JaCoCo are taken over by [Codecov](https://about.codecov.io/), which is responsible for verifying that for each PRs
-the coverage does not fall more than 5% and for generating graphical reports that are accessible [here](https://app.codecov.io/gh/atedeg/mdm).
+The reports generated by JaCoCo are taken over by [Codecov](https://about.codecov.io/),
+which verifies that for each PRs the coverage does not fall more than 5% and
+generates graphical reports that are accessible [here](https://app.codecov.io/gh/atedeg/mdm).
 
 ## Sonarcloud
 
-[Sonarcloud](https://sonarcloud.io/) is a useful tool as it can detect various issues in code such as bugs, code smells, code duplication, etc.
-It has been configured to run at every PR and thus evaluate the quality of the contribution made and in case it does not meet the expected
-quality levels, it blocks the PR from being merged.
+[Sonarcloud](https://sonarcloud.io/) is a useful tool as it can detect various issues in code such
+as bugs, code smells, code duplication, etc.
+It has been configured to run at every PR and thus evaluate the quality of the contribution made;
+in case the PR does not meet the expected quality levels, it is blocked from being merged.
 The quality rules adopted are the default ones available in Sonarcloud for the Scala language.
 
-The Sonarcloud project report is accessible [here](https://sonarcloud.io/project/overview?id=atedeg_mdm).
+The Sonarcloud project report is accessible
+[here](https://sonarcloud.io/project/overview?id=atedeg_mdm).
