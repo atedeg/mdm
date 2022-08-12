@@ -20,6 +20,12 @@ main.container {
     padding: 50px 10px;
 }
 
+.container iframe {
+    width: 100%;
+    height: 345px;
+    pointer-events:none
+}
+
 strong {
     font-weight: bold;
 }
