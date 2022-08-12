@@ -3,7 +3,15 @@ title: Development choices
 layout: static-site-main
 ---
 
-## Domain Modelling Approach
+# Development choices
+
+As described in the ["architecture" section](...) we decided to adopt an hexagonal architecture for our microservices.
+In this section we are going to describe some of the more relevant choices we made when implementing this architecture,
+both from core domain and application layer perspective.
+
+## Core Domain
+
+### Domain Modelling Approach
 
 While we were furthering our knowledge to better approach the development of the project we stumbled
 upon a very interesting [talk](https://www.youtube.com/watch?v=2JB1_e5wZmU) by Scott Wlaschin and
@@ -18,7 +26,7 @@ definitions of the main domain concepts; this way, we were able to skim through 
 with the domain experts to get precious feedback we could easily use to rework our ubiquitous
 language on the spot.
 
-## Action modelling through monads
+### Action modelling through monads
 
 All core domain actions take advantage of a _monadic encoding of side effects,_ ranging from failure
 with an exception, to emitting events to reading an immutable global state.
@@ -55,7 +63,7 @@ Using monads to model side effects proved useful in three distinct ways:
 > and easy-to-read code: thanks to these functions and Scala's for comprehension we can compose a
 > sequence of small actions to obtain more complex behaviour.
 
-## Make illegal states unrepresentable
+### Make illegal states unrepresentable
 
 Before starting the development of the project we also decided to fully embrace the
 _"make illegal states unrepresentable"_ philosophy while leveraging the features the Scala's
@@ -128,5 +136,77 @@ The main advantages we obtained from this approach were:
 > correctly since the compiler will reject any code where the programmer can not prove that `n` is
 > indeed positive.
 
-TODO: aggiungere autogenerazione di boilerplate per i DTO
-TODO: aggiungere Tapir per gli endpoint
+## Application Layer
+
+### DTOs
+
+The DTOs play a fundamental role in interacting with external microservices and the persistence layer.
+However, the code to convert a DTO to a domain model object and vice-versa is often trivial and follows a
+simple pattern that lends itself to being automatically generated via meta-programming.
+
+First, we defined a `DTO[E, D]` type class to describe the predicate that an element of type `E` has a DTO
+of type `D` and a conversion between the two can be performed. We also wrote some basic instances for
+base types such as `DTO[Int, Int]` or `DTO[String, String]` (meaning that base types like `Int` and `String`
+are already considered as DTOs).
+With this simple setup we started defining the conversion methods but quickly realized the code was very repetitive;
+consider the following example:
+
+> Consider the following core domain concepts:
+>
+> ```scala
+> final case class ProductionPlan(plan: NonEmptyList[ProductionPlanItem])
+> final case class ProductionPlanItem(productToProduce: Product, units: NumberOfUnits)
+> ```
+>
+> And their DTOs:
+>
+> ```scala
+> final case class ProductionPlanDTO(productsToProduce: List[ProductToProduceDTO])
+> final case class ProductToProduceDTO(product: ProductDTO, units: Int)
+> ```
+>
+> The DTOs closely mirror the case class structure but only use easy-to-serialize data like primitive types,
+> simple collection types or other DTOs.
+> The encoding/decoding code would simply encode/decode each individual field recursively using the
+> appropriate `DTO` instances. The code would repeat in the exact same way for each domain case class:
+>
+> ```scala
+> given DTO[DomainCaseClass, DTOCaseClass] with
+>   def dtoToDomain(dto: DTOCaseClass): Either[String, DomainCaseClass] = for 
+>     field1 <- dto.field1.decode(using DTO[TypeOfField1, TypeOfDTOField1])
+>     ... 
+>     fieldN <- dto.fieldN.decode(using DTO[TypeOfFieldN, TypeOfDTOFieldN])
+>   yield DomainCaseClass(field1, ..., fieldN)
+>  def domainToDto(domain: DomainCaseClass): DTOCaseClass = DTOCaseClass(
+>    domain.field1.encode(using DTO[TypeOfField1, TypeOfDTOField1]),
+>    ...,
+>    domain.fieldN.encode(using DTO[TypeOfFieldN, TypeOfDTOFieldN]),
+>   )
+> ```
+>
+> We devised some methods to automatically generate this boilerplate-y code using some of Scala
+> 3's meta programming capabilities:
+>
+> ```scala
+> given DTO[DomainCaseClass, DTOCaseClass] = interCaseClassDTO
+> ```
+
+### HTTP API
+
+Some bounded contexts required implementing an HTTP API, we decided to leverage
+the [tapir](https://tapir.softwaremill.com/en/latest/) library.
+It provided many useful features:
+
+- It integrates nicely with the [`cats`](https://typelevel.org/cats/) library
+  allowing us to keep writing monadic code using the `IO` monad
+- It makes it possible to declaratively describe an endpoint and its associated
+  route in type-safe way
+- It automatically generates the [OpenAPI](https://openapi.it/) specification
+  and enables a [Swagger](https://swagger.io/) endpoint
+
+After providing a declarative description of the API, implementing the server is as
+simple as providing a function with the described input and output using the `IO`
+monad.
+Therefore, we described the server logic using functions parametrized on any monad
+that can perform IO operations. This had the added benefit of allowing us
+to easily test the server logic mocking all the accesses to the database.
