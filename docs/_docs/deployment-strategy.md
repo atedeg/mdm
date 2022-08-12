@@ -93,7 +93,7 @@ For more information see the
 > Initially, a
 > [gradle plugin](https://github.com/nicolasfara/conventional-commits) was developed to check
 > commit messages.
-> However, having the need to work with sbt it was decided to rewrite the plugin native to sbt 
+> However, having the need to work with sbt it was decided to rewrite the plugin native to sbt
 > reflecting all the gradle plugin's functionalities.
 
 ### Semantic release
@@ -126,7 +126,7 @@ various versions; it also interacts nicely with GitHub issues and PRs by creatin
 releases made.
 
 Automating the entire process of versioning and artifact releasing gives the ability to focus
-solely on project development without worrying about these easy-to-automate tasks, while also 
+solely on project development without worrying about these easy-to-automate tasks, while also
 minimizing the possibility of errors.
 
 ### The final release workflow
@@ -136,7 +136,7 @@ Our workflow concerning semantic release is organized in the following steps:
 1. The [`commit-analyzer`](https://github.com/semantic-release/commit-analyzer) plugin analyzes the
    commit messages from the last tag to the latest commit in order to determine the version bump to
    apply
-2. The [`release-notes-generator`](https://github.com/semantic-release/release-notes-generator) 
+2. The [`release-notes-generator`](https://github.com/semantic-release/release-notes-generator)
    plugin generates the changelog with the changes since the last tag
 3. The [`changelog`](https://github.com/semantic-release/changelog) plugin updates the
    `CHANGELOG.md` file in the repo with the changelog generated at the step above
@@ -155,4 +155,3 @@ Our workflow concerning semantic release is organized in the following steps:
 
 For the full workflow specification take a look at the file
 [`.releaserc.yml`](https://github.com/atedeg/mdm/blob/main/.releaserc.yml).
-
