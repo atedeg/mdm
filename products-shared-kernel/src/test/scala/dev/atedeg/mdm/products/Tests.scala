@@ -23,7 +23,7 @@ class Tests extends AnyWordSpec, ScalaCheckDrivenPropertyChecks, Matchers:
   def checkWeights(cheeseType: CheeseType): Assertion =
     val weights = cheeseType.allowedWeights.map(_.n.value).toList
     val gen = generatorIncluding(weights)
-    forAll(gen)(w => cheeseType withWeight (_ == w) shouldBeDefinedIf weights.contains(w))
+    forAll(gen)(w => cheeseType withWeight (_ === w) shouldBeDefinedIf weights.contains(w))
 
   "The `withWeight` extension method" should {
     "create a product only if its weight is correct" in {
