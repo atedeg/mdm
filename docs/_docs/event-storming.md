@@ -3,21 +3,45 @@ title: Event Storming
 layout: static-site-main
 ---
 
-# Motivations
+# Event Storming
 
-Given the complexity of the domain, it was decided to use Event Storming to become familiar with
-the terminologies and workflows typical of the domain. The adoption of this activity is justified
-by having real domain experts available to explain the current business processes to us.
+## Motivations
+
+Given the complexity of the domain, it was decided to use [Event Storming](https://www.eventstorming.com)
+to become familiar with the terminologies and workflows typical of the domain.
+The adoption of this activity was also justified by having real domain experts available to explain us the
+current business processes.
 In addition, using this approach it was possible to bring together managers from different areas,
 who collaborated to correctly define the dynamics and problems concerning their communications.
 
-<iframe 
+## The Process
+
+We first held an Event Storming session with three domain experts working in the Mambelli cheese factory:
+Raffaella, the owner and responsible for the planning; Gianluca, the responsible for the correct
+handling of client orders; and Mattia, a cheese maker, responsible for the production of the cheese.
+
+All the experts were kind enough to give us an hour of their time and gladly shared their knowledge and
+experience. The whole process (that can be seen in a sped-up version in the video below) lasted a little
+less than an hour.
+
+<iframe
 src="https://www.youtube.com/embed/BvkPYtI8MF8?playlist=BvkPYtI8MF8&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1">
 </iframe>
 
-# Subdomains
+We found Event Storming to be a refreshing way to approach domain modelling;
+the experts were immediatly engaged by the playfulness of the process and time flew by as we deepened
+our knowledge of the domain. It also was a great way to understand how the different
+domain experts interacted with each other and what were the pain points they wish they could improve.
 
-From the Event Storming session the following subdomains emerged:
+// TODO: Inserire immagine del risultato finale !
+
+After this first session we kept in contact with Raffaella and Gianluca who helped us during the first
+phases of development when we had to define more precisely the ubiquitous language of the different
+bounded contexts.
+
+## Subdomains
+
+These are the subdomains that emerged from the Event Storming process:
 
 - **Production Planning**: creates the daily production plan
 - **Milk Planning**: estimates the amount of milk to order each week
