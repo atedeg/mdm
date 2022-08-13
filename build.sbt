@@ -60,7 +60,7 @@ val commonSettings = Seq(
     "eu.timepit" %% "refined" % "0.10.1",
     "org.typelevel" %% "cats-core" % "2.8.0",
     "org.typelevel" %% "cats-mtl" % "1.3.0",
-    "org.typelevel" %% "cats-effect" % "3.3.14",
+    "org.typelevel" %% "cats-effect" % "3.4-389-3862cf0",
     "org.typelevel" %% "shapeless3-deriving" % "3.1.0",
     "org.http4s" %% "http4s-blaze-server" % "0.23.12",
     "org.http4s" %% "http4s-circe" % "0.23.14",
