@@ -12,10 +12,12 @@ subsection:
           - page: bounded-contexts/production.md
           - page: bounded-contexts/stocking.md
           - page: bounded-contexts/restocking.md
+  - page: architecture.md
   - page: quality-assurance.md
   - page: deployment-strategy.md
   - page: ci.md
+  - page: licence.md
   - page: development-choices.md
   - page: documentation.md
-  - page: architecture.md
+
   
