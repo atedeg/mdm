@@ -1,20 +1,17 @@
 index: index.md
 subsection:
-  - title: Event Storming
-    directory: docs
-    index: event-storming.md
+  - page: event-storming.md
+  - page: user-stories.md
+  - page: context-map.md
+  - title: Bounded Contexts
+    index: bounded-contexts/bc.md
     subsection:
-      - title: Bounded Contexts
-        index: bounded-contexts/bc.md
-        subsection:
-          - page: user-stories.md
-          - page: context-map.md
-          - page: bounded-contexts/milk-planning.md
-          - page: bounded-contexts/production-planning.md
-          - page: bounded-contexts/production.md
-          - page: bounded-contexts/stocking.md
-          - page: bounded-contexts/restocking.md
-          - page: bounded-contexts/client-orders.md
+      - page: bounded-contexts/milk-planning.md
+      - page: bounded-contexts/production-planning.md
+      - page: bounded-contexts/production.md
+      - page: bounded-contexts/stocking.md
+      - page: bounded-contexts/restocking.md
+      - page: bounded-contexts/client-orders.md
   - page: architecture.md
   - page: quality-assurance.md
   - page: deployment-strategy.md
