@@ -6,7 +6,6 @@ layout: static-site-main
 # Deployment Strategy
 
 A good deployment strategy is crucial for the success of a project.
-One of the main goals we want to achieve is the adoption of the continuous release strategy.
 We decided to adopt a continuous release strategy: this implied having a robust test suite,
 an adequate DVCS workflow and tools to automate the releases.
 
