@@ -5,7 +5,7 @@ layout: static-site-main
 
 # Quality Assurance
 
-This section will review the quality assurance practices adopted by the team.
+This section will review the quality assurance practices we decided to adopted.
 
 ## Scalafmt
 
@@ -18,20 +18,20 @@ Specifically, the `scalaftmCheckAll` task is used in CI/CD to check if the pushe
 properly; in the case of unformatted code, the workflow fails to prevent the merging of unformatted
 code.
 
-For more details about the rules used by the team, please take a look at the
+For more details about the rules we used, please take a look at the
 [`.scalafmt.conf`](https://github.com/atedeg/mdm/blob/main/.scalafmt.conf) configuration file.
 
 ## Scalafix
 
-[Scalafix](https://scalacenter.github.io/scalafix/) helps the developers automate day-to-day code
-health checks, spot bad programming practices, and linting the code. The team agreed on using all
+[Scalafix](https://scalacenter.github.io/scalafix/) helps developers automate day-to-day code
+health checks, spot bad programming practices, and linting the code. We agreed on using all
 the linting rules.
 
 The tool is available via an [sbt plugin](https://github.com/scalacenter/sbt-scalafix) which
 provides a task to check the project. This task is used in CI/CD to enforce the rules and prevent
 the merging of code if the check spots any kind of problems.
 
-For more details about the rules used by the team, please take a look at the
+For more details about the rules we used, please take a look at the
 [`.scalafix.conf`](https://github.com/atedeg/mdm/blob/main/.scalafix.conf) configuration file.
 
 ## Wartremover
@@ -39,8 +39,8 @@ For more details about the rules used by the team, please take a look at the
 [Wartremover](https://www.wartremover.org/), as stated in its site, helps scala developers
 write safe and correct software by removing some of the language’s nastier features.
 
-Initially, the team agreed on using all the built-in warts; however, during the development, the
-team decided to disable two warts project-wise:
+Initially, we agreed on using all the built-in warts; however, during the development, we
+decided to disable two warts project-wise:
 
 - [`Overloading`](https://www.wartremover.org/doc/warts.html#overloading): we wanted to overload
   some simple operators like `+`, `-`, etc. to make the code easier to read and less verbose.
@@ -65,6 +65,7 @@ However, for Scala 3 it is still not fully compatible: the use of Scala 3.2.0-RC
 mandatory.
 We tried using  Scala 3.2.0-RC2; however, Scoverage kept crashing badly, apparently due to its
 current lack of support for macros.
+
 For convenience, we fell back to JaCoCo, which despite not being designed to operate directly with
 Scala, could still produce an acceptable coverage report.
 We found JaCoCo to be quite underwhelming with the reports sometimes being completely inaccurate or
