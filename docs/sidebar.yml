@@ -7,6 +7,8 @@ subsection:
       - title: Bounded Contexts
         index: bounded-contexts/bc.md
         subsection:
+          - page: user-stories.md
+          - page: context-map.md
           - page: bounded-contexts/milk-planning.md
           - page: bounded-contexts/production-planning.md
           - page: bounded-contexts/production.md
