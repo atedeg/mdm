@@ -12,6 +12,7 @@ subsection:
           - page: bounded-contexts/production.md
           - page: bounded-contexts/stocking.md
           - page: bounded-contexts/restocking.md
+          - page: bounded-contexts/client-orders.md
   - page: architecture.md
   - page: quality-assurance.md
   - page: deployment-strategy.md

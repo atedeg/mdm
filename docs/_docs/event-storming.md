@@ -33,7 +33,7 @@ the experts were immediatly engaged by the playfulness of the process and time f
 our knowledge of the domain. It also was a great way to understand how the different
 domain experts interacted with each other and what were the pain points they wish they could improve.
 
-// TODO: Inserire immagine del risultato finale !
+![Event Storming](images/eventStorming.svg)
 
 After this first session we kept in contact with Raffaella and Gianluca who helped us during the first
 phases of development when we had to define more precisely the ubiquitous language of the different
