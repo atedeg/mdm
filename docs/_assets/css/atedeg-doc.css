@@ -248,3 +248,15 @@ header {
     position: static !important;
     width: 100% !important;
 }
+
+:root {
+    --clean-arch: url(../images/cleanArchitecture.svg);
+}
+
+:root.theme-dark {
+    --clean-arch: url(../images/cleanArchitecture_dark.svg);
+}
+
+img#clean-arch {
+    content: var(--clean-arch);
+}
