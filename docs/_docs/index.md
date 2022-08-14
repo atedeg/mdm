@@ -3,6 +3,8 @@ title: MDM - Mambelli Domain Model
 layout: static-site-main
 ---
 
+![Logo](images/logo.svg)
+
 # MDM - Mambelli Domain Model
 
 This is the documentation for the final project of the
