@@ -5,7 +5,7 @@ layout: static-site-main
 
 # Quality Assurance
 
-This section will review the quality assurance practices we decided to adopted.
+This section will review the quality assurance practices we decided to adopt.
 
 ## Scalafmt
 

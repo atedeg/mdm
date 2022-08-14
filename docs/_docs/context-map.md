@@ -4,6 +4,7 @@ layout: static-site-main
 ---
 
 # Context Map
+
 - `MilkPlanning [D, ACL] <- [U] ClientOrders` and `ProductionPlanning [D, ACL] <- [U] ClientOrders`  
   `ClientOrders` sends a message to `MilkPlanning` and `ProductionPlanning` to inform a new order was received.
   `MilkPlanning` and `ProductionPlanning` are downstream *core domains* so it's necessary to insert an *Anti-Corruption Layer* between them and `ClientOrders`.
@@ -19,11 +20,11 @@ layout: static-site-main
   Since `ProductionPlanning` and `Production` are tightly coupled, the latter is *Conformist*.
 - `Stocking [D, ACL] <- [U] ClientOrders`  
   `Stocking` receives a message from `ClientOrders` notifying the removal from stock of certain products.
-  `Stocking ` has an *Anti-Corruption Layer*, as `ClientOrders` is going to be a generic bounded context and it will be
+  `Stocking` has an *Anti-Corruption Layer*, as `ClientOrders` is going to be a generic bounded context and it will be
   impossible to control the format of the messages.
 - `ProductionPlanning [D, ACL] <- [U] Stocking`  
-  `ProductionPlannig` asks `Stocking` for the amount of products missing from the stock.
-  Since `ProductionPlannig` is a downstream core bounded context, and Anti-Corruption Layer is required.
+  `ProductionPlannig` asks `Stocking` for the number of products missing from the stock.
+  Since `ProductionPlannig` is a downstream core bounded context, an Anti-Corruption Layer is required.
 - `Stocking [D, CF] <- [U] Production`  
   `Production` informs `Stocking` that a batch is ripening.
   Since `Production` and `Stocking` are tightly coupled, the latter is Conformist.
@@ -38,9 +39,9 @@ layout: static-site-main
 There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
 This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
 bounded contexts handling these concepts.
-In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts: 
-the production, ordering, labelling and stocking processes would need a rehaul to take into account the new kind of product.
-By sharing this information among different bounded context it is guaranteed that, whenever a change happens to any of these concepts, all the domains
+In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts:
+the production, ordering, labeling and stocking processes would need a rehaul to take into account the new kind of product.
+By sharing this information among different bounded contexts it is guaranteed that, whenever a change happens to any of these concepts, all the domains
 will maintain an up-to-date vision of these concepts.
 
 ![Context Map](images/contextMap.svg)

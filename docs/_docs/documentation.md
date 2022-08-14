@@ -61,7 +61,8 @@ At its core the plugin extracts the scaladoc from classes, case classes, traits,
 as specified in a configuration file.
 This way we could enrich our description of the bounded contexts with automatically generated tables of the
 ubiquitous language concepts without the need to manually copy and paste the scaladoc.
-With this approach we managed to automate a tedious and error-prone task obtaining an always up-to-date documentation.
+With this approach we managed to automate a tedious and error-prone task, obtaining an always up-to-date documentation.
 
-The ubidoc plugin has its own repository and was developed following the same approach as the core project.
+The ubidoc plugin has its own [repository](https://github.com/atedeg/sbt-ubiquitous-scaladoc)
+and was developed following the same approach as the core project.
 We paid attention to code quality and enforce the same checks, we adopted a workflow with semantic-release and conventional commits.

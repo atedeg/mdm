@@ -28,14 +28,14 @@ less than an hour.
 src="https://www.youtube.com/embed/BvkPYtI8MF8?playlist=BvkPYtI8MF8&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1">
 </iframe>
 
-We found Event Storming to be a refreshing way to approach domain modelling;
-the experts were immediatly engaged by the playfulness of the process and time flew by as we deepened
+We found Event Storming to be a refreshing way to approach domain modeling;
+the experts were immediately engaged by the playfulness of the process and time flew by as we deepened
 our knowledge of the domain. It also was a great way to understand how the different
 domain experts interacted with each other and what were the pain points they wish they could improve.
 
 ![Event Storming](images/eventStorming.svg)
 
-After this first session we kept in contact with Raffaella and Gianluca who helped us during the first
+After this first session, we kept in contact with Raffaella and Gianluca who helped us during the first
 phases of development when we had to define more precisely the ubiquitous language of the different
 bounded contexts.
 
