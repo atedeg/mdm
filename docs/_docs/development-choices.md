@@ -200,7 +200,7 @@ It provided many useful features:
 - It integrates nicely with the [`cats`](https://typelevel.org/cats/) library
   allowing us to keep writing monadic code using the `IO` monad
 - It makes it possible to declaratively describe an endpoint and its associated
-  route in type-safe way
+  route in a type-safe way
 - It automatically generates the [OpenAPI](https://openapi.it/) specification
   and enables a [Swagger](https://swagger.io/) endpoint
 
