@@ -145,4 +145,9 @@ tables:
       - class: "pricing.ThresholdQuantity"
       - class: "pricing.DiscountPercentage"
 
+  - name: "shared-kernel-ul"
+    rows:
+      - enum: "CheeseType"
+      - enum: "Product"
+      - enum: "Ingredient"
 ignored: []

@@ -36,7 +36,7 @@ layout: static-site-main
   `MilkPlanning` asks `Stocking` for the amount of products in stock.
   Since `MilkPlanning` is a downstream core bounded context, and Anti-Corruption Layer is required.
 
-There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product** and **cheese type**.
+There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product**, **cheese type** and **ingredient**.
 This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
 bounded contexts handling these concepts.
 In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts:
