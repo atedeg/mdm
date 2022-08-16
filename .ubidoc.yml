@@ -8,8 +8,6 @@ tables:
       - class: "stocking.MissingQuantity"
       - enum: "stocking.Batch"
       - enum: "stocking.QualityAssuredBatch"
-      - class: "stocking.BatchID"
-        name: "Batch ID"
       - class: "stocking.LabelledProduct"
   - name: "stocking-outgoing"
     rows:
