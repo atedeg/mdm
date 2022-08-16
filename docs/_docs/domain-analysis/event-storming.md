@@ -24,9 +24,7 @@ All the experts were kind enough to give us an hour of their time and gladly sha
 experience. The whole process (that can be seen in a sped-up version in the video below) lasted a little
 less than an hour.
 
-<iframe
-src="https://www.youtube.com/embed/BvkPYtI8MF8?playlist=BvkPYtI8MF8&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1">
-</iframe>
+![Event Storming Video](images/eventStormingVideo.gif)
 
 We found Event Storming to be a refreshing way to approach domain modeling;
 the experts were immediately engaged by the playfulness of the process and time flew by as we deepened

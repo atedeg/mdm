@@ -1,6 +1,7 @@
 ---
 title: Bounded Contexts
 ---
+
 # Table of Contents
 1. [Milk Planning](milk-planning.md)
 2. [Production Planning](production-planning.md)
