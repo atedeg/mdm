@@ -1,21 +1,32 @@
 index: index.md
 subsection:
-  - page: event-storming.md
-  - page: user-stories.md
-  - page: context-map.md
-  - title: Bounded Contexts
-    index: bounded-contexts/bc.md
+  - page: introduction.md
+  - title: Domain Analysis
+    index: domain-analysis/da.md
     subsection:
-      - page: bounded-contexts/milk-planning.md
-      - page: bounded-contexts/production-planning.md
-      - page: bounded-contexts/production.md
-      - page: bounded-contexts/stocking.md
-      - page: bounded-contexts/restocking.md
-      - page: bounded-contexts/client-orders.md
+      - page: domain-analysis/event-storming.md
+      - page: domain-analysis/context-map.md
+      - page: domain-analysis/user-stories.md
+      - title: Bounded Contexts
+        index: domain-analysis/bounded-contexts/bc.md
+        subsection:
+          - page: domain-analysis/bounded-contexts/milk-planning.md
+          - page: domain-analysis/bounded-contexts/production-planning.md
+          - page: domain-analysis/bounded-contexts/production.md
+          - page: domain-analysis/bounded-contexts/stocking.md
+          - page: domain-analysis/bounded-contexts/restocking.md
+          - page: domain-analysis/bounded-contexts/client-orders.md
   - page: architecture.md
-  - page: quality-assurance.md
-  - page: deployment-strategy.md
-  - page: ci.md
+  - title: Development
+    index: development/dev.md
+    subsection:
+      - page: development/development-choices.md
+      - page: development/documentation.md
+  - title: DevOps Techniques
+    index: devops-techniques/devops.md
+    subsection:
+      - page: devops-techniques/ci.md
+      - page: devops-techniques/deployment-strategy.md
+      - page: devops-techniques/quality-assurance.md
   - page: licence.md
-  - page: development-choices.md
-  - page: documentation.md
+
