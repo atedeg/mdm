@@ -12,6 +12,7 @@ import math.Ordering.Implicits.infixOrderingOps
 type PositiveNumber = Int Refined Positive
 type PositiveDecimal = Double Refined Positive
 type DecimalInClosedRange[L, U] = Double Refined Interval.Closed[L, U]
+type DecimalInOpenClosedRange[L, U] = Double Refined Interval.OpenClosed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
 
