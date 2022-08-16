@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/atedeg/mdm/compare/v1.0.1...v1.0.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* **docker:** set docker username in order to publish to Docker Hub ([24d7a74](https://github.com/atedeg/mdm/commit/24d7a743ab815f50ef85e140a2439908310cef9d))
+
 ## [1.0.1](https://github.com/atedeg/mdm/compare/v1.0.0...v1.0.1) (2022-08-12)
 
 
