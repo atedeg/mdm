@@ -34,6 +34,11 @@ After sketching out the main subdomains, we came up with this set of user storie
    **I want to** automatically generate a transport document for an order ready to be shipped  
    **so that** I don't have to do it manually
 
+## Pricing
+1. **As** Raffaella
+   **I want to** calculate the price of a certain product (with its quantity) for a given client
+   **so that** I can build customer loyalty by making discounts to particular clients
+
 ## Restocking
 1. **As** Raffaella  
    **I want to** place orders for raw materials  
