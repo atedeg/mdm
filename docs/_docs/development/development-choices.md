@@ -9,7 +9,7 @@ As described in the ["architecture" section](...) we decided to adopt an hexagon
 In this section we are going to describe some of the more relevant choices we made when implementing this architecture,
 both from core domain and application layer perspective.
 
-## Core Domain
+## Core Domain  
 
 ### Domain Modelling Approach
 
