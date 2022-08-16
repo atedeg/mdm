@@ -28,19 +28,19 @@ final case class NumberOfUnits(n: PositiveNumber)
 enum Production:
   /**
    * A [[Production production]] that needs to be started, it specifies the [[Product product]] to produce
-   * and the [[Quantity quantity]] in which it needs to be produced.
+   * and the [[NumberOfUnits units]] in which it needs to be produced.
    */
   case ToStart(ID: ProductionID, productToProduce: Product, unitsToProduce: NumberOfUnits)
 
   /**
    * A [[Production production]] that has already started, it specifies the [[Product product]] that is being produced
-   * and the [[Quantity quantity]] in which it is being produced.
+   * and the [[NumberOfUnits units]] in which it is being produced.
    */
   case InProgress(ID: ProductionID, productInProduction: Product, unitsInProduction: NumberOfUnits)
 
   /**
-   * A [[Production production]] that ended, it has a [[BatchID lot number]] and specified the [[Product product]]
-   * that was produced and in which [[Quantity quantity]] it was produced.
+   * A [[Production production]] that ended, it has a [[BatchID lot number]] and specifies the [[Product product]]
+   * that was produced and in the [[NumberOfUnits units]] produced.
    */
   case Ended(ID: ProductionID, batchID: BatchID, producedProduct: Product, producedUnits: NumberOfUnits)
 
