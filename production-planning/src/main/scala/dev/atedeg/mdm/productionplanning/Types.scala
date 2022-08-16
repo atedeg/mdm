@@ -36,13 +36,13 @@ final case class MissingProducts(missingProducts: Map[Product, MissingQuantity])
 final case class MissingQuantity(n: NonNegativeNumber)
 
 /**
- * A set of requested [[Product product]] with the [[Quantity quantities]] that have to be produced by the given
+ * A set of requested [[Product products]] with the [[Quantity quantities]] that have to be produced by the given
  * [[LocalDate date]].
  */
 final case class Order(orderdID: OrderID, requiredBy: LocalDate, orderedProducts: NonEmptyList[OrderedProduct])
 
 /**
- * Uniquely identifies an [[Order order]].
+ * An ID used to uniquely identify an [[Order order]].
  */
 final case class OrderID(id: UUID)
 
