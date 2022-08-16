@@ -90,9 +90,7 @@ tables:
     rows:
       - class: "productionplanning.ProductionPlan"
       - class: "productionplanning.ProductToProduce"
-      - class: "productionplanning.Quantity"
       - class: "productionplanning.MissingProducts"
-      - class: "productionplanning.MissingQuantity"
       - class: "productionplanning.Order"
       - class: "productionplanning.OrderedProduct"
       - class: "productionplanning.CheeseTypeRipeningDays"
