@@ -3,7 +3,7 @@ title: Introduction
 layout: static-site-main
 ---
 
-![Logo](images/logo.svg)
+<img id="logo" src="images/logo.svg">
 
 # MDM - Mambelli Domain Model
 
