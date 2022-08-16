@@ -2,6 +2,8 @@ package dev.atedeg.mdm.pricing
 
 import java.time.LocalDateTime
 
+import cats.syntax.all.*
+
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
 
@@ -17,7 +19,7 @@ def priceOrderLine(
     case Some(promotions) => promotions.toList
     case None => List.empty[Promotion]
   val activePromotions = clientPromotions.filter(_.expiryDate.isAfter(today))
-  val lines = activePromotions.flatMap(_.lines.toList).filter(_.product == product)
+  val lines = activePromotions.flatMap(_.lines.toList).filter(_.product === product)
   // Accumulate the fixed discounts
   val fixedDiscount = lines.collect { case PromotionLine.Fixed(_, discount) =>
     (100.0 - discount.n.value) / 100.0
