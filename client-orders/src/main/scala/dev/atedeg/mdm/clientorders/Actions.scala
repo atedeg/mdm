@@ -39,7 +39,7 @@ private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): Pric
   PricedOrder(
     incomingOrder.id,
     pricedOrderLines,
-    incomingOrder.customer,
+    incomingOrder.client,
     incomingOrder.deliveryDate,
     incomingOrder.deliveryLocation,
     totalPrice,
@@ -50,9 +50,9 @@ private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): Pric
  * fulfilled by operators.
  */
 def startPreparingOrder(pricedOrder: PricedOrder): InProgressOrder =
-  val PricedOrder(id, ols, customer, deliveryDate, deliveryLocation, totalPrice) = pricedOrder
+  val PricedOrder(id, ols, client, deliveryDate, deliveryLocation, totalPrice) = pricedOrder
   val newOrderLine = ols.map(ol => Incomplete(0.palletizedQuantity, ol.quantity, ol.product, ol.totalPrice))
-  InProgressOrder(id, newOrderLine, customer, deliveryDate, deliveryLocation, totalPrice)
+  InProgressOrder(id, newOrderLine, client, deliveryDate, deliveryLocation, totalPrice)
 
 /**
  * Palletizes a [[Product product]] in the specified [[Order.Quantity quantity]] for a given
@@ -66,7 +66,7 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad: Emits[Pr
 )(
     inProgressOrder: InProgressOrder,
 ): M[InProgressOrder] =
-  val InProgressOrder(id, ol, customer, dd, dl, totalPrice) = inProgressOrder
+  val InProgressOrder(id, ol, client, dd, dl, totalPrice) = inProgressOrder
   for
     orderLine <- ol.find(hasProduct(product)).ifMissingRaise(ProductNotInOrder(product))
     updatedLine <- addToLine(orderLine)(quantity)
@@ -75,7 +75,7 @@ def palletizeProductForOrder[M[_]: CanRaise[PalletizationError]: Monad: Emits[Pr
       case l @ _ => l
     }
     _ <- emit(ProductPalletized(product, quantity): ProductPalletized)
-  yield InProgressOrder(id, newOrderLines, customer, dd, dl, totalPrice)
+  yield InProgressOrder(id, newOrderLines, client, dd, dl, totalPrice)
 
 private def hasProduct(product: Product)(ol: InProgressOrderLine): Boolean = ol match
   case Incomplete(_, _, p, _) => p === product
@@ -98,11 +98,11 @@ private def addToLine[M[_]: Monad: CanRaise[PalletizedMoreThanRequired]](ol: InP
 def completeOrder[Result[_]: CanRaise[OrderCompletionError]: Monad](
     inProgressOrder: InProgressOrder,
 ): Result[CompletedOrder] =
-  val InProgressOrder(id, ols, customer, dd, dl, totalPrice) = inProgressOrder
+  val InProgressOrder(id, ols, client, dd, dl, totalPrice) = inProgressOrder
   for
     completedOrderLines <- getCompletedOrderLines(ols).ifMissingRaise(OrderNotComplete())
     completeOrderLines = completedOrderLines.map(ol => CompleteOrderLine(ol.quantity, ol.product, ol.price))
-  yield CompletedOrder(id, completeOrderLines, customer, dd, dl, totalPrice)
+  yield CompletedOrder(id, completeOrderLines, client, dd, dl, totalPrice)
 
 private def getCompletedOrderLines(orderLines: NonEmptyList[InProgressOrderLine]): Option[NonEmptyList[Complete]] =
   @tailrec
@@ -128,9 +128,9 @@ def weightOrder(completeOrder: CompletedOrder): WeightInKilograms =
  * Creates a [[Order.TransportDocument transport document]] from a [[Order.CompletedOrder complete order]].
  */
 def createTransportDocument(completeOrder: CompletedOrder, weight: WeightInKilograms): TransportDocument =
-  val CompletedOrder(_, orderLines, customer, _, deliveryLocation, _) = completeOrder
+  val CompletedOrder(_, orderLines, client, _, deliveryLocation, _) = completeOrder
   val transportDocumentLines = orderLines.map(l => TransportDocumentLine(l.quantity, l.product))
   val date = LocalDateTime.now
-  TransportDocument(deliveryLocation, mambelliDeliveryLocation, customer, date, transportDocumentLines, weight)
+  TransportDocument(deliveryLocation, mambelliDeliveryLocation, client, date, transportDocumentLines, weight)
 
 private val mambelliDeliveryLocation = Location(Latitude(12.0), Longitude(44.0))
