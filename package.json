@@ -6,6 +6,6 @@
     "conventional-changelog-conventionalcommits": "5.0.0"
   },
   "engines": {
-    "node": "16.16"
+    "node": "16.17"
   }
 }
