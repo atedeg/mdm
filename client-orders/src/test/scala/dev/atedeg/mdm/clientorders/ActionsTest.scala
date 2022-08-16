@@ -24,7 +24,6 @@ import dev.atedeg.mdm.products.{ CheeseType, Grams, Product }
 import dev.atedeg.mdm.products.Product.*
 import dev.atedeg.mdm.utils.*
 import dev.atedeg.mdm.utils.given
-import dev.atedeg.mdm.utils.intToNonNegativeNumber
 import dev.atedeg.mdm.utils.monads.*
 
 trait ClientMock:
