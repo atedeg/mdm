@@ -1,12 +1,12 @@
 package dev.atedeg.mdm.pricing
 
-import java.util.UUID
 import java.time.LocalDateTime
+import java.util.UUID
+
+import cats.data.NonEmptyList
 
 import dev.atedeg.mdm.products.Product
 import dev.atedeg.mdm.utils.*
-import dev.atedeg.mdm.utils.given
-import cats.data.NonEmptyList
 
 /**
  * A [[Product product]] with its ordered [[Quantity quantity]].
@@ -26,7 +26,7 @@ final case class PriceList(priceList: Map[Product, PriceInEuroCents])
 /**
  * A price expressed in cents, the smallest currency unit for euros.
  */
-final case class PriceInEuroCents(n: PositiveNumber) derives Plus
+final case class PriceInEuroCents(n: PositiveNumber)
 
 /**
  * A physical or legal entity that places [[IncomingOrderLine order lines]].
@@ -52,27 +52,29 @@ final case class Promotion(client: Client, expiryDate: LocalDateTime, lines: Non
  * A promotion line, which describes the [[Promotion promotion]].
  */
 enum PromotionLine(val product: Product):
-    /**
-     * This promotion line specifies the discounted product and how much to discount it by.
-     * 
-     * Every order line which contains the product is discounted by the specified amount.
-     * 
-     * @note For example, if a 100g casatella normally costs 100 cents and the promotion line specifies
-     * a 50% discount, each 100g casatella will cost 50 cents.
-     */
-    case Fixed(override val product: Product, discount: DiscountPercentage) extends PromotionLine(product)
-    /**
-      * This promotion line specifies the discounted product, the threshold and how much to discount it by.
-      * 
-      * Only the products above the threshold are discounted; the other ones are at full price.
-      *
-      * @note For example, if a 100g casatella normally costs 100 cents and the promotion line specifies
-      * a 50% discount above 5 casatellas, the first 5 casatella will cost 100 cents, while from the 6th onwards
-      * they will cost 50 cents each.
-      */
-    case Threshold(override val product: Product, threshold: Quantity, discount: DiscountPercentage) extends PromotionLine(product)
+  /**
+   * This promotion line specifies the discounted product and how much to discount it by.
+   *
+   * Every order line which contains the product is discounted by the specified amount.
+   *
+   * @note For example, if a 100g casatella normally costs 100 cents and the promotion line specifies
+   * a 50% discount, each 100g casatella will cost 50 cents.
+   */
+  case Fixed(override val product: Product, discount: DiscountPercentage) extends PromotionLine(product)
+
+  /**
+   * This promotion line specifies the discounted product, the threshold and how much to discount it by.
+   *
+   * Only the products above the threshold are discounted; the other ones are at full price.
+   *
+   * @note For example, if a 100g casatella normally costs 100 cents and the promotion line specifies
+   * a 50% discount above 5 casatellas, the first 5 casatella will cost 100 cents, while from the 6th onwards
+   * they will cost 50 cents each.
+   */
+  case Threshold(override val product: Product, threshold: Quantity, discount: DiscountPercentage)
+      extends PromotionLine(product)
 
 /**
  * A discount percentage, expressed as a number between 0 (exclusive) and 100 (inclusive).
  */
-final case class DiscountPercentage(n: DecimalInOpenClosedRange[0, 100])
+final case class DiscountPercentage(n: DecimalInOpenClosedRange[0.0, 100.0])
