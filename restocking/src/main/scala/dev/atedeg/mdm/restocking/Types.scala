@@ -25,11 +25,11 @@ final case class WeightInQuintals(n: PositiveDecimal)
 final case class StockedMilk(quintals: NonNegativeDecimal)
 
 /**
- * The quantity of ingredients in stock.
+ * Defines for each [[Ingredient ingredient]] the [[StockedQuantity quantity]] in stock.
  */
 type Stock = Map[Ingredient, StockedQuantity]
 
 /**
- * A stocked quantity.
+ * A quantity of a stocked [[Product product]].
  */
 final case class StockedQuantity(quintals: NonNegativeDecimal) derives Minus

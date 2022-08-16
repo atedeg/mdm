@@ -76,7 +76,6 @@ tables:
     rows:
       - type: "restocking.Stock"
       - class: "restocking.StockedMilk"
-      - class: "restocking.StockedQuantity"
       - class: "restocking.QuintalsOfIngredient"
       - class: "restocking.QuintalsOfMilk"
   - name: "restocking-incoming"
