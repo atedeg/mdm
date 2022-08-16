@@ -124,6 +124,7 @@ lazy val root = project
     `products-shared-kernel`,
     restocking,
     `client-orders`,
+    pricing,
   )
 
 lazy val utils = project
@@ -194,6 +195,16 @@ lazy val restocking = project
 lazy val `production-planning` = project
   .enablePlugins(DockerPlugin, JavaAppPackaging)
   .in(file("production-planning"))
+  .settings(commonSettings)
+  .settings(commonDockerSettings)
+  .settings(
+    dockerExposedPorts := Seq(8080),
+  )
+  .dependsOn(utils, `products-shared-kernel`)
+
+lazy val pricing = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
+  .in(file("pricing"))
   .settings(commonSettings)
   .settings(commonDockerSettings)
   .settings(
