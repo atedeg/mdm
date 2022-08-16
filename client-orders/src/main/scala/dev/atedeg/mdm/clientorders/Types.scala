@@ -14,13 +14,13 @@ import dev.atedeg.mdm.utils.given
 
 /**
  * A set of [[IncomingOrderLine order lines]] with their respective [[Quantity quantity]] (e.g. 1000 ricotte of 0.5kg,
- * 50 squacqueroni of 1 kg), it also contains data about the [[Customer customer]], an expected
+ * 50 squacqueroni of 1 kg), it also contains data about the [[Client client]], an expected
  * [[DateTime delivery date]] and the [[Location delivery location]].
  */
 final case class IncomingOrder(
     id: OrderID,
     orderLines: NonEmptyList[IncomingOrderLine],
-    customer: Customer,
+    client: Client,
     deliveryDate: LocalDateTime,
     deliveryLocation: Location,
 )
@@ -48,17 +48,17 @@ final case class MissingQuantity(n: NonNegativeNumber)
 /**
  * A physical or legal entity that places [[IncomingOrder orders]].
  */
-final case class Customer(code: CustomerID, name: CustomerName, vatNumber: VATNumber)
+final case class Client(code: ClientID, name: ClientName, vatNumber: VATNumber)
 
 /**
- * An id which uniquely identifies a [[Customer customer]].
+ * An ID which uniquely identifies a [[Client client]].
  */
-final case class CustomerID(id: UUID)
+final case class ClientID(id: UUID)
 
 /**
- * A human readable name used to refer to a [[Customer customer]].
+ * A human-readable name used to refer to a [[Client client]].
  */
-final case class CustomerName(name: String)
+final case class ClientName(name: String)
 
 /**
  * An alphanumeric code for value-added tax purposes.
@@ -103,7 +103,7 @@ final case class PriceInEuroCents(n: PositiveNumber) derives Plus
 final case class PricedOrder(
     id: OrderID,
     orderLines: NonEmptyList[PricedOrderLine],
-    customer: Customer,
+    client: Client,
     deliveryDate: LocalDateTime,
     deliveryLocation: Location,
     totalPrice: PriceInEuroCents,
@@ -121,7 +121,7 @@ final case class PricedOrderLine(quantity: Quantity, product: Product, totalPric
 final case class InProgressOrder(
     id: OrderID,
     orderLines: NonEmptyList[InProgressOrderLine],
-    customer: Customer,
+    client: Client,
     deliveryDate: LocalDateTime,
     deliveryLocation: Location,
     totalPrice: PriceInEuroCents,
@@ -160,7 +160,7 @@ final case class PalletizedQuantity(n: NonNegativeNumber) derives Plus
 final case class CompletedOrder(
     id: OrderID,
     orderLines: NonEmptyList[CompleteOrderLine],
-    customer: Customer,
+    client: Client,
     deliveryDate: LocalDateTime,
     deliveryLocation: Location,
     totalPrice: PriceInEuroCents,
@@ -173,13 +173,13 @@ final case class CompleteOrderLine(quantity: Quantity, product: Product, price: 
 
 /**
  * A document that has to specify: a [[Location delivery location]], a [[Location shipping location]], the
- * [[Customer customer]]'s info, the [[DateTime shipping date]], the total [[WeightInKilograms weight]] of the pallet,
+ * [[Client client]]'s info, the [[DateTime shipping date]], the total [[WeightInKilograms weight]] of the pallet,
  * and a list of [[TransportDocumentLine transport document lines]].
  */
 final case class TransportDocument(
     deliveryLocation: Location,
     shippingLocation: Location,
-    customer: Customer,
+    client: Client,
     shippingDate: LocalDateTime,
     transportDocumentLines: NonEmptyList[TransportDocumentLine],
     totalWeight: WeightInKilograms,

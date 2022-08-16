@@ -12,13 +12,13 @@ import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
 private object Commons:
   given DTO[OrderID, String] = caseClassDTO
-  given DTO[Customer, CustomerDTO] = interCaseClassDTO
+  given DTO[Client, ClientDTO] = interCaseClassDTO
   given DTO[Location, LocationDTO] = interCaseClassDTO
   given DTO[Latitude, Double] = caseClassDTO
   given DTO[Longitude, Double] = caseClassDTO
   given DTO[Quantity, Int] = caseClassDTO
-  given DTO[CustomerID, String] = caseClassDTO
-  given DTO[CustomerName, String] = caseClassDTO
+  given DTO[ClientID, String] = caseClassDTO
+  given DTO[ClientName, String] = caseClassDTO
   given DTO[VATNumber, String] = caseClassDTO
   given DTO[IncomingOrderLine, IncomingOrderLineDTO] = interCaseClassDTO
   given DTO[PriceInEuroCents, Int] = caseClassDTO
@@ -30,12 +30,12 @@ import Commons.given
 
 final case class OrderReceivedDTO(
     orderLines: List[IncomingOrderLineDTO],
-    customer: CustomerDTO,
+    client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
 )
 final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
-final case class CustomerDTO(code: String, name: String, vatNumber: String)
+final case class ClientDTO(code: String, name: String, vatNumber: String)
 final case class LocationDTO(latitude: Double, longitude: Double)
 object OrderReceivedDTO:
   given DTO[OrderReceived, OrderReceivedDTO] = interCaseClassDTO
@@ -52,7 +52,7 @@ final case class OrderProcessedDTO(incomingOrder: IncomingOrderDTO)
 final case class IncomingOrderDTO(
     id: String,
     orderLines: List[IncomingOrderLineDTO],
-    customer: CustomerDTO,
+    client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
 )
@@ -67,7 +67,7 @@ object PriceListDTO:
 final case class InProgressOrderDTO(
     id: String,
     orderLines: List[InProgressOrderLineDTO],
-    customer: CustomerDTO,
+    client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
     totalPrice: Int,
@@ -108,7 +108,7 @@ object ProductPalletizedDTO:
 final case class CompletedOrderDTO(
     id: String,
     orderLines: List[CompletedOrderLineDTO],
-    customer: CustomerDTO,
+    client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
     totalPrice: Int,
@@ -121,7 +121,7 @@ object CompletedOrderDTO:
 final case class TransportDocumentDTO(
     deliveryLocation: LocationDTO,
     shippingLocation: LocationDTO,
-    customer: CustomerDTO,
+    client: ClientDTO,
     shippingDate: String,
     transportDocumentLines: List[TransportDocumentLineDTO],
     totalWeight: Double,

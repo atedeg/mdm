@@ -16,7 +16,7 @@ enum IncomingEvent:
    */
   case OrderReceived(
       orderLines: NonEmptyList[IncomingOrderLine],
-      customer: Customer,
+      client: Client,
       deliveryDate: LocalDateTime,
       deliveryLocation: Location,
   )

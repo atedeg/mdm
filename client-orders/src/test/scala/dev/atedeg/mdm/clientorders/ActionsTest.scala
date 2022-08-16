@@ -27,11 +27,11 @@ import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.intToNonNegativeNumber
 import dev.atedeg.mdm.utils.monads.*
 
-trait CustomerMock:
-  private val customerId: CustomerID = CustomerID(UUID.randomUUID)
-  private val customerName: CustomerName = CustomerName("Giovanni Molari")
+trait ClientMock:
+  private val clientId: ClientID = ClientID(UUID.randomUUID)
+  private val clientName: ClientName = ClientName("Giovanni Molari")
   private val vatNumber: VATNumber = VATNumber(coerce("IT12345678901"))
-  val customer: Customer = Customer(customerId, customerName, vatNumber)
+  val client: Client = Client(clientId, clientName, vatNumber)
 
 trait LocationMock:
   private val latitude: Latitude = Latitude(-90)
@@ -47,7 +47,7 @@ trait PriceListMock:
     ),
   )
 
-trait OrderMocks extends PriceListMock, CustomerMock, LocationMock:
+trait OrderMocks extends PriceListMock, ClientMock, LocationMock:
   private val orderId: OrderID = OrderID(UUID.randomUUID)
 
   private val orderLines: NonEmptyList[IncomingOrderLine] = NonEmptyList.of[IncomingOrderLine](
@@ -55,7 +55,7 @@ trait OrderMocks extends PriceListMock, CustomerMock, LocationMock:
     100 of Caciotta(500),
   )
   private val date: LocalDateTime = LocalDateTime.now
-  val incomingOrder: IncomingOrder = IncomingOrder(orderId, orderLines, customer, date, location)
+  val incomingOrder: IncomingOrder = IncomingOrder(orderId, orderLines, client, date, location)
 
   val inProgressCompleteOrder: InProgressOrder =
     def palletizeAll[M[_]: Monad: CanRaise[PalletizationError]: Emits[ProductPalletized]](
@@ -190,7 +190,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
           CompleteOrderLine(Quantity(100), Caciotta(1000), 10_000.euroCents),
           CompleteOrderLine(Quantity(100), Caciotta(500), 5000.euroCents),
         ),
-        inProgressCompleteOrder.customer,
+        inProgressCompleteOrder.client,
         inProgressCompleteOrder.deliveryDate,
         inProgressCompleteOrder.deliveryLocation,
         inProgressCompleteOrder.totalPrice,
@@ -215,7 +215,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
       When("one requests the transport document")
       val td = createTransportDocument(completedOrder, weight)
       Then("the correct transport document is generated")
-      td.customer shouldBe completedOrder.customer
+      td.client shouldBe completedOrder.client
       td.deliveryLocation shouldBe completedOrder.deliveryLocation
       td.totalWeight shouldBe weight
       td.transportDocumentLines.toList should contain allOf (

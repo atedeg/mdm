@@ -30,7 +30,7 @@ trait Mocks:
   val oldInProgressOrder: InProgressOrderDTO = InProgressOrderDTO(
     UUID.randomUUID.toDTO,
     List(InProgressOrderLineDTO("incomplete", None, Some(incompleteOrderLine))),
-    CustomerDTO(UUID.randomUUID.toDTO, "foo", "IT01088260409"),
+    ClientDTO(UUID.randomUUID.toDTO, "foo", "IT01088260409"),
     LocalDateTime.now.toDTO,
     LocationDTO(12, 42),
     1000,
@@ -61,10 +61,10 @@ trait Mocks:
 class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
   "The `newOrderHandler`" should {
     val orderLines = List(IncomingOrderLineDTO(10, ProductDTO("ricotta", 350)))
-    val customer = CustomerDTO(UUID.randomUUID.toDTO[String], "foo", "IT01088260409")
+    val client = ClientDTO(UUID.randomUUID.toDTO[String], "foo", "IT01088260409")
     val deliveryDate = LocalDateTime.now.toDTO[String]
     val deliveryLocation = LocationDTO(12, 41)
-    val orderReceivedDTO = OrderReceivedDTO(orderLines, customer, deliveryDate, deliveryLocation)
+    val orderReceivedDTO = OrderReceivedDTO(orderLines, client, deliveryDate, deliveryLocation)
     val action: ServerAction[Configuration, String, String] = newOrderHandler(orderReceivedDTO)
     val res = action.unsafeExecute(config)
 
@@ -72,7 +72,7 @@ class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
       emittedOrderProcessed match
         case Nil => fail("No events were emitted")
         case List(e) =>
-          e.incomingOrder shouldBe IncomingOrderDTO(res.value, orderLines, customer, deliveryDate, deliveryLocation)
+          e.incomingOrder shouldBe IncomingOrderDTO(res.value, orderLines, client, deliveryDate, deliveryLocation)
         case _ => fail("Emitted more events than expected")
     }
 
@@ -82,7 +82,7 @@ class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
         case Some(o) =>
           val incomplete = IncompleteOrderLineDTO(0, 10, ProductDTO("ricotta", 350), 1000)
           val orderLines = List(InProgressOrderLineDTO("incomplete", None, Some(incomplete)))
-          o shouldBe InProgressOrderDTO(res.value, orderLines, customer, deliveryDate, deliveryLocation, 1000)
+          o shouldBe InProgressOrderDTO(res.value, orderLines, client, deliveryDate, deliveryLocation, 1000)
     }
   }
 

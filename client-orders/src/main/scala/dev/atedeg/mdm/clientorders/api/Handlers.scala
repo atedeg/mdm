@@ -24,7 +24,7 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
     incomingOrder = IncomingOrder(
       OrderID(UUID.randomUUID),
       orderData.orderLines,
-      orderData.customer,
+      orderData.client,
       orderData.deliveryDate,
       orderData.deliveryLocation,
     )
