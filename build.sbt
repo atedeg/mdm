@@ -80,7 +80,7 @@ val commonSettings = Seq(
 )
 
 val commonDockerSettings = Seq(
-  dockerBaseImage := "eclipse-temurin:18.0.2_9-jre",
+  dockerBaseImage := "eclipse-temurin:17.0.4_8-jre",
   dockerEnvVars := Map("PORT" -> "8080", "HOST" -> "0.0.0.0"),
   Docker / packageName := packageName.value,
   Docker / version := version.value,
