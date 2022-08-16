@@ -9,3 +9,4 @@ title: Bounded Contexts
 4. [Stocking](stocking.md)
 5. [Restocking](restocking.md)
 6. [Client Orders](client-orders.md)
+7. [Pricing]()
