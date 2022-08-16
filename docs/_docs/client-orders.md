@@ -6,7 +6,7 @@ title: Client Orders
 
 The system receives all incoming orders from the clients; each incoming order
 line specifies a product and the required quantity. Moreover, the incoming order
-contains information about the customer, the expected delivery date and the
+contains information about the client, the expected delivery date and the
 delivery location.
 Finally, each order is identified by a unique ID in order to allow order tracking.
 
@@ -24,7 +24,7 @@ The order is considered incomplete until all the required products are palletize
 When an order is completed by the operator (i.e. all the products are taken from the
 stock and palletized) it is weighted; then, the operator prints the order's transport
 document and attach it to the pallet which is loaded onto a truck. A notification is sent
-to the customer notifying them the order has been shipped.
+to the client notifying them the order has been shipped.
 
 ## Ubiquitous Language
 
