@@ -9,12 +9,12 @@ import dev.atedeg.mdm.products.*
 import dev.atedeg.mdm.utils.*
 
 /**
- * The available quantity of a certain product.
+ * The quantity in stock of a certain [[Product product]].
  */
 final case class AvailableQuantity(n: NonNegativeNumber)
 
 /**
- * The desired quantity of a certain product.
+ * The desired quantity of a certain [[Product product]] to be in stock.
  */
 final case class DesiredQuantity(n: PositiveNumber)
 
@@ -24,7 +24,7 @@ final case class DesiredQuantity(n: PositiveNumber)
 final case class Quantity(n: PositiveNumber)
 
 /**
- * The required quantity of a certain product to reach the desired stock level.
+ * The required quantity of a certain [[Product product]] to reach the desired stock level.
  */
 final case class MissingQuantity(n: NonNegativeNumber)
 
@@ -72,7 +72,7 @@ enum QualityAssuredBatch:
   case Failed(id: BatchID, cheeseType: CheeseType)
 
 /**
- * Uniquely identifies a [[Batch batch]].
+ * An ID used to uniquely identify a [[Batch batch]].
  */
 final case class BatchID(id: UUID)
 
