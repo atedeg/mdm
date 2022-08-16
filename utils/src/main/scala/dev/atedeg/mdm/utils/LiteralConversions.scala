@@ -14,6 +14,12 @@ inline implicit def doubleToNumberInRange[L <: Double & Singleton, U <: Double &
   inline if constValue[L] <= d && d <= constValue[U] then coerce(d) else compiletime.error("Not in the desired range")
 
 @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion", "org.wartremover.warts.OptionPartial"))
+inline implicit def doubleToNumberInOpenClosedRange[L <: Double & Singleton, U <: Double & Singleton](
+    inline d: Double,
+): DecimalInOpenClosedRange[L, U] =
+  inline if constValue[L] < d && d <= constValue[U] then coerce(d) else compiletime.error("Not in the desired range")
+
+@SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion", "org.wartremover.warts.OptionPartial"))
 inline implicit def intToPositiveNumber(inline i: Int): PositiveNumber =
   inline if i > 0 then coerce(i) else compiletime.error("Not a positive number")
 
