@@ -16,3 +16,9 @@ help us and participate in the project's development as domain experts.
 We also happen to love cheese so that's a win-win! 🧀
 
 The project's repository can be found [here](https://github.com/atedeg/mdm).
+
+### Members
+- Giacomo Cavalieri, giacomo.cavalieri2@studio.unibo.it
+- Nicolò Di Domenico, nicolo.didomenico@studio.unibo.it
+- Nicolas Farabegoli, nicolas.farabegoli@studio.unibo.it
+- Linda Vitali, linda.vitali2@studio.unibo.it
