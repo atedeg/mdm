@@ -1,4 +1,4 @@
-package dev.atedeg.mdm.utils
+package dev.atedeg.mdm.utils.ranges
 
 import scala.annotation.targetName
 import scala.math.Numeric.Implicits.*
@@ -20,6 +20,5 @@ extension [T: Numeric](x: T)
     Range(x.toDouble * (1.0 - y.percentage), x.toDouble * (1.0 + y.percentage))
 
 extension [T: Ordering](x: T)
-
   def isInRange(range: Range[T]): Boolean =
     x >= range.min && x <= range.max

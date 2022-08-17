@@ -10,9 +10,10 @@ import dev.atedeg.mdm.products.utils.given
 import dev.atedeg.mdm.stocking.*
 import dev.atedeg.mdm.stocking.Error.*
 import dev.atedeg.mdm.stocking.OutgoingEvent.*
-import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.{ percent as _, * }
 import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
+import dev.atedeg.mdm.utils.ranges.*
 
 /**
  * Gets [[MissingQuantity how many products]] are missing from the [[AvailableStock stock]], given the [[DesiredStock desired stock]].
