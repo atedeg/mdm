@@ -89,7 +89,7 @@ jobs:
       - name: Scalatest
         run: sbt test
 
-      - name: Scalatest
+      - name: Generate coverage report
         run: sbt jacocoAggregate
 
       - name: Get scala version
