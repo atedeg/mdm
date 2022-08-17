@@ -57,4 +57,5 @@ object PromotionDTO:
   private given DTO[ThresholdQuantity, Int] = caseClassDTO
   private given DTO[DiscountPercentage, Double] = caseClassDTO
   private given DTO[Client, ClientDTO] = interCaseClassDTO
-  private given DTO[ClientID, String] = caseClassDTO
+
+given DTO[ClientID, String] = caseClassDTO
