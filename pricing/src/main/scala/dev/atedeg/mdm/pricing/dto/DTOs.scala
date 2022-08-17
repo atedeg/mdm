@@ -11,3 +11,8 @@ final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
 object IncomingOrderLineDTO:
   given DTO[IncomingOrderLine, IncomingOrderLineDTO] = interCaseClassDTO
   private given DTO[Quantity, Int] = caseClassDTO
+
+final case class PriceInEuroCentsDTO(price: Int)
+
+object PriceInEuroCentsDTO:
+  given DTO[PriceInEuroCents, PriceInEuroCentsDTO] = interCaseClassDTO
