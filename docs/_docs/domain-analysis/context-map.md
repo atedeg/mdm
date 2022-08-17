@@ -13,6 +13,9 @@ layout: static-site-main
   In addition it asks to `Restocking` the quantity of milk used in the previous year. 
   `MilkPlanning` is a downstream core domain since `Restocking` provides a service to it and the latter is going to be a generic bounded context, as 
   reported in the Core Domain Chart. For all these reasons `MilkPlanning` has an Anti-Corruption Layer on its side.
+- `ClientOrders [D, CF] <- [U] Pricing`  
+  `Pricing` computes for `ClientOrders` the price of each order line.
+  As `Pricing` is the service provider, it is upstream. Also, since `ClientOrders` and `Pricing` are tightly coupled, the former is *Conformist*.
 - `Production [D, CF] <- [U] ProductionPlanning`  
   `ProductionPlanning` provides `Production` with the production plan for the day.
   As `ProductionPlanning` is the service provider concerning `Production`, they are respectively upstream and downstream.
