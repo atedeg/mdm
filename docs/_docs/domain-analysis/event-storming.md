@@ -25,6 +25,10 @@ experience. The whole process (that can be seen in a sped-up version in the vide
 less than an hour.
 
 ![Event Storming Video](images/eventStormingVideo.gif)
+<blockquote class="imgur-embed-pub" lang="en" data-id="hrjc0WR" data-context="false" >
+<a href="//imgur.com/hrjc0WR"></a>
+</blockquote>
+<script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 We found Event Storming to be a refreshing way to approach domain modeling;
 the experts were immediately engaged by the playfulness of the process and time flew by as we deepened
