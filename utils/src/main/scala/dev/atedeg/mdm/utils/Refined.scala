@@ -64,8 +64,8 @@ given refinedPlus[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Plus[N]
 given refinedTimes[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Times[N]): Times[N Refined P] with
   override def times(x: N Refined P, y: N Refined P): N Refined P = coerce(Op.times(x.value, y.value))
 
-given refinedTimesPercentage(using Op: Times[Double]): Times[Percentage] with
-  override def times(x: Percentage, y: Percentage): Percentage = coerce(Op.times(x.value, y.value))
+given refinedTimesPercentage: Times[Percentage] with
+  override def times(x: Percentage, y: Percentage): Percentage = coerce(x.value * y.value)
 
 given refinedDivFloat[P <: Positive | NonNegative: ValidFor[Double]]: Div[Double Refined P] with
 
