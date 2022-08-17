@@ -47,6 +47,7 @@ These are the subdomains that emerged from the Event Storming process:
 - **Restocking**: orders the milk and keeps track of the available quantity of milk
 - **Client Orders**: handles and fulfills the orders made by clients
 - **Production**: tracks the cheeses' production process
+- **Pricing**: calculates the price for every order considering the specific client
 
 We then proceeded to have a more in-depth analysis of each subdomain to determine their business
 differentiation and to do a first estimate of the model's complexity.
@@ -63,7 +64,7 @@ The following considerations were made:
 We gathered these pieces of information and compiled the following core domain chart:
 ![Core domain chart](images/core-domain-chart.png)
 
-As for the **Client Orders** and **Restocking** subdomains, they are considered to be *supporting*
+As for the **Client Orders**, **Restocking** and **Pricing** subdomains, they are considered to be *supporting*
 for the moment since it would be unfeasible to buy a full-fledged SAP-like system.
 For now, it may suffice to implement a custom-made minimal solution to cut costs.
 In the future, with an increased sales volume and revenue, these domains will become generic by
