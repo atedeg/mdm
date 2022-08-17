@@ -15,14 +15,12 @@ def priceOrderLine(
     clientPromotions: List[Promotion],
     today: LocalDateTime,
 )(orderLine: IncomingOrderLine): PriceInEuroCents =
-  val (quantity, product) = (orderLine.quantity, orderLine.product)
+  val IncomingOrderLine(quantity, product) = orderLine
   val baseUnitPrice = priceList.priceList(product)
   val activePromotions = clientPromotions.filter(_.expiryDate.isAfter(today))
   val lines = activePromotions.flatMap(_.lines.toList).filter(_.product === product)
-  // Get the fixed discounts
-  val fixedDiscounts = lines.collect { case p @ PromotionLine.Fixed(_, _) => p }
-  // Get the threshold discounts
-  val thresholdDiscounts = lines.collect { case p @ PromotionLine.Threshold(_, _, _) => p }
+  val fixedDiscounts = lines.collect { case p: PromotionLine.Fixed => p }
+  val thresholdDiscounts = lines.collect { case p: PromotionLine.Threshold => p }
   val basePrice = PriceInEuroCents(baseUnitPrice.n * quantity.n)
   basePrice
     |> applyFixedDiscount(fixedDiscounts)
@@ -31,18 +29,17 @@ def priceOrderLine(
 private def applyFixedDiscount(promotionLines: List[PromotionLine.Fixed])(
     basePrice: PriceInEuroCents,
 ): PriceInEuroCents =
-  val maybeDiscount = promotionLines.map(_.discount).reduceOption(_ * _)
-  maybeDiscount match
+  promotionLines.map(_.discount).reduceOption(_ * _) match
     case Some(discount) => basePrice withDiscount discount
     case None => basePrice
 
 private def applyThresholdDiscount(promotionLines: List[PromotionLine.Threshold], quantity: Quantity)(
     basePrice: PriceInEuroCents,
 ): PriceInEuroCents =
-  val filteredLines = promotionLines.collect {
-    case PromotionLine.Threshold(_, threshold, discount) if threshold.n.value < quantity.n.value =>
-      (threshold, discount)
-  }.sortBy(_._1.n.value)
+  val filteredLines = promotionLines
+    .filter(_.threshold.n < quantity.n)
+    .sortBy(_.threshold.n)
+    .map(pl => (pl.threshold, pl.discount))
   if filteredLines.isEmpty
   then basePrice
   else
