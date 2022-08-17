@@ -16,3 +16,8 @@ final case class PriceInEuroCentsDTO(price: Int)
 
 object PriceInEuroCentsDTO:
   given DTO[PriceInEuroCents, PriceInEuroCentsDTO] = interCaseClassDTO
+
+final case class PriceListDTO(priceList: Map[ProductDTO, PriceInEuroCentsDTO])
+
+object PriceListDTO:
+  given DTO[PriceList, PriceListDTO] = interCaseClassDTO
