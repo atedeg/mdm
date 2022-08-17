@@ -129,4 +129,20 @@ tables:
     rows:
       - case: "OutgoingEvent.OrderProcessed"
 
+  - name: "pricing-ul"
+    rows:
+      - class: "pricing.IncomingOrderLine"
+      - class: "pricing.Quantity"
+      - class: "pricing.PriceList"
+      - class: "pricing.PriceInEuroCents"
+      - class: "pricing.Client"
+      - class: "pricing.ClientID"
+      - class: "pricing.Promotion"
+      - case: "pricing.PromotionLine.Fixed"
+        name: "Fixed promotion line"
+      - case: "pricing.PromotionLine.Threshold"
+        name: "Threshold promotion line"
+      - class: "pricing.ThresholdQuantity"
+      - class: "pricing.DiscountPercentage"
+
 ignored: []
