@@ -9,5 +9,5 @@ title: Bounded Contexts
 4. [Stocking](stocking.md)
 5. [Restocking](restocking.md)
 6. [Client Orders](client-orders.md)
-7. [Pricing]()
+7. [Pricing](pricing.md)
 8. [Shared Kernel](shared-kernel.md)
