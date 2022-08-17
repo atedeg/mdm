@@ -1,5 +1,6 @@
 ---
 title: DevOps Techniques
+layout: static-site-main
 ---
 
 # Table of Contents
