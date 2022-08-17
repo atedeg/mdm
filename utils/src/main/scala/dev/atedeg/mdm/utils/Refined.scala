@@ -15,8 +15,13 @@ type DecimalInClosedRange[L, U] = Double Refined Interval.Closed[L, U]
 type DecimalInOpenClosedRange[L, U] = Double Refined Interval.OpenClosed[L, U]
 type NonNegativeNumber = Int Refined NonNegative
 type NonNegativeDecimal = Double Refined NonNegative
+type Percentage = DecimalInClosedRange[0.0, 1.0]
 
 extension [N: Numeric](n: N Refined Positive) def toNonNegative: N Refined NonNegative = coerce(n.value)
+
+extension (n: DecimalInClosedRange[0.0, 100.0]) def percent: Percentage = coerce(n.value / 100.0)
+
+extension (n: Percentage) def inverted: Percentage = coerce(1.0 - n.value)
 
 extension [N, P <: Positive | NonNegative: ValidFor[N]: ValidFor[Double]](n: N Refined P)(using N: Numeric[N])
   def toDecimal: Double Refined P = coerce(N.toDouble(n.value))
@@ -58,6 +63,9 @@ given refinedPlus[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Plus[N]
 
 given refinedTimes[N, P <: Positive | NonNegative: ValidFor[N]](using Op: Times[N]): Times[N Refined P] with
   override def times(x: N Refined P, y: N Refined P): N Refined P = coerce(Op.times(x.value, y.value))
+
+given refinedTimesPercentage(using Op: Times[Double]): Times[Percentage] with
+  override def times(x: Percentage, y: Percentage): Percentage = coerce(Op.times(x.value, y.value))
 
 given refinedDivFloat[P <: Positive | NonNegative: ValidFor[Double]]: Div[Double Refined P] with
 

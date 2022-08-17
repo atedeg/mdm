@@ -30,9 +30,8 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       Given("an incoming order line")
       val orderLine = 100 of Caciotta(1000)
       And("a promotions list where the client is not present")
-      val promotionsList = PromotionsList(Map.empty)
       When("pricing it")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List.empty, LocalDateTime.now)(orderLine)
       Then("the price should have no discounts")
       price shouldBe 10000.euroCents
     }
@@ -43,9 +42,8 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       And("a promotions list where the client has an expired promotion")
       val promotionLine = PromotionLine.Fixed(Caciotta(1000), 25.0.percent)
       val promotion = Promotion(client, LocalDateTime.MIN, NonEmptyList.of(promotionLine))
-      val promotionsList = PromotionsList(Map(client -> NonEmptyList.of(promotion)))
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have no discount")
       price shouldBe 10000.euroCents
     }
@@ -56,9 +54,8 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       And("a promotions list where the client has a promotion")
       val promotionLine = PromotionLine.Fixed(Caciotta(1000), 25.0.percent)
       val promotion = Promotion(client, LocalDateTime.MAX, NonEmptyList.of(promotionLine))
-      val promotionsList = PromotionsList(Map(client -> NonEmptyList.of(promotion)))
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have the fixed discount only")
       price shouldBe 7500.euroCents
     }
@@ -67,11 +64,10 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       Given("an incoming order line which meets the threshold")
       val orderLine = 100 of Caciotta(1000)
       And("a promotions list where the client has a promotion")
-      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 10.quantity, 50.0.percent)
+      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 10.threshold, 50.0.percent)
       val promotion = Promotion(client, LocalDateTime.MAX, NonEmptyList.of(promotionLine))
-      val promotionsList = PromotionsList(Map(client -> NonEmptyList.of(promotion)))
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have the correct threshold discount")
       price shouldBe 5500.euroCents
     }
@@ -80,11 +76,10 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       Given("an incoming order line which does not meet the threshold")
       val orderLine = 100 of Caciotta(1000)
       And("a promotions list where the client has a promotion")
-      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 1000.quantity, 50.0.percent)
+      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 1000.threshold, 50.0.percent)
       val promotion = Promotion(client, LocalDateTime.MAX, NonEmptyList.of(promotionLine))
-      val promotionsList = PromotionsList(Map(client -> NonEmptyList.of(promotion)))
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have no discount")
       price shouldBe 10000.euroCents
     }
@@ -95,12 +90,11 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       And("a promotions list where the client has a promotion")
       val promotionLines = NonEmptyList.of(
         PromotionLine.Fixed(Caciotta(1000), 25.0.percent),
-        PromotionLine.Threshold(Caciotta(1000), 50.quantity, 50.0.percent),
+        PromotionLine.Threshold(Caciotta(1000), 50.threshold, 50.0.percent),
       )
       val promotion = Promotion(client, LocalDateTime.MAX, promotionLines)
-      val promotionsList = PromotionsList(Map(client -> NonEmptyList.of(promotion)))
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have both discounts applied")
       price shouldBe 5625.euroCents
     }
@@ -111,26 +105,17 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientM
       And("a promotions list where the client has a promotion")
       val promotionLines1 = NonEmptyList.of(
         PromotionLine.Fixed(Caciotta(1000), 25.0.percent),
-        PromotionLine.Threshold(Caciotta(1000), 50.quantity, 50.0.percent),
+        PromotionLine.Threshold(Caciotta(1000), 50.threshold, 50.0.percent),
       )
       val promotionLines2 = NonEmptyList.of(
-        PromotionLine.Threshold(Caciotta(1000), 75.quantity, 60.0.percent),
+        PromotionLine.Threshold(Caciotta(1000), 75.threshold, 60.0.percent),
       )
       val activePromotion1 = Promotion(client, LocalDateTime.MAX, promotionLines1)
       val activePromotion2 = Promotion(client, LocalDateTime.MAX, promotionLines2)
       val expiredPromotion = Promotion(client, LocalDateTime.MIN, promotionLines1)
-      val promotionsList =
-        PromotionsList(
-          Map(
-            client -> NonEmptyList.of(
-              activePromotion1,
-              activePromotion2,
-              expiredPromotion,
-            ),
-          ),
-        )
+      val promotions = List(activePromotion1, activePromotion2, expiredPromotion)
       When("pricing the order line")
-      val price = priceOrderLine(priceList, promotionsList, LocalDateTime.now)(client, orderLine)
+      val price = priceOrderLine(priceList, promotions, LocalDateTime.now)(orderLine)
       Then("the price should have all discounts correctly applied")
       price shouldBe 5063.euroCents
     }

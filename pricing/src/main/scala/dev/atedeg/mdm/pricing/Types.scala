@@ -5,8 +5,11 @@ import java.util.UUID
 
 import cats.data.NonEmptyList
 
+import dev.atedeg.mdm.pricing.utils.*
+import dev.atedeg.mdm.pricing.utils.given
 import dev.atedeg.mdm.products.Product
 import dev.atedeg.mdm.utils.*
+import dev.atedeg.mdm.utils.given
 
 /**
  * A [[Product product]] with its ordered [[Quantity quantity]].
@@ -39,11 +42,6 @@ final case class Client(code: ClientID)
 final case class ClientID(id: UUID)
 
 /**
- * A list of all the promotions for each [[Client client]].
- */
-final case class PromotionsList(promotions: Map[Client, NonEmptyList[Promotion]])
-
-/**
  * A promotion for a [[Client client]], with an expiry date, containing promotion lines for some products.
  */
 final case class Promotion(client: Client, expiryDate: LocalDateTime, lines: NonEmptyList[PromotionLine])
@@ -71,10 +69,15 @@ enum PromotionLine(val product: Product):
    * a 50% discount above 5 casatellas, the first 5 casatella will cost 100 cents, while from the 6th onwards
    * they will cost 50 cents each.
    */
-  case Threshold(override val product: Product, threshold: Quantity, discount: DiscountPercentage)
+  case Threshold(override val product: Product, threshold: ThresholdQuantity, discount: DiscountPercentage)
       extends PromotionLine(product)
 
 /**
  * A discount percentage, expressed as a number between 0 (exclusive) and 100 (inclusive).
  */
-final case class DiscountPercentage(n: DecimalInOpenClosedRange[0.0, 100.0])
+final case class DiscountPercentage(n: DecimalInOpenClosedRange[0.0, 1.0]) derives Times
+
+/**
+ * A threshold under which the discount does not apply.
+ */
+final case class ThresholdQuantity(n: PositiveNumber)
