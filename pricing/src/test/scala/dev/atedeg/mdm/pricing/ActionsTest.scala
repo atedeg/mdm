@@ -18,11 +18,7 @@ trait ClientMock:
   val client: Client = Client(clientId)
 
 trait PriceListMock:
-  val priceList: PriceList = PriceList(
-    Map(
-      Caciotta(1000) -> 100.euroCents,
-    ),
-  )
+  val priceList: PriceList = PriceList(Map(Caciotta(1000) -> 100.euroCents))
 
 class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceListMock:
   Feature("Order pricing") {
