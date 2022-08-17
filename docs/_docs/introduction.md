@@ -6,7 +6,6 @@ layout: static-site-main
 <img id="mdmCheeseLogo" src="images/logo.svg">
 
 # MDM - Mambelli Domain Model
-
 This is the documentation for the final project of the
 [2021/2022 LSS exam](https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/412677).
 

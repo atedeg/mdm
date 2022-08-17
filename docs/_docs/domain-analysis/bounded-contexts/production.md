@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Production
-
 Every day the dairyman receives a production plan from Raffaella, containing instructions
 on the cheese he needs to produce for the day.
 

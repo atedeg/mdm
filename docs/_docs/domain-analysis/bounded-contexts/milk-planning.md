@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Milk Planning
-
 Every Saturday Raffaella has to estimate the quintals of milk necessary to produce all products
 for the following week.
 She makes this estimate by taking into account the following factors:

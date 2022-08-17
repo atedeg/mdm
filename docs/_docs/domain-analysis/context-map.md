@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Context Map
-
 - `MilkPlanning [D, ACL] <- [U] ClientOrders` and `ProductionPlanning [D, ACL] <- [U] ClientOrders`  
   `ClientOrders` sends a message to `MilkPlanning` and `ProductionPlanning` to inform a new order was received.
   `MilkPlanning` and `ProductionPlanning` are downstream *core domains* so it's necessary to insert an *Anti-Corruption Layer* between them and `ClientOrders`.

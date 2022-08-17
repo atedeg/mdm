@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Restocking
-
 The Restocking bounded context is responsible to fulfill the requests to order
 milk coming from the Milk Planning.
 Moreover, it keeps track of the quintals of stocked milk that could be used by

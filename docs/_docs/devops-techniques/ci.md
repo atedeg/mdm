@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Continuous Integration and Delivery
-
 In this section we analyze the setup of the CI/CD, in particular the workflows used in the pipeline implementation.
 
 The pipeline is structured as follows: the first stage is the `build` stage, which is responsible for building the project and running the tests.
@@ -52,7 +51,6 @@ flowchart LR
 ```
 
 ## Pipeline optimizations
-
 ```mermaid
 flowchart LR
   subgraph AA[Build Test and Deploy]

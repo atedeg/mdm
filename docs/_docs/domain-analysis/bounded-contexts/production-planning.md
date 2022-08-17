@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Production Planning
-
 Every morning Raffaella has to create a production plan which contains how many of each product to produce that day.
 
 She makes this plan taking into account the following factors:
