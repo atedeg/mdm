@@ -1,5 +1,6 @@
 ---
 title: Bounded Contexts
+layout: static-site-main
 ---
 
 # Table of Contents

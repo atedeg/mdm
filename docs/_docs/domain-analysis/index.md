@@ -1,5 +1,6 @@
 ---
 title: Domain Analysis
+layout: static-site-main
 ---
 
 # Table of Contents
