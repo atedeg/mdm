@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/atedeg/mdm/compare/v2.0.0...v2.0.1) (2022-08-17)
+
+
+### Reverts
+
+* Revert "docs: add event storming video" ([712c100](https://github.com/atedeg/mdm/commit/712c10077ff1d7636b6ecfc4d48ec8dcabd267e2))
+
 # [2.0.0](https://github.com/atedeg/mdm/compare/v1.0.2...v2.0.0) (2022-08-17)
 
 
