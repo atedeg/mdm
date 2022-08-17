@@ -24,7 +24,7 @@ trait PriceListMock:
     ),
   )
 
-class Tests extends AnyFeatureSpec with GivenWhenThen with Matchers with ClientMock with PriceListMock:
+class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceListMock:
   Feature("Order pricing") {
     Scenario("Order line from a regular client") {
       Given("an incoming order line")
