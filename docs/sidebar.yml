@@ -26,8 +26,7 @@ subsection:
   - title: DevOps Techniques
     index: devops-techniques/devops-techniques-toc.md
     subsection:
-      - page: devops-techniques/ci.md
       - page: devops-techniques/deployment-strategy.md
       - page: devops-techniques/quality-assurance.md
+      - page: devops-techniques/ci.md
   - page: licence.md
-
