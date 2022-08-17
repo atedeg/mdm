@@ -16,6 +16,7 @@ subsection:
           - page: domain-analysis/bounded-contexts/stocking.md
           - page: domain-analysis/bounded-contexts/restocking.md
           - page: domain-analysis/bounded-contexts/client-orders.md
+#          - page: domain-analysis/bounded-contexts/pricing.md
           - page: domain-analysis/bounded-contexts/shared-kernel.md
   - page: architecture.md
   - title: Development
