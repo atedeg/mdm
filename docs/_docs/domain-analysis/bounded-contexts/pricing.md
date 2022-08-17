@@ -1,5 +1,6 @@
 ---
 title: Pricing
+layout: static-site-main
 ---
 
 # Pricing
