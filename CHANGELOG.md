@@ -1,3 +1,29 @@
+# [2.0.0](https://github.com/atedeg/mdm/compare/v1.0.2...v2.0.0) (2022-08-17)
+
+
+### Bug Fixes
+
+* **pricing:** add clarification for multiple promotions ([df90a94](https://github.com/atedeg/mdm/commit/df90a941efbc70803e4090f212609246c90c5dbe))
+* **pricing:** address review comments ([33a3fb5](https://github.com/atedeg/mdm/commit/33a3fb5a037fc16728b31e51e6c02949548f34f9))
+* **pricing:** address review comments ([a062b5f](https://github.com/atedeg/mdm/commit/a062b5f6ed06ecbe021a9e9cb03ac945bee35e67))
+* **pricing:** change percent range to double and remove plus derivation ([22eaaac](https://github.com/atedeg/mdm/commit/22eaaacb1d769e08a7bc3f125ddc4f5fc2ef2a68))
+* **pricing:** fix tests ([e50dc68](https://github.com/atedeg/mdm/commit/e50dc68157bb40bcd876a504f59a22a1cf24ce5d))
+* **pricing:** remove collect from threshold discount for better clarity ([72cfcde](https://github.com/atedeg/mdm/commit/72cfcde4196f7f841d9867a2ecd4c0f81fa33151))
+* **pricing:** simplify discount multiplication ([12865de](https://github.com/atedeg/mdm/commit/12865de986eaadb6356cb2fb4f5dde25f404401f))
+* **pricing:** simplify domain types ([166b7c6](https://github.com/atedeg/mdm/commit/166b7c6ad7acdf7a4e9722da29959b0aae40a322))
+* **pricing:** use === for equality ([9612b8c](https://github.com/atedeg/mdm/commit/9612b8c7f69ef35f2aeb332ce1b685c0a73032ef))
+* **stocking:** move ranges in their package ([7811cf2](https://github.com/atedeg/mdm/commit/7811cf23ddc19f7cdb497820e2b455778c90a332))
+* **utils:** simplify multiplication between percentages ([b5683d7](https://github.com/atedeg/mdm/commit/b5683d77893bfb0264316faeb11bb5d299ff9171))
+
+
+### Features
+
+* **pricing:** add domain types ([56d357d](https://github.com/atedeg/mdm/commit/56d357d3d69f653a688a68746619336ec99babae))
+* **pricing:** add pricing action with tests ([afa9cd2](https://github.com/atedeg/mdm/commit/afa9cd2ba8093f21d9b6283d054984b492eb853b))
+* **pricing:** add utils for bounded context ([2d4b67b](https://github.com/atedeg/mdm/commit/2d4b67b8581e0057214777265d1d17b9c02abc00))
+* **utils:** add conversion from double to open-closed range ([5878852](https://github.com/atedeg/mdm/commit/5878852003e365e6d1b42bb32349515ff8150b46))
+* **utils:** add decimal in open-closed range type ([84a07fc](https://github.com/atedeg/mdm/commit/84a07fc0e6370c85b7b7a89793aaf76a93da86d3))
+
 ## [1.0.2](https://github.com/atedeg/mdm/compare/v1.0.1...v1.0.2) (2022-08-16)
 
 
