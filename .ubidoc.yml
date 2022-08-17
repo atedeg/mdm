@@ -109,7 +109,7 @@ tables:
     rows:
       - class: "clientorders.IncomingOrder"
       - class: "clientorders.IncomingOrderLine"
-      - class: "clientorders.Customer"
+      - class: "clientorders.Client"
       - class: "clientorders.Location"
       - class: "clientorders.PriceList"
       - class: "clientorders.PricedOrder"
