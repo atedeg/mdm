@@ -60,19 +60,19 @@ class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceLi
       Given("an incoming order line which meets the threshold")
       val orderLine = 100 of Caciotta(1000)
       And("a promotions list where the client has a promotion")
-      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 10.threshold, 50.0.percent)
+      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 10.threshold, 40.0.percent)
       val promotion = Promotion(client, LocalDateTime.MAX, NonEmptyList.of(promotionLine))
       When("pricing the order line")
       val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have the correct threshold discount")
-      price shouldBe 5500.euroCents
+      price shouldBe 6400.euroCents
     }
 
     Scenario("Order line from a client with only a threshold discount which does not meet the threshold") {
       Given("an incoming order line which does not meet the threshold")
       val orderLine = 100 of Caciotta(1000)
       And("a promotions list where the client has a promotion")
-      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 1000.threshold, 50.0.percent)
+      val promotionLine = PromotionLine.Threshold(Caciotta(1000), 1000.threshold, 40.0.percent)
       val promotion = Promotion(client, LocalDateTime.MAX, NonEmptyList.of(promotionLine))
       When("pricing the order line")
       val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
@@ -86,13 +86,13 @@ class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceLi
       And("a promotions list where the client has a promotion")
       val promotionLines = NonEmptyList.of(
         PromotionLine.Fixed(Caciotta(1000), 25.0.percent),
-        PromotionLine.Threshold(Caciotta(1000), 50.threshold, 50.0.percent),
+        PromotionLine.Threshold(Caciotta(1000), 20.threshold, 40.0.percent),
       )
       val promotion = Promotion(client, LocalDateTime.MAX, promotionLines)
       When("pricing the order line")
       val price = priceOrderLine(priceList, List(promotion), LocalDateTime.now)(orderLine)
       Then("the price should have both discounts applied")
-      price shouldBe 5625.euroCents
+      price shouldBe 5100.euroCents
     }
 
     Scenario("Order line from a client with multiple discounts") {
@@ -101,7 +101,7 @@ class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceLi
       And("a promotions list where the client has a promotion")
       val promotionLines1 = NonEmptyList.of(
         PromotionLine.Fixed(Caciotta(1000), 25.0.percent),
-        PromotionLine.Threshold(Caciotta(1000), 50.threshold, 50.0.percent),
+        PromotionLine.Threshold(Caciotta(1000), 20.threshold, 40.0.percent),
       )
       val promotionLines2 = NonEmptyList.of(
         PromotionLine.Threshold(Caciotta(1000), 75.threshold, 60.0.percent),
@@ -113,6 +113,6 @@ class Tests extends AnyFeatureSpec, GivenWhenThen, Matchers, ClientMock, PriceLi
       When("pricing the order line")
       val price = priceOrderLine(priceList, promotions, LocalDateTime.now)(orderLine)
       Then("the price should have all discounts correctly applied")
-      price shouldBe 5063.euroCents
+      price shouldBe 4425.euroCents
     }
   }

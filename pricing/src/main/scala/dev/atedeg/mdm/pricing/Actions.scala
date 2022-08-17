@@ -39,7 +39,7 @@ private def applyFixedDiscount(promotionLines: List[PromotionLine.Fixed])(
 private def applyThresholdDiscount(promotionLines: List[PromotionLine.Threshold], quantity: Quantity)(
     basePrice: PriceInEuroCents,
 ): PriceInEuroCents =
-  def listToPair[A](l: List[A]): (A, A) = (l(0), l(1))
+  def listToPair[A](l: List[A]): (A, A) = (l(1), l(0))
 
   val filteredLines = promotionLines
     .filter(_.threshold.n < quantity.n)
@@ -51,6 +51,6 @@ private def applyThresholdDiscount(promotionLines: List[PromotionLine.Threshold]
     val percentages = filteredLines.map(_._2.toPercentage.inverted).scan(100.0.percent)(_ * _)
     val ranges = filteredLines.map(_._1.n.value).prepended(0).appended(quantity.n.value)
     val distances = ranges.sliding(2).map(listToPair).map(_ - _)
-    val multiplier = 1.0 - percentages.zip(distances).map(_.value * _).sum / quantity.n.value
+    val multiplier = 1.0 - (percentages.zip(distances).map(_.value * _).sum / quantity.n.value)
     val discount = DiscountPercentage(coerce(multiplier))
     basePrice withDiscount discount
