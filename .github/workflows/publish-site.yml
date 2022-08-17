@@ -3,8 +3,8 @@ name: Publish site
 on:
   workflow_run:
     workflows: [Build test and deploy]
-    types:
-      - completed
+    types: [completed]
+    branches: [main]
 
 jobs:
   publish-site:
