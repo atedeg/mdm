@@ -266,4 +266,7 @@ img#clean-arch {
 
 img#event-storming {
     content: var(--event-storming);
+    border: 1px var(--body-fg) solid;
+    padding: 0;
+    margin: 50px 10px;
 }
