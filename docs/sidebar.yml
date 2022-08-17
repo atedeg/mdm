@@ -2,13 +2,13 @@ index: index.md
 subsection:
   - page: introduction.md
   - title: Domain Analysis
-    index: domain-analysis/domain-analysis-toc.md
+    index: domain-analysis/index.md
     subsection:
       - page: domain-analysis/event-storming.md
       - page: domain-analysis/context-map.md
       - page: domain-analysis/user-stories.md
       - title: Bounded Contexts
-        index: domain-analysis/bounded-contexts/bounded-contexts-toc.md
+        index: domain-analysis/bounded-contexts/index.md
         subsection:
           - page: domain-analysis/bounded-contexts/milk-planning.md
           - page: domain-analysis/bounded-contexts/production-planning.md
@@ -20,12 +20,12 @@ subsection:
           - page: domain-analysis/bounded-contexts/shared-kernel.md
   - page: architecture.md
   - title: Development
-    index: development/development-toc.md
+    index: development/index.md
     subsection:
       - page: development/development-choices.md
       - page: development/documentation.md
   - title: DevOps Techniques
-    index: devops-techniques/devops-techniques-toc.md
+    index: devops-techniques/index.md
     subsection:
       - page: devops-techniques/deployment-strategy.md
       - page: devops-techniques/quality-assurance.md

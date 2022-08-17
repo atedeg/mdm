@@ -1,5 +1,6 @@
 ---
 title: Shared Kernel
+layout: static-site-main
 ---
 
 # Shared Kernel
