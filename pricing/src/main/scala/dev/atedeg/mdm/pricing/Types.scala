@@ -29,7 +29,7 @@ final case class PriceList(priceList: Map[Product, PriceInEuroCents])
 /**
  * A price expressed in cents, the smallest currency unit for euros.
  */
-final case class PriceInEuroCents(n: PositiveNumber)
+final case class PriceInEuroCents(n: NonNegativeNumber)
 
 /**
  * A physical or legal entity that places [[IncomingOrderLine order lines]].
