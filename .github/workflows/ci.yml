@@ -9,8 +9,65 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build and test
+  wartremover:
+    name: Wartremover lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: actions/setup-java@v3.4.1
+        with:
+          distribution: 'adopt'
+          java-version: '17.0.3'
+          cache: 'sbt'
+
+      - name: Wartremover checks
+        run: sbt wartremoverInspect
+
+  scalafix:
+    name: Scalafix lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: actions/setup-java@v3.4.1
+        with:
+          distribution: 'adopt'
+          java-version: '17.0.3'
+          cache: 'sbt'
+
+      - name: Scalafix checks
+        run: sbt 'scalafixAll --check'
+
+  scalafmt:
+    name: Scalafmt lint
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: actions/setup-java@v3.4.1
+        with:
+          distribution: 'adopt'
+          java-version: '17.0.3'
+          cache: 'sbt'
+
+      - name: Scalafix checks
+        run: sbt scalafmtCheckAll
+
+  tests:
+    name: Run unit tests
     strategy:
       matrix:
         os: [ubuntu-22.04]
@@ -29,20 +86,17 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'sbt'
 
+      - name: Scalatest
+        run: sbt test
+
+      - name: Scalatest
+        run: sbt jacocoAggregate
+
       - name: Get scala version
         id: get-scala-version
         run: |
           export SCALA_VERSION=`sbt --no-colors --error 'set aggregate := false; print scalaVersion'`
-          echo "::set-output name=scala-version::$SCALA_VERSION"          
-
-      - name: Quality Assurance
-        run: sbt qaCheck
-
-      - name: Test
-        run: sbt test
-
-      - name: Generate coverage report
-        run: sbt jacocoAggregate
+          echo "::set-output name=scala-version::$SCALA_VERSION" 
 
       - name: Publish coverage report
         if: ${{ matrix.os }} == 'ubuntu-22.04' && ${{ matrix.java-version }} == '17.0.3' # Find a better solution instead hardcoded versions
@@ -52,12 +106,28 @@ jobs:
           files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/aggregate/jacoco.xml
           verbose: true
 
+  docsite:
+    name: Build documentation site
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: actions/setup-java@v3.4.1
+        with:
+          distribution: 'adopt'
+          java-version: '17.0.3'
+          cache: 'sbt' 
+
       - name: Build docsite
         run: sbt ubidocGenerate
 
   publish:
     name: Publish
-    needs: [build]
+    needs: [wartremover, scalafix, scalafmt, tests, docsite]
     runs-on: ubuntu-22.04
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta')
     steps:
