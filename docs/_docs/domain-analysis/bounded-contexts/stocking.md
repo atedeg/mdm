@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Stocking
-
 After a batch of cheeses has ripened for the required amount of time,
 one of them is selected to perform quality assurance.
 Its result could be either positive or negative.

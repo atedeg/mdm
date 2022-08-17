@@ -4,11 +4,9 @@ layout: static-site-main
 ---
 
 # Quality Assurance
-
 This section will review the quality assurance practices we decided to adopt.
 
 ## Scalafmt
-
 [Scalafmt](https://scalameta.org/scalafmt/) is used to enforce a common code formatting convention
 across the entire code base, helping the team to have a uniform code style.
 
@@ -22,7 +20,6 @@ For more details about the rules we used, please take a look at the
 [`.scalafmt.conf`](https://github.com/atedeg/mdm/blob/main/.scalafmt.conf) configuration file.
 
 ## Scalafix
-
 [Scalafix](https://scalacenter.github.io/scalafix/) helps developers automate day-to-day code
 health checks, spot bad programming practices, and linting the code. We agreed on using all
 the linting rules.
@@ -35,7 +32,6 @@ For more details about the rules we used, please take a look at the
 [`.scalafix.conf`](https://github.com/atedeg/mdm/blob/main/.scalafix.conf) configuration file.
 
 ## Wartremover
-
 [Wartremover](https://www.wartremover.org/), as stated in its site, helps scala developers
 write safe and correct software by removing some of the language’s nastier features.
 
@@ -58,7 +54,6 @@ Again, in CI/CD the task is executed to enforce the code quality and prevent the
 problematic code.
 
 ## ~~Scoverage~~ JaCoCo & Codecov
-
 Regarding code coverage, it was initially decided to use
 [Scoverage](https://github.com/scoverage/scalac-scoverage-plugin).
 However, for Scala 3 it is still not fully compatible: the use of Scala 3.2.0-RC1 or higher is
@@ -77,7 +72,6 @@ which verifies that for each PRs the coverage does not fall more than 5% and
 generates graphical reports that are accessible [here](https://app.codecov.io/gh/atedeg/mdm).
 
 ## Sonarcloud
-
 [Sonarcloud](https://sonarcloud.io/) is a useful tool as it can detect various issues in code such
 as bugs, code smells, code duplication, etc.
 It has been configured to run at every PR and thus evaluate the quality of the contribution made;

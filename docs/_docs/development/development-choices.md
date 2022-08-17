@@ -4,15 +4,12 @@ layout: static-site-main
 ---
 
 # Development choices
-
 As described in the ["architecture" section](...) we decided to adopt an hexagonal architecture for our microservices.
 In this section we are going to describe some of the more relevant choices we made when implementing this architecture,
 both from core domain and application layer perspective.
 
-## Core Domain  
-
+## Core Domain
 ### Domain Modelling Approach
-
 While we were furthering our knowledge to better approach the development of the project we stumbled
 upon a very interesting [talk](https://www.youtube.com/watch?v=2JB1_e5wZmU) by Scott Wlaschin and
 later read the book [_"Domain Modelling Made Functional"_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/).
@@ -27,7 +24,6 @@ with the domain experts to get precious feedback we could easily use to rework o
 language on the spot.
 
 ### Action modelling through monads
-
 All core domain actions take advantage of a _monadic encoding of side effects,_ ranging from failure
 with an exception, to emitting events to reading an immutable global state.
 
@@ -64,7 +60,6 @@ Using monads to model side effects proved useful in three distinct ways:
 > sequence of small actions to obtain more complex behaviour.
 
 ### Make illegal states unrepresentable
-
 Before starting the development of the project we also decided to fully embrace the
 _"make illegal states unrepresentable"_ philosophy while leveraging the features the Scala's
 type system could offer.
@@ -139,7 +134,6 @@ The main advantages we obtained from this approach were:
 ## Application Layer
 
 ### DTOs
-
 The DTOs play a fundamental role in interacting with external microservices and the persistence layer.
 However, the code to convert a DTO to a domain model object and vice-versa is often trivial and follows a
 simple pattern that lends itself to being automatically generated via meta-programming.
@@ -192,7 +186,6 @@ consider the following example:
 > ```
 
 ### HTTP API
-
 Some bounded contexts required implementing an HTTP API, we decided to leverage
 the [tapir](https://tapir.softwaremill.com/en/latest/) library.
 It provided many useful features:

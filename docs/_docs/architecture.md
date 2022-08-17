@@ -4,7 +4,6 @@ layout: static-site-main
 ---
 
 # Architecture
-
 The architecture of each bounded context follows the
 [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)'s structure: Entities, Use Cases, Interface Adapters, Frameworks and Drivers.  
 
