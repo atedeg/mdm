@@ -19,7 +19,7 @@ layout: static-site-main
 - `Production [D, CF] <- [U] ProductionPlanning`  
   `ProductionPlanning` provides `Production` with the production plan for the day.
   As `ProductionPlanning` is the service provider concerning `Production`, they are respectively upstream and downstream.
-  Since `ProductionPlanning` and `Production` are tightly coupled, the latter is *Conformist*.
+  Since `ProductionPlanning` and `Production` are tightly coupled, the latter is Conformist.
 - `Stocking [D, ACL] <- [U] ClientOrders`  
   `Stocking` receives a message from `ClientOrders` notifying the removal from stock of certain products.
   `Stocking` has an *Anti-Corruption Layer*, as `ClientOrders` is going to be a generic bounded context and it will be
