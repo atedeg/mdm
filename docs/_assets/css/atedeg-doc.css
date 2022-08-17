@@ -252,12 +252,18 @@ header {
 
 :root {
     --clean-arch: url(../images/cleanArchitecture.svg);
+    --event-storming: url(../images/eventStorming.svg);
 }
 
 :root.theme-dark {
     --clean-arch: url(../images/cleanArchitecture_dark.svg);
+    --event-storming: url(../images/eventStorming_dark.svg);
 }
 
 img#clean-arch {
     content: var(--clean-arch);
+}
+
+img#event-storming {
+    content: var(--event-storming);
 }
