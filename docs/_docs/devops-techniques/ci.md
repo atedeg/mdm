@@ -53,4 +53,28 @@ flowchart LR
 
 ## Pipeline optimizations
 
-TODO
+```mermaid
+flowchart LR
+  subgraph AA[Build Test and Deploy]
+  direction LR
+    subgraph Lint[Lint]
+      direction LR
+      SFMT(Scalafmt)
+      SFX(Scalafix)
+      WRM(Wartremover)
+    end
+    Lint --> B
+    subgraph Test[Test]
+      direction LR
+      T(Unit test) --> Cov(Coverage Report)
+    end
+    A(Documentation site build)-->B(Publish)
+    Test --> B
+  end
+  subgraph BB[Publish site]
+  direction LR
+    C(Publish site)
+  end
+
+  AA --> BB
+```
