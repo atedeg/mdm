@@ -4,13 +4,11 @@ layout: static-site-main
 ---
 
 # Deployment Strategy
-
 A good deployment strategy is crucial for the success of a project.
 We decided to adopt a continuous release strategy: this implied having a robust test suite,
 an adequate DVCS workflow and tools to automate the releases.
 
 ## Adopted DVCS workflow
-
 The DVCS workflow we adopted is quite similar to `git-flow` but with substantial changes:
 we use the `feature` branch as intended, with each feature well-isolated and defined.
 Moreover, we used a `beta` branch to publish a non-stable version of the software; this can be
@@ -64,9 +62,7 @@ gitGraph
 ```
 
 ## Tools to automate the release
-
 ### Conventional Commits
-
 We decide to adopt [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) as the
 convention for commit messages.
 It's a lightweight convention on top of commit messages which provides a simple set of rules for
@@ -96,7 +92,6 @@ For more information see the
 > reflecting all the gradle plugin's functionalities.
 
 ### Semantic release
-
 Assigning versions to code can be a controversial activity.
 People often assign versions based on intuition, wrong assumptions or, even worse, randomly.
 In this regard, the [SemVer](https://semver.org/) standard is fundamental to have some shared
@@ -129,7 +124,6 @@ solely on project development without worrying about these easy-to-automate task
 minimizing the possibility of errors.
 
 ### The final release workflow
-
 Our workflow concerning semantic release is organized in the following steps:
 
 1. The [`commit-analyzer`](https://github.com/semantic-release/commit-analyzer) plugin analyzes the

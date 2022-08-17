@@ -3,7 +3,6 @@ title: Pricing
 ---
 
 # Pricing
-
 Every time an order is received, each order line must be priced accordingly.
 Each product has a base unit price coming from a price list.
 If the client is a regular customer, the price for a given order line is simply computed as the base price for
