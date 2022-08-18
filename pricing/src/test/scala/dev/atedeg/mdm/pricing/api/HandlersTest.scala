@@ -46,7 +46,7 @@ trait Mocks:
 class PriceOrderLineHandler extends AnyWordSpec, Matchers, Mocks:
   "The `priceOrderLineHandler`" should {
     val orderLine = IncomingOrderLineDTO(1, ricotta)
-    val action: ServerAction[Configuration, String, PriceInEuroCentsDTO] = handlePriceOrderLine(client.code, orderLine)
+    val action: ServerAction[Configuration, String, PriceInEuroCentsDTO] = priceOrderLineHandler(client.code, orderLine)
     val res = action.unsafeExecute(config)
 
     "compute the correct date" in {
