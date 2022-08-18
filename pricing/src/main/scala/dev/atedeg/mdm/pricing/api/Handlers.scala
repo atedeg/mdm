@@ -12,7 +12,7 @@ import dev.atedeg.mdm.pricing.dto.given
 import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
-def handlePriceOrderLine[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
+def priceOrderLineHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
     clientID: String,
     orderLineDTO: IncomingOrderLineDTO,
 ): M[PriceInEuroCentsDTO] =
