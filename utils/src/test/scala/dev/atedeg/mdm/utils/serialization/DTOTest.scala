@@ -29,11 +29,24 @@ final case class Test1(n: Int)
 final case class Test2(t: Test1, s: String)
 final case class Test2DTO(t: Int, s: String)
 
+final case class SumDTO(tag: String, case1DTO: Option[Int], case2DTO: Option[String])
+final case class SumDTOWithWrongTag(tag: Int, case1DTO: Option[Int], case2DTO: Option[String])
+final case class SumDTOWithLessFields(tag: String, case1DTO: Option[Int])
+final case class SumDTOWithMoreFields(tag: String, case1DTO: Option[Int], case2DTO: Option[String], e: Option[Double])
+final case class SumDTOWithNoOptionalFields(tag: String, case1DTO: Int, case2DTO: String)
+enum Sum:
+  case Case1(n: Int)
+  case Case2(s: String)
+
 trait Generators:
   val test1: Gen[Test1] = arbitrary[Int].map(Test1.apply)
   val test1DTO: Gen[Int] = arbitrary[Int]
   val test2: Gen[Test2] = test1.flatMap(t1 => arbitrary[String].map(Test2(t1, _)))
   val test2DTO: Gen[Test2DTO] = arbitrary[Int].flatMap(i => arbitrary[String].map(Test2DTO(i, _)))
+  val case1: Gen[Sum.Case1] = arbitrary[Int].map(Sum.Case1(_))
+  val case2: Gen[Sum.Case2] = arbitrary[String].map(Sum.Case2(_))
+  val case1DTO: Gen[SumDTO] = arbitrary[Int].map(i => SumDTO("Case1", Some(i), None))
+  val case2DTO: Gen[SumDTO] = arbitrary[String].map(s => SumDTO("Case2", None, Some(s)))
   @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
   val nonEmpty: Gen[NonEmptyList[Int]] = Gen.nonEmptyListOf(arbitrary[Int]).map(_.toNel.get)
   val nonEmptyDTO: Gen[List[Int]] = nonEmpty.map(_.toList)
@@ -47,7 +60,7 @@ trait Generators:
   val uuidDTO: Gen[String] = uuid.map(_.toString)
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class Tests extends AnyWordSpec with ScalaCheckDrivenPropertyChecks with Matchers with Generators:
+class Tests extends AnyWordSpec, ScalaCheckDrivenPropertyChecks, Matchers, Generators:
   extension [D](dto: D) def decodeAndEncode[E](using DTO[E, D]): D = dto.toDomain[E].value.toDTO[D]
   extension [E](elem: E) def encodeAndDecode[D](using DTO[E, D]): E = elem.toDTO[D].toDomain[E].value
   def encodingInverseOfDecoding[E, D](dto: D)(using DTO[E, D]): Assertion = dto.decodeAndEncode[E] shouldBe dto
@@ -113,6 +126,23 @@ class Tests extends AnyWordSpec with ScalaCheckDrivenPropertyChecks with Matcher
       "be checked at compile-time" in {
         "val instance = DTOGenerators.interCaseClassDTO[Test1, Test2]" shouldNot compile
         "val instance = DTOGenerators.interCaseClassDTO[Test2, Test2DTO]" shouldNot compile
+      }
+    }
+    "used for a sum type" should {
+      "generate a correct instance" in {
+        given DTO[Sum.Case1, Int] = DTOGenerators.caseClassDTO
+        given DTO[Sum.Case2, String] = DTOGenerators.caseClassDTO
+        given DTO[Sum, SumDTO] = DTOGenerators.sumTypeDTO
+        forAll(case1)(decodingInverseOfEncoding[Sum, SumDTO])
+        forAll(case1DTO)(encodingInverseOfDecoding[Sum, SumDTO])
+        forAll(case2)(decodingInverseOfEncoding[Sum, SumDTO])
+        forAll(case2DTO)(encodingInverseOfDecoding[Sum, SumDTO])
+      }
+      "be checked at compile-time" in {
+        "val instance = DTOGenerators.sumTypeDTO[Sum, SumDTOWithWrongTag]" shouldNot compile
+        "val instance = DTOGenerators.sumTypeDTO[Sum, SumDTOWithLessFields]" shouldNot compile
+        "val instance = DTOGenerators.sumTypeDTO[Sum, SumDTOWithMoreFields]" shouldNot compile
+        "val instance = DTOGenerators.sumTypeDTO[Sum, SumDTOWithNoOptionalFields]" shouldNot compile
       }
     }
   }
