@@ -10,10 +10,16 @@ import sttp.tapir.server.http4s.Http4sServerInterpreter
 
 import dev.atedeg.mdm.clientorders.api.*
 import dev.atedeg.mdm.clientorders.api.repositories.*
+import dev.atedeg.mdm.clientorders.api.services.*
 import dev.atedeg.mdm.clientorders.dto.*
 import dev.atedeg.mdm.utils.monads.*
 
 object OrdersEndpoints:
+  private val priceOrderLineService = PriceOrderLineServiceHTTP()
+  private val orderRepository = OrderRepositoryDB("bar")
+  private val emitter = EmitterMQ()
+  private val configuration = Configuration(priceOrderLineService, orderRepository, emitter)
+
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   val newOrderEndpoint: PublicEndpoint[OrderReceivedDTO, String, String, Any] =
     endpoint.post
@@ -25,7 +31,7 @@ object OrdersEndpoints:
   val newOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     newOrderEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, String] = newOrderHandler(o)
-      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(configuration)
     },
   )
 
@@ -39,7 +45,7 @@ object OrdersEndpoints:
   val palletizeProductForOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     palletizeProductForOrderEndpoint.serverLogic { p =>
       val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(p)
-      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(configuration)
     },
   )
 
@@ -53,7 +59,7 @@ object OrdersEndpoints:
   val orderCompletedRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     orderCompletedEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, Unit] = orderCompletedHandler(o)
-      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(configuration)
     },
   )
 
@@ -73,6 +79,6 @@ object OrdersEndpoints:
   val getTransportDocumentRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     getTransportDocumentEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, TransportDocumentDTO] = getTransportDocumentHandler(o)
-      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(configuration)
     },
   )

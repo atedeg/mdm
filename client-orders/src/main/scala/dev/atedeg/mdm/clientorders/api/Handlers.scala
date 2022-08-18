@@ -31,7 +31,7 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
     clientID = orderData.client.code.toDTO[String]
     prices <- incomingOrder.orderLines
       .map(_.toDTO[IncomingOrderLineDTO])
-      .traverse(getOrderLinePrice(clientID, _) >>= validate)
+      .traverse(config.priceOrderLineService.getOrderLinePrice(clientID, _) >>= validate)
     pricedOrderLines = incomingOrder.orderLines.zip(prices).map(priceOrderLine)
     action: SafeAction[OrderProcessed, PricedOrder] = priceOrder(incomingOrder, pricedOrderLines)
     (events, pricedOrder) = action.execute
@@ -39,11 +39,6 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
     inProgressOrder = startPreparingOrder(pricedOrder)
     _ <- config.orderRepository.writeInProgressOrder(inProgressOrder.toDTO)
   yield pricedOrder.id.id.toDTO[String]
-
-private def getOrderLinePrice[M[_]: Monad: LiftIO](
-    clientID: String,
-    orderLine: IncomingOrderLineDTO,
-): M[PriceInEuroCentsDTO] = ???
 
 def productPalletizedForOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
     productPalletizedForOrderDTO: ProductPalletizedForOrderDTO,
