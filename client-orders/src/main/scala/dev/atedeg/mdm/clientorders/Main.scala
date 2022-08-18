@@ -1,4 +1,4 @@
-package dev.atedeg
+package dev.atedeg.mdm.clientorders
 
 import scala.util.Properties
 
