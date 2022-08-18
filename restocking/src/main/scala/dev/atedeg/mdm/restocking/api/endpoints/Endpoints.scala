@@ -21,9 +21,9 @@ object RemainingQuintalsOfMilkEndpoint:
   val remainingQuintalsOfMilkEndpoint: PublicEndpoint[Unit, String, RemainingMilkDTO, Any] =
     endpoint.get
       .in("milk")
-      .description("Get the remaining quintals of milk")
       .out(jsonBody[RemainingMilkDTO].description("The quintals of milk remaining in stock"))
       .errorOut(stringBody)
+      .description("Gets the remaining quintals of milk.")
 
   val remainingQuintalsOfMilkRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     remainingQuintalsOfMilkEndpoint.serverLogic(_ => handler.value.run(DBStockRepository("conn-string"))),
