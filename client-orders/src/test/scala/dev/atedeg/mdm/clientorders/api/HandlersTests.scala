@@ -29,7 +29,7 @@ trait Mocks:
   val incompleteOrderLine: IncompleteOrderLineDTO = IncompleteOrderLineDTO(0, 100, ProductDTO("ricotta", 350), 1000)
   val oldInProgressOrder: InProgressOrderDTO = InProgressOrderDTO(
     UUID.randomUUID.toDTO,
-    List(InProgressOrderLineDTO("incomplete", None, Some(incompleteOrderLine))),
+    List(InProgressOrderLineDTO("Incomplete", None, Some(incompleteOrderLine))),
     ClientDTO(UUID.randomUUID.toDTO, "foo", "IT01088260409"),
     LocalDateTime.now.toDTO,
     LocationDTO(12, 42),
@@ -81,7 +81,7 @@ class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
         case None => fail("The order was not saved in the DB")
         case Some(o) =>
           val incomplete = IncompleteOrderLineDTO(0, 10, ProductDTO("ricotta", 350), 1000)
-          val orderLines = List(InProgressOrderLineDTO("incomplete", None, Some(incomplete)))
+          val orderLines = List(InProgressOrderLineDTO("Incomplete", None, Some(incomplete)))
           o shouldBe InProgressOrderDTO(res.value, orderLines, client, deliveryDate, deliveryLocation, 1000)
     }
   }
