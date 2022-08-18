@@ -15,6 +15,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import dev.atedeg.mdm.clientorders.InProgressOrder
 import dev.atedeg.mdm.clientorders.api.repositories.*
+import dev.atedeg.mdm.clientorders.api.services.PriceOrderLineService
 import dev.atedeg.mdm.clientorders.dto.*
 import dev.atedeg.mdm.products.dto.ProductDTO
 import dev.atedeg.mdm.utils.monads.*
@@ -26,18 +27,16 @@ trait Mocks:
   var emittedOrderProcessed: List[OrderProcessedDTO] = Nil
   var savedOrder: Option[InProgressOrderDTO] = None
 
-  val incompleteOrderLine: IncompleteOrderLineDTO = IncompleteOrderLineDTO(0, 100, ProductDTO("ricotta", 350), 1000)
+  val incompleteOrderLine: IncompleteOrderLineDTO =
+    IncompleteOrderLineDTO(0, 100, ProductDTO("ricotta", 350), PriceInEuroCentsDTO(1000))
   val oldInProgressOrder: InProgressOrderDTO = InProgressOrderDTO(
     UUID.randomUUID.toDTO,
     List(InProgressOrderLineDTO("Incomplete", None, Some(incompleteOrderLine))),
     ClientDTO(UUID.randomUUID.toDTO, "foo", "IT01088260409"),
     LocalDateTime.now.toDTO,
     LocationDTO(12, 42),
-    1000,
+    PriceInEuroCentsDTO(1000),
   )
-
-  val priceListRepository: PriceListRepository = new PriceListRepository:
-    override def read[M[_]: Monad: LiftIO]: M[PriceListDTO] = PriceListDTO(Map(ProductDTO("ricotta", 350) -> 100)).pure
 
   val orderRepository: OrderRepository = new OrderRepository:
     override def writeInProgressOrder[M[_]: Monad: LiftIO](inProgressOrder: InProgressOrderDTO): M[Unit] =
@@ -56,7 +55,13 @@ trait Mocks:
       emittedProductPalletized = productPalletized :: emittedProductPalletized
       ().pure
 
-  val config: Configuration = Configuration(priceListRepository, orderRepository, emitter)
+  val priceOrderLineService: PriceOrderLineService = new PriceOrderLineService:
+    override def getOrderLinePrice[M[_]: Monad: LiftIO](
+        clientID: String,
+        orderLine: IncomingOrderLineDTO,
+    ): M[PriceInEuroCentsDTO] = PriceInEuroCentsDTO(100 * orderLine.quantity).pure
+
+  val config: Configuration = Configuration(priceOrderLineService, orderRepository, emitter)
 
 class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
   "The `newOrderHandler`" should {
@@ -80,9 +85,16 @@ class NewOrderHandler extends AnyWordSpec, Matchers, Mocks:
       savedOrder match
         case None => fail("The order was not saved in the DB")
         case Some(o) =>
-          val incomplete = IncompleteOrderLineDTO(0, 10, ProductDTO("ricotta", 350), 1000)
+          val incomplete = IncompleteOrderLineDTO(0, 10, ProductDTO("ricotta", 350), PriceInEuroCentsDTO(1000))
           val orderLines = List(InProgressOrderLineDTO("Incomplete", None, Some(incomplete)))
-          o shouldBe InProgressOrderDTO(res.value, orderLines, client, deliveryDate, deliveryLocation, 1000)
+          o shouldBe InProgressOrderDTO(
+            res.value,
+            orderLines,
+            client,
+            deliveryDate,
+            deliveryLocation,
+            PriceInEuroCentsDTO(1000),
+          )
     }
   }
 

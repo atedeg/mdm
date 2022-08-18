@@ -37,21 +37,16 @@ trait LocationMock:
   private val longitude: Longitude = Longitude(180)
   val location: Location = Location(latitude, longitude)
 
-trait PriceListMock:
-
-  val priceList: PriceList = PriceList(
-    Map(
-      Caciotta(1000) -> 100.euroCents,
-      Caciotta(500) -> 50.euroCents,
-    ),
-  )
-
-trait OrderMocks extends PriceListMock, ClientMock, LocationMock:
+trait OrderMocks extends ClientMock, LocationMock:
   private val orderId: OrderID = OrderID(UUID.randomUUID)
 
-  private val orderLines: NonEmptyList[IncomingOrderLine] = NonEmptyList.of[IncomingOrderLine](
+  private val orderLines: NonEmptyList[IncomingOrderLine] = NonEmptyList.of(
     100 of Caciotta(1000),
     100 of Caciotta(500),
+  )
+  val orderLinesPrices: NonEmptyList[PriceInEuroCents] = NonEmptyList.of(
+    PriceInEuroCents(10000),
+    PriceInEuroCents(5000),
   )
   private val date: LocalDateTime = LocalDateTime.now
   val incomingOrder: IncomingOrder = IncomingOrder(orderId, orderLines, client, date, location)
@@ -63,9 +58,17 @@ trait OrderMocks extends PriceListMock, ClientMock, LocationMock:
       palletizeProductForOrder(Quantity(100), Caciotta(500))(inProgressOrder)
         >>= palletizeProductForOrder(Quantity(100), Caciotta(1000))
 
-    val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+    val pricedOrderLines = orderLines.zip(orderLinesPrices).map(priceOrderLine)
+    val pricedOrderAction: SafeAction[OrderProcessed, PricedOrder] = priceOrder(incomingOrder, pricedOrderLines)
+    val (_, pricedOrder) = pricedOrderAction.execute
+    val inProgressOrder = startPreparingOrder(pricedOrder)
     val palletizeAction: Action[PalletizationError, ProductPalletized, InProgressOrder] = palletizeAll(inProgressOrder)
     palletizeAction.execute._2.value
+
+  val pricedOrder: PricedOrder =
+    val pricedOrderLines = orderLines.zip(orderLinesPrices).map(priceOrderLine)
+    val pricedOrderAction: SafeAction[OrderProcessed, PricedOrder] = priceOrder(incomingOrder, pricedOrderLines)
+    pricedOrderAction.execute._2
 
   val completedOrder: CompletedOrder =
     val completeAction: Action[OrderCompletionError, Unit, CompletedOrder] = completeOrder(inProgressCompleteOrder)
@@ -78,13 +81,14 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
     Scenario("Operator prices an order") {
       Given("an incoming order")
       val order = incomingOrder
+      And("the prices for each incoming order line")
+      val prices = orderLinesPrices
       When("the order is processed")
-      val priceAction: SafeAction[OrderProcessed, PricedOrder] = processIncomingOrder(priceList)(incomingOrder)
+      val pricedOrderLines = order.orderLines.zip(prices).map(priceOrderLine)
+      val priceAction: SafeAction[OrderProcessed, PricedOrder] = priceOrder(incomingOrder, pricedOrderLines)
       val (events, pricedOrder) = priceAction.execute
-      Then("the priced is computed correctly")
-      val expectedPrice =
-        incomingOrder.orderLines.map(ol => priceList.priceList(ol.product).n * ol.quantity.n).reduce(_ + _).euroCents
-      pricedOrder.totalPrice shouldBe expectedPrice
+      Then("the price is computed correctly")
+      pricedOrder.totalPrice shouldBe PriceInEuroCents(10000 + 5000)
       And("an event is emitted")
       events shouldBe List(OrderProcessed(incomingOrder))
     }
@@ -93,7 +97,6 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
   Feature("Order preparation") {
     Scenario("An order is prepared") {
       Given("a priced order")
-      val pricedOrder = priceOrder(priceList)(incomingOrder)
       When("the order is marked as in progress")
       val inProgressOrder = startPreparingOrder(pricedOrder)
       Then("it should not contain any palletized product")
@@ -105,7 +108,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
 
     Scenario("A product is palletized for an order that does not require it") {
       Given("an in-progress order")
-      val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+      val inProgressOrder = startPreparingOrder(pricedOrder)
       And("a product that is not requested by the order")
       val productNotInOrder = Ricotta(350)
       When("the operator tries to palletize it")
@@ -119,7 +122,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
 
     Scenario("A product is palletized in a quantity greater than the required one") {
       Given("an in-progress order")
-      val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+      val inProgressOrder = startPreparingOrder(pricedOrder)
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator tries to palletize it in a quantity greater than the required one")
@@ -133,7 +136,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
 
     Scenario("A product is palletized in the exact quantity") {
       Given("an in-progress order")
-      val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+      val inProgressOrder = startPreparingOrder(pricedOrder)
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator palletizes it in the exact required quantity")
@@ -150,7 +153,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
 
     Scenario("A product is palletized in a quantity lower than the required one") {
       Given("an in-progress order")
-      val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+      val inProgressOrder = startPreparingOrder(pricedOrder)
       And("a product requested by the order")
       val productInOrder = Caciotta(500)
       When("the operator palletizes it in a quantity lower than the required one")
@@ -169,7 +172,7 @@ class Tests extends AnyFeatureSpec with GivenWhenThen with Explicitly with Match
   Feature("Order completion") {
     Scenario("An incomplete order is completed") {
       Given("an incomplete in-progress order")
-      val inProgressOrder = startPreparingOrder(priceOrder(priceList)(incomingOrder))
+      val inProgressOrder = startPreparingOrder(pricedOrder)
       When("one tries to mark it as completed")
       val completeAction: Action[OrderCompletionError, Unit, CompletedOrder] = completeOrder(inProgressOrder)
       Then("an OrderCompletionError is raised")
