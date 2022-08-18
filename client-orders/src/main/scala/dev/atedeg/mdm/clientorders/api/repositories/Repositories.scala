@@ -13,7 +13,7 @@ trait OrderRepository:
   def updateOrderToCompleted[M[_]: Monad: LiftIO: CanRaise[String]](completedOrder: CompletedOrderDTO): M[Unit]
   def readCompletedOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[CompletedOrderDTO]
 
-final case class OrderRepositoryDB(connectionString: String) extends OrderRepository:
+final class OrderRepositoryDB(connectionString: String) extends OrderRepository:
   override def writeInProgressOrder[M[_]: Monad: LiftIO](inProgressOrder: InProgressOrderDTO): M[Unit] = ???
   override def readInProgressOrder[M[_]: Monad: LiftIO: CanRaise[String]](orderID: String): M[InProgressOrderDTO] = ???
   override def updateOrderToCompleted[M[_]: Monad: LiftIO: CanRaise[String]](order: CompletedOrderDTO): M[Unit] = ???
