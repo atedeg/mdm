@@ -108,30 +108,30 @@ class Tests extends AnyWordSpec, ScalaCheckDrivenPropertyChecks, Matchers, Gener
   "DTO auto-generation" when {
     "used for case class with one field" should {
       "generate a correct instance" in {
-        given DTO[Test1, Int] = DTOGenerators.caseClassDTO
+        given DTO[Test1, Int] = DTOGenerators.unwrapFieldDTO
         forAll(test1)(decodingInverseOfEncoding[Test1, Int])
         forAll(arbitrary[Int])(encodingInverseOfDecoding[Test1, Int])
       }
       "be checked at compile-time" in {
-        "val instance = DTOGenerators.caseClassDTO[Test1, Test2]" shouldNot compile
+        "val instance = DTOGenerators.unwrapFieldDTO[Test1, Test2]" shouldNot compile
       }
     }
     "used with a pair of compatible case classes" should {
       "generate a correct instance" in {
-        given DTO[Test1, Int] = DTOGenerators.caseClassDTO
-        given DTO[Test2, Test2DTO] = DTOGenerators.interCaseClassDTO
+        given DTO[Test1, Int] = DTOGenerators.unwrapFieldDTO
+        given DTO[Test2, Test2DTO] = DTOGenerators.productTypeDTO
         forAll(test2)(decodingInverseOfEncoding[Test2, Test2DTO])
         forAll(test2DTO)(encodingInverseOfDecoding[Test2, Test2DTO])
       }
       "be checked at compile-time" in {
-        "val instance = DTOGenerators.interCaseClassDTO[Test1, Test2]" shouldNot compile
-        "val instance = DTOGenerators.interCaseClassDTO[Test2, Test2DTO]" shouldNot compile
+        "val instance = DTOGenerators.productTypeDTO[Test1, Test2]" shouldNot compile
+        "val instance = DTOGenerators.productTypeDTO[Test2, Test2DTO]" shouldNot compile
       }
     }
     "used for a sum type" should {
       "generate a correct instance" in {
-        given DTO[Sum.Case1, Int] = DTOGenerators.caseClassDTO
-        given DTO[Sum.Case2, String] = DTOGenerators.caseClassDTO
+        given DTO[Sum.Case1, Int] = DTOGenerators.unwrapFieldDTO
+        given DTO[Sum.Case2, String] = DTOGenerators.unwrapFieldDTO
         given DTO[Sum, SumDTO] = DTOGenerators.sumTypeDTO
         forAll(case1)(decodingInverseOfEncoding[Sum, SumDTO])
         forAll(case1DTO)(encodingInverseOfDecoding[Sum, SumDTO])
