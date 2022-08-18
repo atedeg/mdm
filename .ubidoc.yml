@@ -106,7 +106,6 @@ tables:
       - class: "clientorders.IncomingOrderLine"
       - class: "clientorders.Client"
       - class: "clientorders.Location"
-      - class: "clientorders.PriceList"
       - class: "clientorders.PricedOrder"
       - class: "clientorders.PricedOrderLine"
       - class: "clientorders.InProgressOrder"
