@@ -86,11 +86,6 @@ final case class Latitude(value: DecimalInClosedRange[-90.0, 90.0])
 final case class Longitude(value: DecimalInClosedRange[-180.0, 180.0])
 
 /**
- * Associates to each [[Product product]] its [[PriceInEuroCents unitary price]].
- */
-final case class PriceList(priceList: Map[Product, PriceInEuroCents])
-
-/**
  * A price expressed in cents, the smallest currency unit for euros.
  */
 final case class PriceInEuroCents(n: PositiveNumber) derives Plus

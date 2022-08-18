@@ -11,6 +11,7 @@ import dev.atedeg.mdm.clientorders.*
 import dev.atedeg.mdm.clientorders.IncomingEvent.*
 import dev.atedeg.mdm.clientorders.OutgoingEvent.*
 import dev.atedeg.mdm.clientorders.dto.*
+import dev.atedeg.mdm.clientorders.dto.given
 import dev.atedeg.mdm.utils.monads.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
@@ -19,7 +20,6 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
 ): M[String] =
   for
     config <- readState
-    priceList <- config.priceListRepository.read >>= validate
     orderData <- validate(orderReceivedDTO)
     incomingOrder = IncomingOrder(
       OrderID(UUID.randomUUID),
@@ -28,12 +28,22 @@ def newOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration
       orderData.deliveryDate,
       orderData.deliveryLocation,
     )
-    action: SafeAction[OrderProcessed, PricedOrder] = processIncomingOrder(priceList)(incomingOrder)
+    clientID = orderData.client.code.toDTO[String]
+    prices <- incomingOrder.orderLines
+      .map(_.toDTO[IncomingOrderLineDTO])
+      .traverse(getOrderLinePrice(clientID, _) >>= validate)
+    pricedOrderLines = incomingOrder.orderLines.zip(prices).map(priceOrderLine)
+    action: SafeAction[OrderProcessed, PricedOrder] = priceOrder(incomingOrder, pricedOrderLines)
     (events, pricedOrder) = action.execute
     _ <- events.map(_.toDTO[OrderProcessedDTO]).traverse(config.emitter.emitOrderProcessed)
     inProgressOrder = startPreparingOrder(pricedOrder)
     _ <- config.orderRepository.writeInProgressOrder(inProgressOrder.toDTO)
   yield pricedOrder.id.id.toDTO[String]
+
+private def getOrderLinePrice[M[_]: Monad: LiftIO](
+    clientID: String,
+    orderLine: IncomingOrderLineDTO,
+): M[PriceInEuroCentsDTO] = ???
 
 def productPalletizedForOrderHandler[M[_]: Monad: LiftIO: CanRaise[String]: CanRead[Configuration]](
     productPalletizedForOrderDTO: ProductPalletizedForOrderDTO,

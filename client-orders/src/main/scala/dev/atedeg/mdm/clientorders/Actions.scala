@@ -21,22 +21,22 @@ import dev.atedeg.mdm.utils.given
 import dev.atedeg.mdm.utils.monads.*
 
 /**
- * Turns an [[IncomingOrder incoming order]] into a [[PricedOrder priced order]] by computing the price
- * of each [[IncomingOrderLine line]] using a [[PriceList price list]].
+ * Given an [[IncomingOrderLine incoming order line]] and a [[PriceInEuroCents price]],
+ * [[PricedOrderLine prices the order line]].
  */
-def processIncomingOrder[M[_]: Monad: Emits[OrderProcessed]](priceList: PriceList)(
-    incomingOrder: IncomingOrder,
-): M[PricedOrder] =
-  val pricedOrder = priceOrder(priceList)(incomingOrder)
-  emit(OrderProcessed(incomingOrder): OrderProcessed).thenReturn(pricedOrder)
+def priceOrderLine(orderLine: IncomingOrderLine, price: PriceInEuroCents): PricedOrderLine =
+  PricedOrderLine(orderLine.quantity, orderLine.product, price)
 
-private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): PricedOrder =
-  val pricedOrderLines = incomingOrder.orderLines.map { case IncomingOrderLine(quantity, product) =>
-    val price = priceList.priceList(product).n * quantity.n
-    PricedOrderLine(quantity, product, price.euroCents)
-  }
+/**
+ * Turns an [[IncomingOrder incoming order]] into a [[PricedOrder priced order]],
+ * given the [[PricedOrderLine priced order lines]].
+ */
+def priceOrder[M[_]: Monad: Emits[OrderProcessed]](
+    incomingOrder: IncomingOrder,
+    pricedOrderLines: NonEmptyList[PricedOrderLine],
+): M[PricedOrder] =
   val totalPrice = pricedOrderLines.map(_.totalPrice).reduce(_ + _)
-  PricedOrder(
+  val pricedOrder = PricedOrder(
     incomingOrder.id,
     pricedOrderLines,
     incomingOrder.client,
@@ -44,6 +44,7 @@ private def priceOrder(priceList: PriceList)(incomingOrder: IncomingOrder): Pric
     incomingOrder.deliveryLocation,
     totalPrice,
   )
+  emit(OrderProcessed(incomingOrder): OrderProcessed).thenReturn(pricedOrder)
 
 /**
  * Turns a [[Order.PricedOrder priced order]] into an [[Order.InProgressOrder in-progress order]] that can then be
