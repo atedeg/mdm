@@ -78,18 +78,13 @@ object DTOGenerators:
     override def elemToDto(e: T): T = e
     override def dtoToElem(dto: T): Either[String, T] = dto.asRight[String]
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-  private def firstField[T, X](t: T): X = t.asInstanceOf[Product].productElement(0).asInstanceOf[X]
-  private type First[T <: Tuple] = Tuple.Elem[T, 0]
-  inline private def numberOfFields[A](inline p: Mirror.ProductOf[A]): Int = constValue[Tuple.Size[p.MirroredElemTypes]]
-
   inline def caseClassDTO[E, D](using p: Mirror.ProductOf[E]): DTO[E, D] =
     inline numberOfFields(p) match
       case 1 =>
         type t = First[p.MirroredElemTypes]
         val instance: DTO[t, D] = summonInline[DTO[t, D]]
         new DTO[E, D]:
-          def elemToDto(e: E): D = instance.elemToDto(firstField(e))
+          def elemToDto(e: E): D = instance.elemToDto(nthField(e, 0))
           def dtoToElem(dto: D): Either[String, E] = instance.dtoToElem(dto).map(e => p.fromProduct(e *: EmptyTuple))
       case _ => compiletime.error("Can only derive for case classes with only one field")
 
@@ -97,8 +92,6 @@ object DTOGenerators:
     inline if numberOfFields(p1) != numberOfFields(p2)
     then compiletime.error("Can only derive DTO for case classes with same number of fields")
     else
-      type DTOFromTuple[T] = T match
-        case (t1 *: t2 *: EmptyTuple) => DTO[t1, t2]
       type DTOs = Tuple.Map[Tuple.Zip[p1.MirroredElemTypes, p2.MirroredElemTypes], DTOFromTuple]
       val instances = summonAll[DTOs].toList.asInstanceOf[List[DTO[Any, Any]]]
       new DTO[C1, C2]:
@@ -113,3 +106,52 @@ object DTOGenerators:
           .toList
           .traverse(fi => fi._2.dtoToElem(fi._1))
           .map(l => p1.fromProduct(Tuple.fromArray(l.toArray)))
+
+  inline def sumTypeDTO[E, D](using s: Mirror.SumOf[E])(using p: Mirror.ProductOf[D]) =
+    checkDTO(s, p)
+    type DTOs = Tuple.Map[Tuple.Zip[s.MirroredElemTypes, Tuple.Map[Tail[p.MirroredElemTypes], UnOption]], DTOFromTuple]
+    val instances = summonAll[DTOs].toList.asInstanceOf[List[DTO[Any, Any]]]
+    val tags = constValueTuple[s.MirroredElemLabels].toList
+    val baseList = List.fill(tags.size)(None)
+    new DTO[E, D]:
+      def elemToDto(e: E): D =
+        val index = s.ordinal(e)
+        val l = tags(index) :: baseList.updated(index, Some(instances(index).elemToDto(e)))
+        p.fromProduct(Tuple.fromArray(l.toArray))
+      def dtoToElem(d: D): Either[String, E] =
+        val tag: String = nthField(d, 0)
+        val index = tags.indexOf(tag)
+        if index < 0 then s"Unknown DTO tag: $tag".asLeft[E]
+        else
+          d.asInstanceOf[Product].productElement(index + 1) match
+            case None => s"Found tag $tag but the corresponding field does not contain the needed data".asLeft[E]
+            case Some(dto) => instances(index).dtoToElem(dto).asInstanceOf[Either[String, E]]
+
+  inline private def hasEnoughFieldsToHoldAllCases[E, D](
+      inline s: Mirror.SumOf[E],
+      inline p: Mirror.ProductOf[D],
+  ): Boolean =
+    numberOfCases(s) + 1 == numberOfFields(p)
+
+  private type UnOption[T] = T match
+    case Option[t] => t
+  private type DTOFromTuple[T] = T match
+    case (t1 *: t2 *: EmptyTuple) => DTO[t1, t2]
+  private type First[T <: Tuple] = Tuple.Elem[T, 0]
+  private type Tail[T <: Tuple] <: Tuple = T match
+    case (? *: t) => t
+
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+  private def nthField[T, X](t: T, n: Int): X = t.asInstanceOf[Product].productElement(n).asInstanceOf[X]
+  inline private def numberOfFields[A](inline p: Mirror.ProductOf[A]): Int = constValue[Tuple.Size[p.MirroredElemTypes]]
+  inline private def numberOfCases[A](inline s: Mirror.SumOf[A]): Int = constValue[Tuple.Size[s.MirroredElemTypes]]
+  inline def isFirstFieldAString[A](inline p: Mirror.ProductOf[A]): Boolean =
+    inline erasedValue[First[p.MirroredElemTypes]] match
+      case _: String => true
+      case _ => false
+
+  inline private def checkDTO[E, D](s: Mirror.SumOf[E], p: Mirror.ProductOf[D]): Unit =
+    inline if hasEnoughFieldsToHoldAllCases(s, p) then
+      inline if isFirstFieldAString(p) then ()
+      else compiletime.error("The first field of the DTO type should be a String that can bee used as a tag")
+    else compiletime.error("The DTO type should have exactly one field more than the Elem type's number of cases")
