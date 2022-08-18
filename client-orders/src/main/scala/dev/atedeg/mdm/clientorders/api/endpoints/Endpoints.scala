@@ -13,7 +13,7 @@ import dev.atedeg.mdm.clientorders.api.repositories.*
 import dev.atedeg.mdm.clientorders.dto.*
 import dev.atedeg.mdm.utils.monads.*
 
-object OrdersEndpoint:
+object OrdersEndpoints:
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   val newOrderEndpoint: PublicEndpoint[OrderReceivedDTO, String, String, Any] =
     endpoint.post

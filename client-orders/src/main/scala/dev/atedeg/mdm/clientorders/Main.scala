@@ -15,7 +15,7 @@ import org.typelevel.log4cats.slf4j.loggerFactoryforSync
 import sttp.tapir.server.http4s.Http4sServerInterpreter
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
-import dev.atedeg.mdm.clientorders.api.endpoints.OrdersEndpoint.*
+import dev.atedeg.mdm.clientorders.api.endpoints.OrdersEndpoints.*
 
 object Main extends IOApp:
   private val swaggerEndpoint = SwaggerInterpreter().fromEndpoints[IO](
