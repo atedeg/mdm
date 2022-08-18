@@ -1,3 +1,21 @@
+# [3.0.0](https://github.com/atedeg/mdm/compare/v2.0.1...v3.0.0) (2022-08-18)
+
+
+### Bug Fixes
+
+* **pricing:** add missing validations ([ef0b1bc](https://github.com/atedeg/mdm/commit/ef0b1bc29e0c71a0ea3336d15a967c164320f3c4))
+* **pricing:** allow price of 0 ([b5b06e4](https://github.com/atedeg/mdm/commit/b5b06e4f634b9b6a562afcfcf59e81aee6a72636))
+* **pricing:** expose dto conversion between string and client id ([52c72a8](https://github.com/atedeg/mdm/commit/52c72a8e188e7a307cdc46c7ea388797c2d6ee3b))
+* **pricing:** move .euroCents extension method from positive to non-negative number ([f3220b3](https://github.com/atedeg/mdm/commit/f3220b3018882ff056fee7bc0ac2485535b0caf0))
+
+
+### Features
+
+* **client-orders:** add price order line service ([0036802](https://github.com/atedeg/mdm/commit/0036802d47d9d36d0126141d09240d0ac5f774a3))
+* **pricing:** add http endpoint for pricing an order line ([b9cc36e](https://github.com/atedeg/mdm/commit/b9cc36e6c7693a720e336b57927398025daf6ffb))
+* **pricing:** create server for pricing microservice ([567b6b1](https://github.com/atedeg/mdm/commit/567b6b1cb66e10b7e89e1c1769804774b84dd24d))
+* **pricing:** handle price order line requests ([47368b5](https://github.com/atedeg/mdm/commit/47368b5fcd5acff26f9e0bcd0a74d052b115401f))
+
 ## [2.0.1](https://github.com/atedeg/mdm/compare/v2.0.0...v2.0.1) (2022-08-17)
 
 
