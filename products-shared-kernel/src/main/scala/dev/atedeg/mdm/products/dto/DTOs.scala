@@ -26,7 +26,7 @@ object ProductDTO:
       yield product
 
     override def elemToDto(e: Product): ProductDTO = ProductDTO(e.cheeseType.toDTO, e.weight.toDTO)
-  private given DTO[Grams, Int] = caseClassDTO
+  private given DTO[Grams, Int] = unwrapFieldDTO
 
 object CheeseTypeDTO:
   given DTO[CheeseType, String] with

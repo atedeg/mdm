@@ -8,5 +8,5 @@ import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 final case class RemainingMilkDTO(quintalsOfMilk: Int)
 
 object RemainingMilkDTO:
-  given DTO[RemainingMilk, RemainingMilkDTO] = interCaseClassDTO
-  private given DTO[QuintalsOfMilk, Int] = caseClassDTO
+  given DTO[RemainingMilk, RemainingMilkDTO] = productTypeDTO
+  private given DTO[QuintalsOfMilk, Int] = unwrapFieldDTO

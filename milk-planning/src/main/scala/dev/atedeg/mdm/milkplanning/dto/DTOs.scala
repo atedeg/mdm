@@ -24,28 +24,28 @@ type StockDTO = Map[ProductDTO, Int]
 type RecipeBookDTO = Map[String, Double]
 
 object ReceivedOrderDTO:
-  given DTO[ReceivedOrder, ReceivedOrderDTO] = interCaseClassDTO
-  private given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
-  private given DTO[Quantity, Int] = caseClassDTO
+  given DTO[ReceivedOrder, ReceivedOrderDTO] = productTypeDTO
+  private given DTO[RequestedProduct, RequestedProductDTO] = productTypeDTO
+  private given DTO[Quantity, Int] = unwrapFieldDTO
 
 object RequestedProductDTO:
-  given DTO[RequestedProduct, RequestedProductDTO] = interCaseClassDTO
-  private given DTO[Quantity, Int] = caseClassDTO
+  given DTO[RequestedProduct, RequestedProductDTO] = productTypeDTO
+  private given DTO[Quantity, Int] = unwrapFieldDTO
 
 object OrderMilkDTO:
-  given DTO[OrderMilk, OrderMilkDTO] = interCaseClassDTO
-  private given DTO[QuintalsOfMilk, Int] = caseClassDTO
+  given DTO[OrderMilk, OrderMilkDTO] = productTypeDTO
+  private given DTO[QuintalsOfMilk, Int] = unwrapFieldDTO
 
 object StockDTO:
   import dev.atedeg.mdm.products.dto.ProductDTO.given
   given DTO[Stock, StockDTO] = DTO.mapDTO
-  private given DTO[StockedQuantity, Int] = caseClassDTO
+  private given DTO[StockedQuantity, Int] = unwrapFieldDTO
 
 object RecipeBookDTO:
   import dev.atedeg.mdm.products.dto.CheeseTypeDTO.given
   import dev.atedeg.mdm.products.dto.ProductDTO.given
   given DTO[RecipeBook, RecipeBookDTO] = DTO.mapDTO
-  private given DTO[Yield, Double] = caseClassDTO
+  private given DTO[Yield, Double] = unwrapFieldDTO
 
 object QuintalsOfMilkDTO:
-  given DTO[QuintalsOfMilk, QuintalsOfMilkDTO] = interCaseClassDTO
+  given DTO[QuintalsOfMilk, QuintalsOfMilkDTO] = productTypeDTO

@@ -11,19 +11,19 @@ import dev.atedeg.mdm.utils.serialization.DTOGenerators.*
 import dev.atedeg.mdm.utils.serialization.DTOOps.*
 
 private object Commons:
-  given DTO[OrderID, String] = caseClassDTO
-  given DTO[Client, ClientDTO] = interCaseClassDTO
-  given DTO[Location, LocationDTO] = interCaseClassDTO
-  given DTO[Latitude, Double] = caseClassDTO
-  given DTO[Longitude, Double] = caseClassDTO
-  given DTO[Quantity, Int] = caseClassDTO
-  given DTO[ClientID, String] = caseClassDTO
-  given DTO[ClientName, String] = caseClassDTO
-  given DTO[VATNumber, String] = caseClassDTO
-  given DTO[IncomingOrderLine, IncomingOrderLineDTO] = interCaseClassDTO
-  given DTO[PriceInEuroCents, Int] = caseClassDTO
-  given DTO[PalletizedQuantity, Int] = caseClassDTO
-  given DTO[WeightInKilograms, Double] = caseClassDTO
+  given DTO[OrderID, String] = unwrapFieldDTO
+  given DTO[Client, ClientDTO] = productTypeDTO
+  given DTO[Location, LocationDTO] = productTypeDTO
+  given DTO[Latitude, Double] = unwrapFieldDTO
+  given DTO[Longitude, Double] = unwrapFieldDTO
+  given DTO[Quantity, Int] = unwrapFieldDTO
+  given DTO[ClientID, String] = unwrapFieldDTO
+  given DTO[ClientName, String] = unwrapFieldDTO
+  given DTO[VATNumber, String] = unwrapFieldDTO
+  given DTO[IncomingOrderLine, IncomingOrderLineDTO] = productTypeDTO
+  given DTO[PriceInEuroCents, Int] = unwrapFieldDTO
+  given DTO[PalletizedQuantity, Int] = unwrapFieldDTO
+  given DTO[WeightInKilograms, Double] = unwrapFieldDTO
 
 import Commons.*
 import Commons.given
@@ -38,15 +38,15 @@ final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
 final case class ClientDTO(code: String, name: String, vatNumber: String)
 final case class LocationDTO(latitude: Double, longitude: Double)
 object OrderReceivedDTO:
-  given DTO[OrderReceived, OrderReceivedDTO] = interCaseClassDTO
+  given DTO[OrderReceived, OrderReceivedDTO] = productTypeDTO
 
 final case class ProductPalletizedForOrderDTO(orderID: String, quantity: Int, product: ProductDTO)
 object ProductPalletizedForOrderDTO:
-  given DTO[ProductPalletizedForOrder, ProductPalletizedForOrderDTO] = interCaseClassDTO
+  given DTO[ProductPalletizedForOrder, ProductPalletizedForOrderDTO] = productTypeDTO
 
 final case class OrderCompletedDTO(orderID: String)
 object OrderCompletedDTO:
-  given DTO[OrderCompleted, OrderCompletedDTO] = interCaseClassDTO
+  given DTO[OrderCompleted, OrderCompletedDTO] = productTypeDTO
 
 final case class OrderProcessedDTO(incomingOrder: IncomingOrderDTO)
 final case class IncomingOrderDTO(
@@ -57,12 +57,12 @@ final case class IncomingOrderDTO(
     deliveryLocation: LocationDTO,
 )
 object OrderProcessedDTO:
-  given DTO[OrderProcessed, OrderProcessedDTO] = interCaseClassDTO
-  private given DTO[IncomingOrder, IncomingOrderDTO] = interCaseClassDTO
+  given DTO[OrderProcessed, OrderProcessedDTO] = productTypeDTO
+  private given DTO[IncomingOrder, IncomingOrderDTO] = productTypeDTO
 
 final case class PriceListDTO(priceList: Map[ProductDTO, Int])
 object PriceListDTO:
-  given DTO[PriceList, PriceListDTO] = interCaseClassDTO
+  given DTO[PriceList, PriceListDTO] = productTypeDTO
 
 final case class InProgressOrderDTO(
     id: String,
@@ -82,9 +82,9 @@ final case class CompleteOrderLineDTO(quantity: Int, product: ProductDTO, price:
 final case class IncompleteOrderLineDTO(actual: Int, required: Int, product: ProductDTO, price: Int)
 
 object InProgressOrderDTO:
-  given DTO[InProgressOrder, InProgressOrderDTO] = interCaseClassDTO
-  private given DTO[InProgressOrderLine.Complete, CompleteOrderLineDTO] = interCaseClassDTO
-  private given DTO[InProgressOrderLine.Incomplete, IncompleteOrderLineDTO] = interCaseClassDTO
+  given DTO[InProgressOrder, InProgressOrderDTO] = productTypeDTO
+  private given DTO[InProgressOrderLine.Complete, CompleteOrderLineDTO] = productTypeDTO
+  private given DTO[InProgressOrderLine.Incomplete, IncompleteOrderLineDTO] = productTypeDTO
   private given DTO[InProgressOrderLine, InProgressOrderLineDTO] = new DTO:
     override def elemToDto(e: InProgressOrderLine): InProgressOrderLineDTO = e match
       case c: InProgressOrderLine.Complete => InProgressOrderLineDTO("complete", Some(c.toDTO), None)
@@ -102,8 +102,8 @@ object InProgressOrderDTO:
 
 final case class ProductPalletizedDTO(product: ProductDTO, quantity: Int)
 object ProductPalletizedDTO:
-  given DTO[ProductPalletized, ProductPalletizedDTO] = interCaseClassDTO
-  private given DTO[Quantity, Int] = caseClassDTO
+  given DTO[ProductPalletized, ProductPalletizedDTO] = productTypeDTO
+  private given DTO[Quantity, Int] = unwrapFieldDTO
 
 final case class CompletedOrderDTO(
     id: String,
@@ -115,8 +115,8 @@ final case class CompletedOrderDTO(
 )
 final case class CompletedOrderLineDTO(quantity: Int, product: ProductDTO, price: Int)
 object CompletedOrderDTO:
-  given DTO[CompletedOrder, CompletedOrderDTO] = interCaseClassDTO
-  private given DTO[CompleteOrderLine, CompletedOrderLineDTO] = interCaseClassDTO
+  given DTO[CompletedOrder, CompletedOrderDTO] = productTypeDTO
+  private given DTO[CompleteOrderLine, CompletedOrderLineDTO] = productTypeDTO
 
 final case class TransportDocumentDTO(
     deliveryLocation: LocationDTO,
@@ -128,5 +128,5 @@ final case class TransportDocumentDTO(
 )
 final case class TransportDocumentLineDTO(quantity: Int, product: ProductDTO)
 object TransportDocumentDTO:
-  given DTO[TransportDocument, TransportDocumentDTO] = interCaseClassDTO
-  private given DTO[TransportDocumentLine, TransportDocumentLineDTO] = interCaseClassDTO
+  given DTO[TransportDocument, TransportDocumentDTO] = productTypeDTO
+  private given DTO[TransportDocumentLine, TransportDocumentLineDTO] = productTypeDTO

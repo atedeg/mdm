@@ -13,17 +13,17 @@ final case class QuintalsOfIngredientDTO(quintals: Double, ingredient: String)
 type StockDTO = Map[String, Double]
 
 object OrderMilkDTO:
-  given DTO[OrderMilk, OrderMilkDTO] = interCaseClassDTO
-  private given DTO[QuintalsOfMilk, Int] = caseClassDTO
+  given DTO[OrderMilk, OrderMilkDTO] = productTypeDTO
+  private given DTO[QuintalsOfMilk, Int] = unwrapFieldDTO
 
 object ProductionStartedDTO:
-  given DTO[ProductionStarted, ProductionStartedDTO] = interCaseClassDTO
+  given DTO[ProductionStarted, ProductionStartedDTO] = productTypeDTO
 
 object QuintalsOfIngredientDTO:
-  given DTO[QuintalsOfIngredient, QuintalsOfIngredientDTO] = interCaseClassDTO
-  private given DTO[WeightInQuintals, Double] = caseClassDTO
+  given DTO[QuintalsOfIngredient, QuintalsOfIngredientDTO] = productTypeDTO
+  private given DTO[WeightInQuintals, Double] = unwrapFieldDTO
 
 object StockDTO:
   import dev.atedeg.mdm.products.dto.IngredientDTO.given
   given DTO[Stock, StockDTO] = DTO.mapDTO
-  private given DTO[StockedQuantity, Double] = caseClassDTO
+  private given DTO[StockedQuantity, Double] = unwrapFieldDTO

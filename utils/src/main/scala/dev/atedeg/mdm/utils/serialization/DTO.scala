@@ -78,7 +78,7 @@ object DTOGenerators:
     override def elemToDto(e: T): T = e
     override def dtoToElem(dto: T): Either[String, T] = dto.asRight[String]
 
-  inline def caseClassDTO[E, D](using p: Mirror.ProductOf[E]): DTO[E, D] =
+  inline def unwrapFieldDTO[E, D](using p: Mirror.ProductOf[E]): DTO[E, D] =
     inline numberOfFields(p) match
       case 1 =>
         type t = First[p.MirroredElemTypes]
@@ -88,7 +88,7 @@ object DTOGenerators:
           def dtoToElem(dto: D): Either[String, E] = instance.dtoToElem(dto).map(e => p.fromProduct(e *: EmptyTuple))
       case _ => compiletime.error("Can only derive for case classes with only one field")
 
-  inline def interCaseClassDTO[C1, C2](using p1: Mirror.ProductOf[C1])(using p2: Mirror.ProductOf[C2]): DTO[C1, C2] =
+  inline def productTypeDTO[C1, C2](using p1: Mirror.ProductOf[C1])(using p2: Mirror.ProductOf[C2]): DTO[C1, C2] =
     inline if numberOfFields(p1) != numberOfFields(p2)
     then compiletime.error("Can only derive DTO for case classes with same number of fields")
     else
