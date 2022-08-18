@@ -85,20 +85,7 @@ object InProgressOrderDTO:
   given DTO[InProgressOrder, InProgressOrderDTO] = productTypeDTO
   private given DTO[InProgressOrderLine.Complete, CompleteOrderLineDTO] = productTypeDTO
   private given DTO[InProgressOrderLine.Incomplete, IncompleteOrderLineDTO] = productTypeDTO
-  private given DTO[InProgressOrderLine, InProgressOrderLineDTO] = new DTO:
-    override def elemToDto(e: InProgressOrderLine): InProgressOrderLineDTO = e match
-      case c: InProgressOrderLine.Complete => InProgressOrderLineDTO("complete", Some(c.toDTO), None)
-      case i: InProgressOrderLine.Incomplete => InProgressOrderLineDTO("incomplete", None, Some(i.toDTO))
-    override def dtoToElem(dto: InProgressOrderLineDTO): Either[String, InProgressOrderLine] = dto.tag match
-      case "complete" =>
-        dto.completeDTO match
-          case Some(dto) => dto.toDomain[InProgressOrderLine.Complete]
-          case None => "Found tag 'complete' but complete data is missing".asLeft[InProgressOrderLine]
-      case "incomplete" =>
-        dto.incompleteDTO match
-          case Some(dto) => dto.toDomain[InProgressOrderLine.Incomplete]
-          case None => "Found tag 'incomplete' but incomplete data is missing".asLeft[InProgressOrderLine]
-      case s => s"Unknown tag: $s".asLeft[InProgressOrderLine]
+  private given DTO[InProgressOrderLine, InProgressOrderLineDTO] = sumTypeDTO
 
 final case class ProductPalletizedDTO(product: ProductDTO, quantity: Int)
 object ProductPalletizedDTO:
