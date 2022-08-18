@@ -17,16 +17,15 @@ private object Commons:
   given DTO[Latitude, Double] = unwrapFieldDTO
   given DTO[Longitude, Double] = unwrapFieldDTO
   given DTO[Quantity, Int] = unwrapFieldDTO
-  given DTO[ClientID, String] = unwrapFieldDTO
   given DTO[ClientName, String] = unwrapFieldDTO
   given DTO[VATNumber, String] = unwrapFieldDTO
-  given DTO[IncomingOrderLine, IncomingOrderLineDTO] = productTypeDTO
-  given DTO[PriceInEuroCents, Int] = unwrapFieldDTO
   given DTO[PalletizedQuantity, Int] = unwrapFieldDTO
   given DTO[WeightInKilograms, Double] = unwrapFieldDTO
 
 import Commons.*
 import Commons.given
+
+given DTO[ClientID, String] = unwrapFieldDTO
 
 final case class OrderReceivedDTO(
     orderLines: List[IncomingOrderLineDTO],
@@ -35,6 +34,9 @@ final case class OrderReceivedDTO(
     deliveryLocation: LocationDTO,
 )
 final case class IncomingOrderLineDTO(quantity: Int, product: ProductDTO)
+object IncomingOrderLineDTO:
+  given DTO[IncomingOrderLine, IncomingOrderLineDTO] = productTypeDTO
+
 final case class ClientDTO(code: String, name: String, vatNumber: String)
 final case class LocationDTO(latitude: Double, longitude: Double)
 object OrderReceivedDTO:
@@ -60,9 +62,9 @@ object OrderProcessedDTO:
   given DTO[OrderProcessed, OrderProcessedDTO] = productTypeDTO
   private given DTO[IncomingOrder, IncomingOrderDTO] = productTypeDTO
 
-final case class PriceListDTO(priceList: Map[ProductDTO, Int])
-object PriceListDTO:
-  given DTO[PriceList, PriceListDTO] = productTypeDTO
+final case class PriceInEuroCentsDTO(price: Int)
+object PriceInEuroCentsDTO:
+  given DTO[PriceInEuroCents, PriceInEuroCentsDTO] = productTypeDTO
 
 final case class InProgressOrderDTO(
     id: String,
@@ -70,7 +72,7 @@ final case class InProgressOrderDTO(
     client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
-    totalPrice: Int,
+    totalPrice: PriceInEuroCentsDTO,
 )
 final case class InProgressOrderLineDTO(
     tag: String,
@@ -78,8 +80,8 @@ final case class InProgressOrderLineDTO(
     incompleteDTO: Option[IncompleteOrderLineDTO],
 )
 
-final case class CompleteOrderLineDTO(quantity: Int, product: ProductDTO, price: Int)
-final case class IncompleteOrderLineDTO(actual: Int, required: Int, product: ProductDTO, price: Int)
+final case class CompleteOrderLineDTO(quantity: Int, product: ProductDTO, price: PriceInEuroCentsDTO)
+final case class IncompleteOrderLineDTO(actual: Int, required: Int, product: ProductDTO, price: PriceInEuroCentsDTO)
 
 object InProgressOrderDTO:
   given DTO[InProgressOrder, InProgressOrderDTO] = productTypeDTO
@@ -98,9 +100,9 @@ final case class CompletedOrderDTO(
     client: ClientDTO,
     deliveryDate: String,
     deliveryLocation: LocationDTO,
-    totalPrice: Int,
+    totalPrice: PriceInEuroCentsDTO,
 )
-final case class CompletedOrderLineDTO(quantity: Int, product: ProductDTO, price: Int)
+final case class CompletedOrderLineDTO(quantity: Int, product: ProductDTO, price: PriceInEuroCentsDTO)
 object CompletedOrderDTO:
   given DTO[CompletedOrder, CompletedOrderDTO] = productTypeDTO
   private given DTO[CompleteOrderLine, CompletedOrderLineDTO] = productTypeDTO

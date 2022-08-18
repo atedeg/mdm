@@ -25,7 +25,7 @@ object OrdersEndpoints:
   val newOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     newOrderEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, String] = newOrderHandler(o)
-      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )
 
@@ -39,7 +39,7 @@ object OrdersEndpoints:
   val palletizeProductForOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     palletizeProductForOrderEndpoint.serverLogic { p =>
       val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(p)
-      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )
 
@@ -53,7 +53,7 @@ object OrdersEndpoints:
   val orderCompletedRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     orderCompletedEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, Unit] = orderCompletedHandler(o)
-      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )
 
@@ -73,6 +73,6 @@ object OrdersEndpoints:
   val getTransportDocumentRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     getTransportDocumentEndpoint.serverLogic { o =>
       val action: ServerAction[Configuration, String, TransportDocumentDTO] = getTransportDocumentHandler(o)
-      action.value.run(Configuration(PriceListRepositoryDB("foo"), OrderRepositoryDB("bar"), EmitterMQ()))
+      action.value.run(Configuration(OrderRepositoryDB("bar"), EmitterMQ()))
     },
   )
