@@ -1,6 +1,15 @@
 [![Build test and deploy](https://github.com/atedeg/mdm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/atedeg/mdm/actions/workflows/ci.yml)
 [![semantic-release: conventional-commits](https://img.shields.io/badge/semantic--release-conventional_commits-e10098?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![GitHub](https://img.shields.io/github/license/atedeg/mdm)[![codecov](https://codecov.io/gh/atedeg/mdm/branch/main/graph/badge.svg?token=XZQOPAEFAU)](https://codecov.io/gh/atedeg/mdm)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/atedeg/mdm?color=red&label=latest%20release)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=atedeg_mdm&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=atedeg_mdm)
+![GitHub issues](https://img.shields.io/github/issues/atedeg/mdm)
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/atedeg/mdm)
 
 # MDM - Mambelli Domain Model
 
