@@ -25,6 +25,7 @@ object PricingEndpoints:
       .in(query[Int]("weight").description("The weight of the cheese in the order line to be priced"))
       .out(jsonBody[PriceInEuroCentsDTO].description("The price of the order line"))
       .errorOut(stringBody)
+      .description("Gets the price of an order line for a given client")
 
   val priceOrderLineRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     priceOrderLineEndpoint.serverLogic { (clientID, quantity, cheeseType, weight) =>
