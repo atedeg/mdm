@@ -12,6 +12,7 @@ import dev.atedeg.mdm.clientorders.api.*
 import dev.atedeg.mdm.clientorders.api.repositories.*
 import dev.atedeg.mdm.clientorders.api.services.*
 import dev.atedeg.mdm.clientorders.dto.*
+import dev.atedeg.mdm.products.dto.*
 import dev.atedeg.mdm.utils.monads.*
 
 object OrdersEndpoints:
@@ -27,6 +28,7 @@ object OrdersEndpoints:
       .in(jsonBody[OrderReceivedDTO].description("The order that needs to be placed"))
       .out(stringBody.description("The ID assigned to the placed order"))
       .errorOut(stringBody)
+      .description("Creates a new order.")
 
   val newOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     newOrderEndpoint.serverLogic { o =>
@@ -36,29 +38,42 @@ object OrdersEndpoints:
   )
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
-  val palletizeProductForOrderEndpoint: PublicEndpoint[ProductPalletizedForOrderDTO, String, Unit, Any] =
-    endpoint.post
-      .in("order" / "palletize")
-      .in(jsonBody[ProductPalletizedForOrderDTO].description("The product and quantity palletized for the given order"))
+  val palletizeProductForOrderEndpoint: PublicEndpoint[(String, ProductWithQuantityDTO), String, Unit, Any] =
+    endpoint.put
+      .in("order")
+      .in(
+        path[String]
+          .description("The ID of the order for which the product needs to be palletized")
+          .name("order-id"),
+      )
+      .in("palletize")
+      .in(jsonBody[ProductWithQuantityDTO].description("The product and quantity palletized for the given order"))
       .errorOut(stringBody)
+      .description("Palletize a product for the given order.")
 
   val palletizeProductForOrderRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
-    palletizeProductForOrderEndpoint.serverLogic { p =>
-      val action: ServerAction[Configuration, String, Unit] = productPalletizedForOrderHandler(p)
+    palletizeProductForOrderEndpoint.serverLogic { case (orderID, ProductWithQuantityDTO(quantity, product)) =>
+      val action: ServerAction[Configuration, String, Unit] =
+        productPalletizedForOrderHandler(ProductPalletizedForOrderDTO(orderID, quantity, product))
       action.value.run(configuration)
     },
   )
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
-  val orderCompletedEndpoint: PublicEndpoint[OrderCompletedDTO, String, Unit, Any] =
-    endpoint.post
-      .in("order" / "complete")
-      .in(jsonBody[OrderCompletedDTO].description("The ID of the order that has been completed"))
+  val orderCompletedEndpoint: PublicEndpoint[String, String, Unit, Any] =
+    endpoint.put
+      .in("order")
+      .in(
+        path[String]
+          .description("The ID of the order that has been completed")
+          .name("order-id"),
+      )
+      .in("complete")
       .errorOut(stringBody)
 
   val orderCompletedRoute: HttpRoutes[IO] = Http4sServerInterpreter[IO]().toRoutes(
     orderCompletedEndpoint.serverLogic { o =>
-      val action: ServerAction[Configuration, String, Unit] = orderCompletedHandler(o)
+      val action: ServerAction[Configuration, String, Unit] = orderCompletedHandler(OrderCompletedDTO(o))
       action.value.run(configuration)
     },
   )

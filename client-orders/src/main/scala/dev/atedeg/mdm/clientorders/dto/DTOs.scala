@@ -42,6 +42,8 @@ final case class LocationDTO(latitude: Double, longitude: Double)
 object OrderReceivedDTO:
   given DTO[OrderReceived, OrderReceivedDTO] = productTypeDTO
 
+final case class ProductWithQuantityDTO(quantity: Int, product: ProductDTO)
+
 final case class ProductPalletizedForOrderDTO(orderID: String, quantity: Int, product: ProductDTO)
 object ProductPalletizedForOrderDTO:
   given DTO[ProductPalletizedForOrder, ProductPalletizedForOrderDTO] = productTypeDTO
