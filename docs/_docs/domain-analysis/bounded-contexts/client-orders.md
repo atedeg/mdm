@@ -10,11 +10,8 @@ delivery location.
 Finally, each order is identified by a unique ID in order to allow order tracking.
 
 After an order is received it has to be priced: a priced order has the same structure
-of an incoming order but each order line also specifies the total price.
-It is computed by multiplying the ordered quantity and the product's price (which is taken
-from a price list).
-The priced order also specifies the
-total price which is obtained from the sum of the lines' prices.
+of an incoming order but each order line also specifies the total price, which is obtained from the pricing subdomain.
+The priced order also specifies the total price which is obtained from the sum of the lines' prices.
 
 After the order is priced it considered in progress, and it is the operator's job
 to palletize the products needed for each order.
