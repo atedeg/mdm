@@ -1,5 +1,6 @@
 ---
 title: Client Orders
+layout: static-site-main
 ---
 
 # Client Orders
