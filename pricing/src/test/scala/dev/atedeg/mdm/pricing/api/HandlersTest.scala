@@ -32,8 +32,8 @@ trait Mocks:
 
   val promotionsRepository: PromotionsRepository = new PromotionsRepository:
     override def readByClientID[M[_]: Monad: LiftIO](clientID: String): M[List[PromotionDTO]] =
-      val line1 = PromotionLineDTO("fixed", Some(FixedPromotionLineDTO(ricotta, 0.25)), None)
-      val line2 = PromotionLineDTO("fixed", Some(FixedPromotionLineDTO(ricotta, 0.75)), None)
+      val line1 = PromotionLineDTO("Fixed", Some(FixedPromotionLineDTO(ricotta, 0.25)), None)
+      val line2 = PromotionLineDTO("Fixed", Some(FixedPromotionLineDTO(ricotta, 0.75)), None)
       val promotion1 = PromotionDTO(client, future.toDTO, List(line1))
       val promotion2 = PromotionDTO(client, past.toDTO, List(line2))
       List(promotion1, promotion2).pure
@@ -49,7 +49,7 @@ class PriceOrderLineHandler extends AnyWordSpec, Matchers, Mocks:
     val action: ServerAction[Configuration, String, PriceInEuroCentsDTO] = priceOrderLineHandler(client.code, orderLine)
     val res = action.unsafeExecute(config)
 
-    "compute the correct date" in {
+    "compute the correct price using the correct promotion in the future" in {
       res.value shouldBe PriceInEuroCentsDTO(75)
     }
   }
