@@ -12,17 +12,17 @@ an adequate DVCS workflow and tools to automate the releases.
 ## Adopted DVCS workflow
 
 The DVCS workflow we adopted is quite similar to `git-flow` but with some changes:
-we use the `feature` branch as intended, with each feature well-isolated and defined.
+we use the feature branches as intended, with each feature well-isolated and defined.
 Moreover, we used a `beta` branch to publish a non-stable version of the software; this can be
 quite handy as it generates pre-releases that can be beta-tested before releasing a stable version.
-Lastly, the `main` branch is intended to be the only stable branch: a push on this branch triggers
+Lastly, the `main` branch is intended to be the only stable branch: a push to this branch triggers
 a new stable release.
 
 We also added branch protection to the `main` and `beta` branches to prevent mistakes like pushing
-on the wrong branch and inadvertently triggering a release.
-These rules, however, also prevented tools like `semantic-release` from pushing on those branches.
-To overcome this issue we created a team application `atedeg-bot` that has the push permission on
-those branches so that the release process could succeed without failures.
+to the wrong branch and inadvertently triggering a release.
+These rules, however, also prevented tools like `semantic-release` from pushing to those branches.
+To overcome this issue we created a GitHub app called `atedeg-bot`, which is the only entity able to bypass
+the branch protection on those branches, so that the release process could succeed without failures.
 
 We also added features and fixes by using GitHub's pull requests, allowing for code review and
 comments from other team members before the code could be merged.
@@ -86,7 +86,7 @@ check automatically enabled.
 To achieve this we developed an sbt plugin that automatically creates a git hook
 to check all commit messages and rejects them in case they do not comply with the
 conventional commits standard.
-For more information see the
+For more information, see the
 [plugin documentation](https://github.com/nicolasfara/sbt-conventional-commits).
 
 > Initially, a
@@ -109,7 +109,7 @@ tedious task that typically no one wants to do.
 In addition, this kind of task can be greatly complicated by the fact that many commit messages may
 be ambiguous or may not precisely reflect the actual changes.
 
-By adopting a convention for commit messages, such as `conventional-commit`, then it is much easier
+By adopting a convention for commit messages, such as conventional commits, then it is much easier
 to determine the extent of changes by simply analyzing the commit messages.
 Moreover, automated tools can automatically perform this task and determine the version to be
 assigned.
