@@ -13,8 +13,8 @@
    </section>
    <section id="adopted-dvcs-workflow"> 
     <h2><a href="#adopted-dvcs-workflow" class="anchor"></a>Adopted DVCS workflow</h2> 
-    <p>The DVCS workflow we adopted is quite similar to <code>git-flow</code> but with substantial changes: we use the <code>feature</code> branch as intended, with each feature well-isolated and defined. Moreover, we used a <code>beta</code> branch to publish a non-stable version of the software; this can be quite handy as it generates pre-releases that can be beta-tested before releasing a stable version. Lastly, the <code>main</code> branch is intended to be the only stable branch: a push on this branch triggers a new stable release.</p> 
-    <p>We also added branch protection to the <code>main</code> and <code>beta</code> branches to prevent mistakes like pushing on the wrong branch and inadvertently triggering a release. These rules, however, also prevented tools like <code>semantic-release</code> from pushing on those branches. To overcome this issue we created a team application <code>atedeg-bot</code> that has the push permission on those branches so that the release process could succeed without failures.</p> 
+    <p>The DVCS workflow we adopted is quite similar to <code>git-flow</code> but with some changes: we use the feature branches as intended, with each feature well-isolated and defined. Moreover, we used a <code>beta</code> branch to publish a non-stable version of the software; this can be quite handy as it generates pre-releases that can be beta-tested before releasing a stable version. Lastly, the <code>main</code> branch is intended to be the only stable branch: a push to this branch triggers a new stable release.</p> 
+    <p>We also added branch protection to the <code>main</code> and <code>beta</code> branches to prevent mistakes like pushing to the wrong branch and inadvertently triggering a release. These rules, however, also prevented tools like <code>semantic-release</code> from pushing to those branches. To overcome this issue we created a GitHub app called <code>atedeg-bot</code>, which is the only entity able to bypass the branch protection on those branches, so that the release process could succeed without failures.</p> 
     <p>We also added features and fixes by using GitHub's pull requests, allowing for code review and comments from other team members before the code could be merged. This way each team member can still have an overview of the other's work and point out possible problems or ideas to improve it.</p> 
     <p>In addition, this type of workflow makes the classic <code>develop</code> branch unnecessary: having a robust test suite joint with the use of semantic-release, allows one to merge directly to <code>main</code> (or <code>beta</code>); only relevant changes trigger a new release without having to worry about when to make a new one (as opposed to what happens when one has to deal with the <code>develop</code> branch).</p> 
     <p>An example of the workflow adopted by the team is shown in the image below:</p> 
@@ -53,7 +53,7 @@
     <h3><a href="#conventional-commits" class="anchor"></a>Conventional Commits</h3> 
     <p>We decide to adopt <a href="https://www.conventionalcommits.org/en/v1.0.0/">conventional commits</a> as the convention for commit messages. It's a lightweight convention on top of commit messages which provides a simple set of rules for creating a more structured commit history, easier to handle by automated tools.</p> 
     <p>Since this standard forces a particular format for commit messages, it can be quite easy to get it wrong and not comply with that format. Therefore, we wanted an automated check that could reject any message not compliant with the standard.</p> 
-    <p>Even though there are tools such as <a href="https://github.com/conventional-changelog/commitlint"><code>husky</code> and <code>commitlint</code></a>, these are not native to sbt and require manual intervention to be activated. However, one could forget to activate these tools rendering them useless; our goal was that as soon as a new user clones the repository and imports the project, they already have the commit check automatically enabled. To achieve this we developed an sbt plugin that automatically creates a git hook to check all commit messages and rejects them in case they do not comply with the conventional commits standard. For more information see the <a href="https://github.com/nicolasfara/sbt-conventional-commits">plugin documentation</a>.</p> 
+    <p>Even though there are tools such as <a href="https://github.com/conventional-changelog/commitlint"><code>husky</code> and <code>commitlint</code></a>, these are not native to sbt and require manual intervention to be activated. However, one could forget to activate these tools rendering them useless; our goal was that as soon as a new user clones the repository and imports the project, they already have the commit check automatically enabled. To achieve this we developed an sbt plugin that automatically creates a git hook to check all commit messages and rejects them in case they do not comply with the conventional commits standard. For more information, see the <a href="https://github.com/nicolasfara/sbt-conventional-commits">plugin documentation</a>.</p> 
     <blockquote> 
      <p>Initially, a <a href="https://github.com/nicolasfara/conventional-commits">gradle plugin</a> was developed to check commit messages. However, having the need to work with sbt it was decided to rewrite the plugin native to sbt reflecting all the gradle plugin's functionalities.</p> 
     </blockquote> 
@@ -61,8 +61,8 @@
    <section id="semantic-release"> 
     <h3><a href="#semantic-release" class="anchor"></a>Semantic release</h3> 
     <p>Assigning versions to code can be a controversial activity. People often assign versions based on intuition, wrong assumptions or, even worse, randomly. In this regard, the <a href="https://semver.org/">SemVer</a> standard is fundamental to have some shared guidelines on how to properly assign a version based on some rules. However, even following the SemVer guidelines there is still the problem of figuring out which version to assign: identifying the extent of the changes made between versions to determine the new version is not an easy task. Doing so requires re-reading the commit history and getting an idea of what was changed; it is a tedious task that typically no one wants to do. In addition, this kind of task can be greatly complicated by the fact that many commit messages may be ambiguous or may not precisely reflect the actual changes.</p> 
-    <p>By adopting a convention for commit messages, such as <code>conventional-commit</code>, then it is much easier to determine the extent of changes by simply analyzing the commit messages. Moreover, automated tools can automatically perform this task and determine the version to be assigned.</p> 
-    <p>Tools like <a href="https://semantic-release.gitbook.io/semantic-release/"><code>semantic-release</code></a> automate version assignment and automatically manage the release of artifacts. Strictly following the SemVer specification, there is no longer room for human intervention in assigning version numbers that are determined automatically and can reliably and consistently communicate the impact of changes to consumers. This tool, in addition to automatically determining the version to be assigned, can generate (and update) the <code>CHANGELOG</code> file reporting in an organized manner all the changes made in the various versions; it also interacts nicely with GitHub issues and PRs by creating comments concerning the releases made.</p> 
+    <p>By adopting a convention for commit messages, such as conventional commits, then it is much easier to determine the extent of changes by simply analyzing the commit messages. Moreover, automated tools can automatically perform this task and determine the version to be assigned.</p> 
+    <p>Tools like <a href="https://semantic-release.gitbook.io/semantic-release/"><code>semantic-release</code></a> automate version assignment and automatically manage the release of artifacts. Strictly following the SemVer specification, there is no longer room for human intervention in assigning version numbers that are determined automatically and can reliably and consistently communicate the impact of changes to consumers. This tool, in addition to automatically determining the version to be assigned, can generate (and update) the <code>CHANGELOG</code> file, reporting in an organized manner all the changes made in the various versions; it also interacts nicely with GitHub issues and PRs by creating comments concerning the releases made.</p> 
     <p>Automating the entire process of versioning and artifact releasing gives the ability to focus solely on project development without worrying about these easy-to-automate tasks, while also minimizing the possibility of errors.</p> 
    </section>
    <section id="the-final-release-workflow"> 
@@ -71,15 +71,15 @@
     <ol> 
      <li>The <a href="https://github.com/semantic-release/commit-analyzer"><code>commit-analyzer</code></a> plugin analyzes the commit messages from the last tag to the latest commit in order to determine the version bump to apply</li> 
      <li>The <a href="https://github.com/semantic-release/release-notes-generator"><code>release-notes-generator</code></a> plugin generates the changelog with the changes since the last tag</li> 
-     <li>The <a href="https://github.com/semantic-release/changelog"><code>changelog</code></a> plugin updates the <code>CHANGELOG.md</code> file in the repo with the changelog generated at the step above</li> 
+     <li>The <a href="https://github.com/semantic-release/changelog"><code>changelog</code></a> plugin updates the <code>CHANGELOG</code> file in the repo with the changelog generated at the step above</li> 
      <li>With the <a href="https://github.com/semantic-release/exec"><code>exec</code></a> plugin we specify the commands needed to publish all the artefacts and the documentation site 
       <ul> 
        <li>The first command releases all the <code>jar</code>s to <a href="https://search.maven.org/search?q=dev.atedeg.mdm"><em>Maven Central</em></a></li> 
        <li>The second command generates the documentation site</li> 
-       <li>The third command publishes the <code>Dockerfile</code> of each subproject to <a href="https://hub.docker.com/">Docker Hub</a></li> 
+       <li>The third command publishes the <code>Dockerfile</code> of each subproject to <a href="https://hub.docker.com/search?q=atedeg">Docker Hub</a></li> 
       </ul> </li> 
-     <li>The <a href="https://github.com/semantic-release/git"><code>git</code></a> plugin pushes the updated <code>CHANGELOG.md</code> into the repo</li> 
-     <li>The <a href="https://github.com/semantic-release/github"><code>github</code></a> plugin generates the release and comments the issues closed since the last tag</li> 
+     <li>The <a href="https://github.com/semantic-release/git"><code>git</code></a> plugin pushes the updated <code>CHANGELOG</code> into the repo</li> 
+     <li>The <a href="https://github.com/semantic-release/github"><code>github</code></a> plugin generates the release and comments the PRs and issues closed since the last tag</li> 
     </ol> 
     <p>For the full workflow specification take a look at the file <a href="https://github.com/atedeg/mdm/blob/main/.releaserc.yml"><code>.releaserc.yml</code></a>.</p> 
    </section> 
@@ -87,12 +87,24 @@
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
 </html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#deployment-strategy">Deployment Strategy</a><ul><li><a href="#adopted-dvcs-workflow">Adopted DVCS workflow</a></li><li><a href="#tools-to-automate-the-release">Tools to automate the release</a><ul><li><a href="#conventional-commits">Conventional Commits</a></li><li><a href="#semantic-release">Semantic release</a></li><li><a href="#the-final-release-workflow">The final release workflow</a></li></ul></li></ul></li></ul></nav></div></div></body></html>

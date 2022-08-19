@@ -35,27 +35,27 @@
      <tbody> 
       <tr>
        <td>Production plan</td>
-       <td>All the <a href="dev/atedeg/mdm/productionplanning/ProductToProduce.html#">products to be produced</a> in a day.</td>
+       <td>All the <a href="../../../dev/atedeg/mdm/productionplanning/ProductToProduce.html#">products to be produced</a> in a day.</td>
       </tr> 
       <tr>
        <td>Product to produce</td>
-       <td>The <a href="dev/atedeg/mdm/clientorders/Quantity.html#">quantity</a> of each product to be produced.</td>
+       <td>The <a href="../../../dev/atedeg/mdm/clientorders/Quantity.html#">quantity</a> of each product to be produced.</td>
       </tr> 
       <tr>
        <td>Missing products</td>
-       <td>The products missing from the stock in a given <a href="dev/atedeg/mdm/productionplanning/MissingQuantity.html#">quantity</a>.</td>
+       <td>The products missing from the stock in a given <a href="../../../dev/atedeg/mdm/productionplanning/MissingQuantity.html#">quantity</a>.</td>
       </tr> 
       <tr>
        <td>Order</td>
-       <td>A set of requested products with the <a href="dev/atedeg/mdm/clientorders/Quantity.html#">quantities</a> that have to be produced by the given date.</td>
+       <td>A set of requested products with the <a href="../../../dev/atedeg/mdm/clientorders/Quantity.html#">quantities</a> that have to be produced by the given date.</td>
       </tr> 
       <tr>
        <td>Ordered product</td>
-       <td>A product requested in a given <a href="dev/atedeg/mdm/clientorders/Quantity.html#">quantity</a>.</td>
+       <td>A product requested in a given <a href="../../../dev/atedeg/mdm/clientorders/Quantity.html#">quantity</a>.</td>
       </tr> 
       <tr>
        <td>Cheese type ripening days</td>
-       <td>Defines how many <a href="dev/atedeg/mdm/production/RipeningDays.html#">days of ripening</a> are needed for a given type of cheese.</td>
+       <td>Defines how many <a href="../../../dev/atedeg/mdm/production/RipeningDays.html#">days of ripening</a> are needed for a given type of cheese.</td>
       </tr> 
       <tr>
        <td>Ripening days</td>
@@ -79,7 +79,7 @@
      <tbody> 
       <tr>
        <td>New order received</td>
-       <td>Event representing an <a href="dev/atedeg/mdm/productionplanning/Order.html#">order</a> placed, data about the orders is used to create the <a href="dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a>.</td>
+       <td>Event representing an <a href="../../../dev/atedeg/mdm/productionplanning/Order.html#">order</a> placed, data about the orders is used to create the <a href="../../../dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a>.</td>
       </tr> 
      </tbody> 
     </table> 
@@ -96,11 +96,11 @@
      <tbody> 
       <tr>
        <td>Production plan ready</td>
-       <td>Event that contains the <a href="dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> of the day.</td>
+       <td>Event that contains the <a href="../../../dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> of the day.</td>
       </tr> 
       <tr>
        <td>Order delayed</td>
-       <td>An event emitted if an <a href="dev/atedeg/mdm/productionplanning/Order.html#">order</a> cannot be fulfilled since there are some products whose <a href="dev/atedeg/mdm/production/RipeningDays.html#">ripening days</a> would make it impossible to fulfil the order by the required date. A new delivery date is also provided.</td>
+       <td>An event emitted if an <a href="../../../dev/atedeg/mdm/productionplanning/Order.html#">order</a> cannot be fulfilled since there are some products whose <a href="../../../dev/atedeg/mdm/production/RipeningDays.html#">ripening days</a> would make it impossible to fulfil the order by the required date. A new delivery date is also provided.</td>
       </tr> 
      </tbody> 
     </table> 
@@ -109,12 +109,24 @@
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
 </html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#production-planning">Production Planning</a><ul><li><a href="#ubiquitous-language">Ubiquitous Language</a></li><li><a href="#domain-events">Domain Events</a><ul><li><a href="#incoming-events">Incoming Events</a></li><li><a href="#outgoing-events">Outgoing Events</a></li></ul></li></ul></li></ul></nav></div></div></body></html>

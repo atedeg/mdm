@@ -9,7 +9,7 @@
   <div class="container"> 
    <section id="development-choices"> 
     <h1><a href="#development-choices" class="anchor"></a>Development choices</h1> 
-    <p>As described in the <a href="...">"architecture" section</a> we decided to adopt an hexagonal architecture for our microservices. In this section we are going to describe some of the more relevant choices we made when implementing this architecture, both from core domain and application layer perspective.</p> 
+    <p>In this section we are going to describe some of the more relevant choices we made when implementing the clean architecture described in the previous chapter, both from core domain and application layer perspective.</p> 
    </section>
    <section id="core-domain"> 
     <h2><a href="#core-domain" class="anchor"></a>Core Domain</h2> 
@@ -17,16 +17,16 @@
    <section id="domain-modelling-approach"> 
     <h3><a href="#domain-modelling-approach" class="anchor"></a>Domain Modelling Approach</h3> 
     <p>While we were furthering our knowledge to better approach the development of the project we stumbled upon a very interesting <a href="https://www.youtube.com/watch?v=2JB1_e5wZmU">talk</a> by Scott Wlaschin and later read the book <a href="https://pragprog.com/titles/swdddf/domain-modeling-made-functional/"><em>"Domain Modelling Made Functional"</em></a>. This sparked a keen interest in the topic and convinced us to carry out the project by embracing a fully functional approach.</p> 
-    <p>All domain concepts are modelled using bare-bone enums and case classes; every action dealing with these entities is either defined as simple functions or as extension methods. This allowed us to have <em>self-contained, clutter-free</em> and <em>simple</em> files containing all the definitions of the main domain concepts; this way, we were able to skim through these files along with the domain experts to get precious feedback we could easily use to rework our ubiquitous language on the spot.</p> 
+    <p>All domain concepts are modelled using bare-bone enums and case classes; every action dealing with these entities is either defined as a simple function or as an extension method. This allowed us to have <em>self-contained, clutter-free</em> and <em>simple</em> files containing all the definitions of the main domain concepts; this way, we were able to skim through these files along with the domain experts to get precious feedback we could easily use to rework our ubiquitous language on the spot.</p> 
    </section>
    <section id="action-modelling-through-monads"> 
     <h3><a href="#action-modelling-through-monads" class="anchor"></a>Action modelling through monads</h3> 
-    <p>All core domain actions take advantage of a <em>monadic encoding of side effects,</em> ranging from failure with an exception, to emitting events to reading an immutable global state.</p> 
+    <p>All core domain actions take advantage of a <em>monadic encoding of side effects,</em> ranging from failure with an exception, to emitting events, to reading an immutable global state.</p> 
     <p>Using monads to model side effects proved useful in three distinct ways:</p> 
     <ul> 
      <li>The core logic of the resulting code is pretty <em>easy to read and understand:</em> complex actions are modelled using a DSL for effects and can be easily composed together. Moreover, these functions expose the side effects they can perform in their type signature making it <em>impossible for the programmer to forget to handle them</em></li> 
      <li>By reifying side effects as data we were able to <em>easily test</em> the core behaviour of our system</li> 
-     <li>This approach is a <em>good fit to implement the hexagonal architecture:</em> all the core logic is pure and does not perform any kind of IO (<a href="https://blog.ploeh.dk/2017/01/27/from-dependency-injection-to-dependency-rejection/"><em>dependency rejection</em></a>) while all necessary dependencies are injected as simple parameters or in the reader monad. Following this discipline makes a hexagonal architecture emerge quite naturally</li> 
+     <li>This approach is a <em>good fit to implement the clean architecture:</em> all the core logic is pure and does not perform any kind of IO (<a href="https://blog.ploeh.dk/2017/01/27/from-dependency-injection-to-dependency-rejection/"><em>dependency rejection</em></a>) while all necessary dependencies are injected as simple parameters or in the reader monad. Following this discipline makes a clean architecture emerge quite naturally</li> 
     </ul> 
     <blockquote> 
      <p>A code example from our codebase:</p> 
@@ -47,7 +47,7 @@
    </section>
    <section id="make-illegal-states-unrepresentable"> 
     <h3><a href="#make-illegal-states-unrepresentable" class="anchor"></a>Make illegal states unrepresentable</h3> 
-    <p>Before starting the development of the project we also decided to fully embrace the <em>"make illegal states unrepresentable"</em> philosophy while leveraging the features the Scala's type system could offer. First of all, according to the DDD principles, all domain elements are modelled using appropriate data structures to wrap primitive types. We also used Scala 3's ADTs to model effectively the domain's concepts and constraints:</p> 
+    <p>Before starting the development of the project we also decided to fully embrace the <em>"make illegal states unrepresentable"</em> philosophy while leveraging the features the Scala's type system could offer. First of all, according to the DDD principles, all domain elements are modelled using appropriate data structures to wrap primitive types. We also used <a href="https://docs.scala-lang.org/scala3/book/types-adts-gadts.html">Scala 3's ADTs</a> to model effectively the domain's concepts and constraints:</p> 
     <div class="snippet" scala-snippet="">
      <div class="buttons"></div>
      <pre><code class="language-scala"><span id="0" class=""><span class="tooltip-container"></span>// A batch of cheese that can either be aging or ready for quality assurance
@@ -116,7 +116,7 @@
 </span><span id="1" class=""><span class="tooltip-container"></span>final case class ProductToProduceDTO(product: ProductDTO, units: Int)
 </span></code></pre>
      </div> 
-     <p>The DTOs closely mirror the case class structure but only use easy-to-serialize data like primitive types, simple collection types or other DTOs. The encoding/decoding code would simply encode/decode each individual field recursively using the appropriate <code>DTO</code> instances. The code would repeat in the exact same way for each domain case class:</p> 
+     <p>The DTOs closely mirror the case class structure but only use easy-to-serialize primitive types, simple collections or other DTOs. The encoding/decoding code would simply encode/decode each individual field recursively using the appropriate <code>DTO</code> instances. The code would repeat in the exact same way for each domain case class:</p> 
      <div class="snippet" scala-snippet="">
       <div class="buttons"></div>
       <pre><code class="language-scala"><span id="0" class=""><span class="tooltip-container"></span>given DTO[DomainCaseClass, DTOCaseClass] with
@@ -135,7 +135,7 @@
      <p>We devised some methods to automatically generate this boilerplate-y code using some of Scala 3's meta programming capabilities:</p> 
      <div class="snippet" scala-snippet="">
       <div class="buttons"></div>
-      <pre><code class="language-scala"><span id="0" class=""><span class="tooltip-container"></span>given DTO[DomainCaseClass, DTOCaseClass] = interCaseClassDTO
+      <pre><code class="language-scala"><span id="0" class=""><span class="tooltip-container"></span>given DTO[DomainCaseClass, DTOCaseClass] = productTypeDTO
 </span></code></pre>
      </div> 
     </blockquote> 
@@ -144,7 +144,7 @@
     <h3><a href="#http-api" class="anchor"></a>HTTP API</h3> 
     <p>Some bounded contexts required implementing an HTTP API, we decided to leverage the <a href="https://tapir.softwaremill.com/en/latest/">tapir</a> library. It provided many useful features:</p> 
     <ul> 
-     <li>It integrates nicely with the <a href="https://typelevel.org/cats/"><code>cats</code></a> library allowing us to keep writing monadic code using the <code>IO</code> monad</li> 
+     <li>It integrates nicely with the <a href="https://typelevel.org/cats/">cats</a> library allowing us to keep writing monadic code using the <code>IO</code> monad</li> 
      <li>It makes it possible to declaratively describe an endpoint and its associated route in a type-safe way</li> 
      <li>It automatically generates the <a href="https://openapi.it/">OpenAPI</a> specification and enables a <a href="https://swagger.io/">Swagger</a> endpoint</li> 
     </ul> 
@@ -154,12 +154,24 @@
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
 </html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#development-choices">Development choices</a><ul><li><a href="#core-domain">Core Domain</a><ul><li><a href="#domain-modelling-approach">Domain Modelling Approach</a></li><li><a href="#action-modelling-through-monads">Action modelling through monads</a></li><li><a href="#make-illegal-states-unrepresentable">Make illegal states unrepresentable</a></li></ul></li><li><a href="#application-layer">Application Layer</a><ul><li><a href="#dtos">DTOs</a></li><li><a href="#http-api">HTTP API</a></li></ul></li></ul></li></ul></nav></div></div></body></html>

@@ -11,7 +11,7 @@
     <h1><a href="#context-map" class="anchor"></a>Context Map</h1> 
     <ul> 
      <li><code>MilkPlanning [D, ACL] &lt;- [U] ClientOrders</code> and <code>ProductionPlanning [D, ACL] &lt;- [U] ClientOrders</code><br> <code>ClientOrders</code> sends a message to <code>MilkPlanning</code> and <code>ProductionPlanning</code> to inform a new order was received. <code>MilkPlanning</code> and <code>ProductionPlanning</code> are downstream <em>core domains</em> so it's necessary to insert an <em>Anti-Corruption Layer</em> between them and <code>ClientOrders</code>. Moreover, <code>ClientOrders</code> is going to be a <em>generic</em> bounded context, as reported in the Core Domain Chart.</li> 
-     <li><code>MilkPlanning [D, ACL] &lt;- [U] Restocking</code><br> <code>MilkPlanning</code> asks to <code>Restocking</code> the remaining quantity of milk and informs <code>Restocking</code> to place an order for the required amount of milk. In addition it asks to <code>Restocking</code> the quantity of milk used in the previous year. <code>MilkPlanning</code> is a downstream core domain since <code>Restocking</code> provides a service to it and the latter is going to be a generic bounded context, as reported in the Core Domain Chart. For all these reasons <code>MilkPlanning</code> has an Anti-Corruption Layer on its side.</li> 
+     <li><code>MilkPlanning [D, ACL] &lt;- [U] Restocking</code><br> <code>MilkPlanning</code> asks <code>Restocking</code> the remaining quantity of milk and informs <code>Restocking</code> to place an order for the required amount of milk. In addition it asks <code>Restocking</code> the quantity of milk used in the previous year. <code>MilkPlanning</code> is a downstream core domain since <code>Restocking</code> provides a service to it and the latter is going to be a generic bounded context, as reported in the Core Domain Chart. For all these reasons <code>MilkPlanning</code> has an Anti-Corruption Layer on its side.</li> 
      <li><code>ClientOrders [D, CF] &lt;- [U] Pricing</code><br> <code>Pricing</code> computes for <code>ClientOrders</code> the price of each order line. As <code>Pricing</code> is the service provider, it is upstream. Also, since <code>ClientOrders</code> and <code>Pricing</code> are tightly coupled, the former is <em>Conformist</em>.</li> 
      <li><code>Production [D, CF] &lt;- [U] ProductionPlanning</code><br> <code>ProductionPlanning</code> provides <code>Production</code> with the production plan for the day. As <code>ProductionPlanning</code> is the service provider concerning <code>Production</code>, they are respectively upstream and downstream. Since <code>ProductionPlanning</code> and <code>Production</code> are tightly coupled, the latter is Conformist.</li> 
      <li><code>Stocking [D, ACL] &lt;- [U] ClientOrders</code><br> <code>Stocking</code> receives a message from <code>ClientOrders</code> notifying the removal from stock of certain products. <code>Stocking</code> has an <em>Anti-Corruption Layer</em>, as <code>ClientOrders</code> is going to be a generic bounded context and it will be impossible to control the format of the messages.</li> 
@@ -20,19 +20,31 @@
      <li><code>Restocking [D] &lt;- [U, CF] Production</code><br> <code>Production</code> informs <code>Restocking</code> when some raw materials are consumed. <code>Production</code> is an upstream Open-Host Service and must expose a published language as the <code>Restocking</code> downstream bounded context is going to be generic and we will not be able to freely change its API.</li> 
      <li><code>MilkPlanning [D, ACL] &lt;- [U] Stocking</code><br> <code>MilkPlanning</code> asks <code>Stocking</code> for the amount of products in stock. Since <code>MilkPlanning</code> is a downstream core bounded context, and Anti-Corruption Layer is required.</li> 
     </ul> 
-    <p>There is a <em>Shared Kernel</em> among the bounded contexts which contains the definitions for <strong>product</strong>, <strong>cheese type</strong> and <strong>ingredient</strong>. This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all bounded contexts handling these concepts. In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts: the production, ordering, labeling and stocking processes would need a rehaul to take into account the new kind of product. By sharing this information among different bounded contexts it is guaranteed that, whenever a change happens to any of these concepts, all the domains will maintain an up-to-date vision of these concepts.</p> 
-    <p><img src="../../images/contextMap.svg" alt="Context Map"></p> 
+    <p>There is a <em>Shared Kernel</em> among the bounded contexts which contains the definitions for <strong>product</strong>, <strong>cheese type</strong> and <strong>ingredient</strong>. This choice was taken as the three aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all bounded contexts handling these concepts. In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts: the production, ordering, labeling and stocking processes would need a rehaul to take into account the new kind of product. By sharing this information among different bounded contexts it is guaranteed that, whenever a change happens to any of these concepts, all the domains will maintain an up-to-date vision.</p> 
+    <img id="context-map" alt="Context map" src="#"> 
    </section> 
    <nav class="arrows-wrapper" aria-label="Page navigation"> <a rel="prev" href="event-storming.html" class="arrows previous" aria-keyshortcuts="Left"> <span>Event Storming</span> <i class="fa fa-angle-left" aria-hidden="true"></i> </a> <a rel="next" href="user-stories.html" class="arrows next" aria-keyshortcuts="Right"> <span>User stories</span> <i class="fa fa-angle-right" aria-hidden="true"></i> </a> 
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
 </html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#context-map">Context Map</a></li></ul></nav></div></div></body></html>

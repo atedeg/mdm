@@ -12,7 +12,7 @@
     <p>Every day the dairyman receives a production plan from Raffaella, containing instructions on the cheese he needs to produce for the day.</p> 
     <p>To determine the ingredients to use for a production the dairyman uses a recipe book where, for each type of cheese, there is a recipe. A recipe specifies the quintals of each ingredient needed to produce a quintal of the given type of cheese.</p> 
     <blockquote> 
-     <p><em>e.g.</em> The recipe for a quintal of ricotta requires 1.5 quintals of milk a tenth of quintal of rennet and a tenth of quintal of salt</p> 
+     <p><em>e.g.</em> The recipe for a quintal of ricotta requires 1.5 quintals of milk, a tenth of quintal of rennet and a tenth of quintal of salt</p> 
     </blockquote> 
     <p>Once the appropriate recipe is chosen the production can start by retrieving the needed ingredients.</p> 
     <p>Once an in-progress production ends (the smart machines will send an appropriate message to signal the end of the process), the produced cheese is assigned a batch ID and stored in a refrigeration room.</p> 
@@ -29,39 +29,39 @@
      <tbody> 
       <tr>
        <td>Production plan</td>
-       <td>A production plan that specifies how many <a href="dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> of products need to be produced.</td>
+       <td>A production plan that specifies how many <a href="../../../dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> of products need to be produced.</td>
       </tr> 
       <tr>
        <td>Production plan item</td>
-       <td>A single line of a <a href="dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> that specifies a product and how many <a href="dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> of it to produce.</td>
+       <td>A single line of a <a href="../../../dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> that specifies a product and how many <a href="../../../dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> of it to produce.</td>
       </tr> 
       <tr>
-       <td>Production to start</td>
-       <td>A <a href="dev/atedeg/mdm/production/Production.html#">production</a> that needs to be started, it specifies the product to produce and the <a href="dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> in which it needs to be produced.</td>
+       <td>Production To Start</td>
+       <td>A <a href="../../../dev/atedeg/mdm/production/Production.html#">production</a> that needs to be started, it specifies the product to produce and the <a href="../../../dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> in which it needs to be produced.</td>
       </tr> 
       <tr>
-       <td>Production in progress</td>
-       <td>A <a href="dev/atedeg/mdm/production/Production.html#">production</a> that has already started, it specifies the product that is being produced and the <a href="dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> in which it is being produced.</td>
+       <td>Production In Progress</td>
+       <td>A <a href="../../../dev/atedeg/mdm/production/Production.html#">production</a> that has already started, it specifies the product that is being produced and the <a href="../../../dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> in which it is being produced.</td>
       </tr> 
       <tr>
-       <td>Ended production</td>
-       <td>A <a href="dev/atedeg/mdm/production/Production.html#">production</a> that ended, it has a <a href="dev/atedeg/mdm/production/BatchID.html#">lot number</a> and specifies the product that was produced and in the <a href="dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> produced.</td>
+       <td>Ended Production</td>
+       <td>A <a href="../../../dev/atedeg/mdm/production/Production.html#">production</a> that ended, it has a <a href="../../../dev/atedeg/mdm/production/BatchID.html#">batch ID</a> and specifies the product that was produced and in the <a href="../../../dev/atedeg/mdm/production/NumberOfUnits.html#">units</a> produced.</td>
       </tr> 
       <tr>
        <td>Recipe book</td>
-       <td>Associates to each cheese type the <a href="dev/atedeg/mdm/production/Recipe.html#">recipe</a> to produce a quintal of it.</td>
+       <td>Associates to each cheese type the <a href="../../../dev/atedeg/mdm/production/Recipe.html#">recipe</a> to produce a quintal of it.</td>
       </tr> 
       <tr>
        <td>Recipe</td>
-       <td>A list of <a href="dev/atedeg/mdm/production/QuintalsOfIngredient.html#">ingredients and the respective quintals</a> needed to produce a quintal of a product.</td>
+       <td>A list of <a href="../../../dev/atedeg/mdm/production/QuintalsOfIngredient.html#">ingredients and the respective quintals</a> needed to produce a quintal of a product.</td>
       </tr> 
       <tr>
        <td>Quintals of ingredient</td>
-       <td>An ingredient and a <a href="dev/atedeg/mdm/production/WeightInQuintals.html#">weight in quintals</a>.</td>
+       <td>An ingredient and a <a href="../../../dev/atedeg/mdm/production/WeightInQuintals.html#">weight in quintals</a>.</td>
       </tr> 
       <tr>
        <td>Cheese type ripening days</td>
-       <td>For each cheese type associates it its <a href="dev/atedeg/mdm/production/RipeningDays.html#">ripening days</a>.</td>
+       <td>For each cheese type, associates its <a href="../../../dev/atedeg/mdm/production/RipeningDays.html#">ripening days</a>.</td>
       </tr> 
       <tr>
        <td>Ripening days</td>
@@ -85,11 +85,11 @@
      <tbody> 
       <tr>
        <td>Production plan ready</td>
-       <td>Specifies the <a href="dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> for the day with the products that need to be produced.</td>
+       <td>Specifies the <a href="../../../dev/atedeg/mdm/production/ProductionPlan.html#">production plan</a> for the day with the products that need to be produced.</td>
       </tr> 
       <tr>
        <td>Production ended</td>
-       <td>Fired when a <a href="dev/atedeg/mdm/production/Production$$InProgress.html#">production</a> is terminated by a smart machine.</td>
+       <td>Fired when a <a href="../../../dev/atedeg/mdm/production/Production$$InProgress.html#">production</a> is terminated by a smart machine.</td>
       </tr> 
      </tbody> 
     </table> 
@@ -106,11 +106,11 @@
      <tbody> 
       <tr>
        <td>Start production</td>
-       <td>Fired when a <a href="dev/atedeg/mdm/production/Production$$ToStart.html#">production</a> needs to be started, specifies the <a href="dev/atedeg/mdm/production/QuintalsOfIngredient.html#">needed ingredients and the quantity</a> necessary to sustain the production.</td>
+       <td>Fired when a <a href="../../../dev/atedeg/mdm/production/Production$$ToStart.html#">production</a> needs to be started, specifies the <a href="../../../dev/atedeg/mdm/production/QuintalsOfIngredient.html#">needed ingredients and the quantity</a> necessary to sustain the production.</td>
       </tr> 
       <tr>
        <td>New batch</td>
-       <td>Fired when a <a href="dev/atedeg/mdm/production/Production$$InProgress.html#">production</a> is terminated, given a <a href="dev/atedeg/mdm/production/BatchID.html#">batch ID</a> and sent to the refrigeration room.</td>
+       <td>Fired when a <a href="../../../dev/atedeg/mdm/production/Production$$InProgress.html#">production</a> is terminated, given a <a href="../../../dev/atedeg/mdm/production/BatchID.html#">batch ID</a> and sent to the refrigeration room.</td>
       </tr> 
      </tbody> 
     </table> 
@@ -119,12 +119,24 @@
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
 </html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#production">Production</a><ul><li><a href="#ubiquitous-language">Ubiquitous Language</a></li><li><a href="#domain-events">Domain Events</a><ul><li><a href="#incoming-events">Incoming Events</a></li><li><a href="#outgoing-events">Outgoing Events</a></li></ul></li></ul></li></ul></nav></div></div></body></html>

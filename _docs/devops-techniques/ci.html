@@ -9,9 +9,18 @@
   <div class="container"> 
    <section id="continuous-integration-and-delivery"> 
     <h1><a href="#continuous-integration-and-delivery" class="anchor"></a>Continuous Integration and Delivery</h1> 
-    <p>In this section we analyze the setup of the CI/CD, in particular the workflows used in the pipeline implementation.</p> 
-    <p>The pipeline is structured as follows: the first stage is the <code>build</code> stage, which is responsible for building the project and running the tests. The second stage is the <code>deploy</code> stage, which is responsible for deploying the artifacts like jars and docker images. The <code>deploy</code> job is executed only if the <code>build</code> job is successful. The <code>build</code> job further consists of multiple steps: the quality assurance in which <code>wartremover</code>, <code>scalafix</code> and <code>scalafmt</code> are executed; the test of the project; the coverage report generation and the build of the documentation site. The <code>deploy</code> job is executed only if the <code>build</code> job is successful and the workflow runs on the <code>main</code> branch and is not a pull request. This job is intended to release the jars to Maven Central and build, for each project, a docker image to push to the Docker Hub; to achieve this, a <em>GitHub Action</em> was made. This GitHub Action configures a Java/Scala environment, setup <code>semantic-release</code> if enabled, and then runs the commands to make a release. For further information about the <code>scala-release</code> action, please visit the <a href="https://github.com/atedeg/scala-release">action page's repository</a>.</p> 
-    <p>The documentation site is published in another workflow, which is triggered when the <code>Build Test and deploy</code> workflow is completed. This workflow is responsible for building the documentation site and publishing it to the <code>gh-pages</code> branch. The fact that the publication of the site is on a different workflow is because we want to publish it by assigning the correct project version, and we do not want to publish it only against a project release but also following changes to the project documentation. This behavior can be achieved by defining a dependency between the two workflows, as shown in the following snippet:</p> 
+    <p>In this section we analyze the setup of the CI/CD pipeline we used.</p> 
+    <p>The pipeline is structured in the following jobs:</p> 
+    <ul> 
+     <li> <p>The <code>build</code> job, which is responsible for building the project and running the tests. It is composed of different steps:</p> 
+      <ul> 
+       <li><code>quality assurance</code>, in which <code>wartremover</code>, <code>scalafix</code> and <code>scalafmt</code> are executed</li> 
+       <li><code>test</code>, in which all the tests are executed and the coverage report is generated</li> 
+       <li><code>build site</code>, in which the documentation site is built</li> 
+      </ul> </li> 
+     <li> <p>The <code>deploy</code> job, which is responsible for deploying the artifacts like jars and Docker images. It only runs if the <code>build</code> job is successful and the workflow is running on the <code>main</code> branch and not in a pull request</p> </li> 
+    </ul> 
+    <p>The documentation site is published in another workflow, which is triggered when the previous one is completed. This workflow is responsible for building the documentation site and publishing it to the <code>gh-pages</code> branch. This behavior can be achieved by defining a dependency between the two workflows, as shown in the following snippet:</p> 
     <div class="snippet"> 
      <pre><code class="language-yaml">on:
   workflow_run:
@@ -20,7 +29,8 @@
       - completed
 </code></pre> 
     </div> 
-    <p>In this way after the <code>Build test and deploy</code> workflow is completed, the <code>Publish site</code> workflow is triggered and the site is published using the last git tag as the project version.</p> 
+    <p>In this way after the <code>Build test and deploy</code> workflow is completed, the <code>Publish site</code> workflow is triggered and the site is published using the last Git tag as the project version.</p> 
+    <p>The site publication is in a different workflow because we want to publish it by assigning the correct project version, and we want to be able to update and publish it independently from the release of new versions of the developed software.</p> 
     <p>The following diagram shows the pipeline structure:</p> 
     <div class="snippet"> 
      <pre><code class="language-mermaid">flowchart LR
@@ -39,6 +49,9 @@
    </section>
    <section id="pipeline-optimizations"> 
     <h2><a href="#pipeline-optimizations" class="anchor"></a>Pipeline optimizations</h2> 
+    <p>In order to cut down the time required for the CI to complete (which was roughly 10 minutes), we parallelized different steps that could be performed independently. The resulting pipeline has five independent jobs: the three quality assurance commands we described earlier (<code>scalafmt</code>, <code>scalafix</code>, <code>wartremover</code>) are no longer executed sequentially; the remaining two jobs are responsible for the unit testing and site build.</p> 
+    <p>With this new pipeline we managed to almost halve the CI times.</p> 
+    <p>The following diagram shows the structure of the new pipeline:</p> 
     <div class="snippet"> 
      <pre><code class="language-mermaid">flowchart LR
   subgraph AA[Build Test and Deploy]
@@ -65,17 +78,33 @@
   AA --&gt; BB
 </code></pre> 
     </div>
+   </section>
+   <section id="the-scala-release-action"> 
+    <h2><a href="#the-scala-release-action" class="anchor"></a>The <code>scala-release</code> action</h2> 
+    <p>We realized that the release process was almost always identical in many different projects we developed. That is why we decided to refactor those steps into a configurable action. It configures a Java/Scala environment, sets up <code>semantic-release</code> if enabled, and then runs the commands to make a release that can also be customized via a property. For further information about the <code>scala-release</code> action, visit the <a href="https://github.com/atedeg/scala-release">action page's repository</a>.</p> 
    </section> 
    <nav class="arrows-wrapper" aria-label="Page navigation"> <a rel="prev" href="quality-assurance.html" class="arrows previous" aria-keyshortcuts="Left"> <span>Quality Assurance</span> <i class="fa fa-angle-left" aria-hidden="true"></i> </a> <a rel="next" href="../licence.html" class="arrows next" aria-keyshortcuts="Right"> <span>Licence</span> <i class="fa fa-angle-right" aria-hidden="true"></i> </a> 
    </nav> 
   </div> 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js" integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
-</script> 
+    </script> 
   <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
  </body>
-</html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#continuous-integration-and-delivery">Continuous Integration and Delivery</a><ul><li><a href="#pipeline-optimizations">Pipeline optimizations</a></li></ul></li></ul></nav></div></div></body></html>
+</html></div></main><footer><div id="generated-by"><span class="footer-text">Generated by</span><a href="https://github.com/lampepfl/dotty/tree/master/scaladoc"><img src="../../images/scaladoc_logo.svg" alt="scaladoc" class="scaladoc_logo"></img><img src="../../images/scaladoc_logo_dark.svg" alt="scaladoc" class="scaladoc_logo_dark"></img></a></div><span id="footer-text">Made with ❤ by Giacomo, Nicolas, Nicolò, Linda</span><div class="socials"><span class="footer-text"></span></div><div class="mode"><span class="footer-text">Mode</span><label id="theme-toggle" class="switch"><input type="checkbox"></input><span class="slider"></span></label></div><span class="go-to-top-icon"><a href="#container"><span class="icon-vertical_align_top"></span><span class="footer-text">Back to top</span></a></span></footer></div><div id="toc"><span class="toc-title">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#continuous-integration-and-delivery">Continuous Integration and Delivery</a><ul><li><a href="#pipeline-optimizations">Pipeline optimizations</a></li><li><a href="#the-scala-release-action">The scala-release action</a></li></ul></li></ul></nav></div></div></body></html>
