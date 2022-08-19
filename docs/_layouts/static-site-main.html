@@ -20,13 +20,24 @@ layout: base
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js"
-        integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer">
-</script>
+    integrity="sha512-jOk8b3W3aB8pr2T+mTHuffpzISAo8cYfOPkOpMIQZCSm/vH4Bn4efY/phVZsNZLMTsl4prvxO0jDt7fqyLgEuQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
 <script>mermaid.initialize({
-    logLevel: "error",
-    securityLevel: "loose",
-    theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base"
-});
+        logLevel: "error",
+        securityLevel: "loose",
+        theme: document.querySelector('html').classList.contains("theme-dark") ? "dark" : "base",
+        themeVariables: {
+            'git0': '#ff3c3e',
+            'git1': '#f9b59c',
+            'git2': '#8de0d8',
+            'git3': '#fca55f',
+            'git4': '#55303e',
+            'gitBranchLabel0': '#000000',
+            'gitBranchLabel1': '#000000',
+            'gitBranchLabel2': '#000000',
+            'gitBranchLabel3': '#000000',
+            'gitBranchLabel4': '#ffffff',
+        }
+    });
 </script>
