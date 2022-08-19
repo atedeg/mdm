@@ -131,7 +131,7 @@ tables:
       - class: "pricing.PriceInEuroCents"
       - class: "pricing.Client"
       - class: "pricing.ClientID"
-        name: "Client id"
+        name: "Client ID"
       - class: "pricing.Promotion"
       - case: "pricing.PromotionLine.Fixed"
         name: "Fixed promotion line"
