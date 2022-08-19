@@ -5,18 +5,18 @@ layout: static-site-main
 
 # Continuous Integration and Delivery
 
-In this section we analyze the setup of the CI/CD, in particular the workflows used in the pipeline implementation.
+In this section we analyze the setup of the CI/CD pipeline we used.
 
 The pipeline is structured in the following jobs:
 
-- The `build` job which is responsible for building the project and running the tests. It is composed
+- The `build` job, which is responsible for building the project and running the tests. It is composed
   of different steps:
 
-  - `quality assurance` in which `wartremover`, `scalafix` and `scalafmt` are executed
-  - `test` in which all the tests are executed and the coverage report is generated
-  - `build site` in which the documentation site is built
+  - `quality assurance`, in which `wartremover`, `scalafix` and `scalafmt` are executed
+  - `test`, in which all the tests are executed and the coverage report is generated
+  - `build site`, in which the documentation site is built
 
-- The `deploy` job which is responsible for deploying the artifacts like jars and docker images.
+- The `deploy` job, which is responsible for deploying the artifacts like jars and Docker images.
   It only runs if the `build` job is successful and the workflow is running on the `main` branch and
   not in a pull request
 
@@ -33,7 +33,8 @@ on:
       - completed
 ```
 
-In this way after the `Build test and deploy` workflow is completed, the `Publish site` workflow is triggered and the site is published using the last git tag as the project version.
+In this way after the `Build test and deploy` workflow is completed, the `Publish site` workflow is triggered
+and the site is published using the last Git tag as the project version.
 
 The site publication is in a different workflow because we want to publish it by assigning the correct
 project version, and we want to be able to update and publish it independently from the release of new versions of the developed software.
@@ -56,9 +57,9 @@ flowchart LR
 
 ## Pipeline optimizations
 
-In order to cut down on our GitHub Action minutes usage we parallelized different steps that could be
-performed independently.
-The resulting pipeline has 5 independent jobs: the three quality assurance commands we described earlier
+In order to cut down the time required for the CI to complete (which was roughly 10 minutes),
+we parallelized different steps that could be performed independently.
+The resulting pipeline has five independent jobs: the three quality assurance commands we described earlier
 (`scalafmt`, `scalafix`, `wartremover`) are no longer executed sequentially; the remaining two jobs
 are responsible for the unit testing and site build.
 
