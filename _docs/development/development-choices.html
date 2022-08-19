@@ -146,7 +146,7 @@
     <ul> 
      <li>It integrates nicely with the <a href="https://typelevel.org/cats/">cats</a> library allowing us to keep writing monadic code using the <code>IO</code> monad</li> 
      <li>It makes it possible to declaratively describe an endpoint and its associated route in a type-safe way</li> 
-     <li>It automatically generates the <a href="https://openapi.it/">OpenAPI</a> specification and enables a <a href="https://swagger.io/">Swagger</a> endpoint</li> 
+     <li>It automatically generates the <a href="https://www.openapis.org/">OpenAPI</a> specification and enables a <a href="https://swagger.io/">Swagger</a> endpoint</li> 
     </ul> 
     <p>After providing a declarative description of the API, implementing the server is as simple as providing a function with the described input and output using the <code>IO</code> monad. Therefore, we described the server logic using functions parametrized on any monad that can perform IO operations. This had the added benefit of allowing us to easily test the server logic mocking all the accesses to the database.</p> 
    </section> 
