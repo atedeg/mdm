@@ -9,7 +9,7 @@ layout: static-site-main
 
 Given the complexity of the domain, it was decided to use [Event Storming](https://www.eventstorming.com)
 to become familiar with the terminologies and workflows typical of the domain.
-The adoption of this activity was also justified by having real domain experts available to explain us the
+The adoption of this activity was also justified by having real domain experts available to explain to us the
 current business processes.
 In addition, using this approach it was possible to bring together managers from different areas,
 who collaborated to correctly define the dynamics and problems concerning their communication.
@@ -17,7 +17,7 @@ who collaborated to correctly define the dynamics and problems concerning their 
 ## The Process
 
 We first held an Event Storming session with three domain experts working in the Mambelli cheese factory:
-Raffaella, the owner and responsible for the planning; Gianluca, the person responsible for the correct
+Raffaella, the owner and responsible for the planning; Gianluca, the person responsible for the correct 
 handling of client orders; and Mattia, a cheese maker, in charge of the production of the cheese.
 
 All the experts were kind enough to give us an hour of their time and gladly shared their knowledge and
@@ -26,7 +26,7 @@ less than an hour.
 
 ![Event Storming Video](images/eventStormingVideo.gif)
 
-We found Event Storming to be a refreshing way to approach domain modeling;
+We found Event Storming to be a refreshing way to approach domain modelling;
 the experts were immediately engaged by the playfulness of the process and time flew by as we deepened
 our knowledge of the domain. It also was a great way to understand how the different
 domain experts interacted with each other and what were the pain points they wish they could improve.

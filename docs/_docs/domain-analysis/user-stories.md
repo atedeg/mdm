@@ -4,7 +4,7 @@ layout: static-site-main
 ---
 
 # User stories
-During our event storming session we discussed with the domain experts and Raffaella
+During our event storming session, we discussed with the domain experts and Raffaella
 (the factory owner). After sketching out the main subdomains, we came up with this set of user
 stories:
 
