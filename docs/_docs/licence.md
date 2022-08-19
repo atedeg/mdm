@@ -1,8 +1,10 @@
 ---
 title: Licence
+layout: static-site-main
 ---
 
 # Licence
+
 In a realistic scenario we would have opted for a closed project. However, for academic purposes,
 we decided to keep the project open; this way we could
 [freely use GitHub Actions](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
