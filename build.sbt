@@ -11,7 +11,7 @@ ThisBuild / Docker / dockerUsername := Some("atedeg")
 
 ThisBuild / ubidoc / targetDirectory := baseDirectory.value / "_includes"
 ThisBuild / ubidoc / lookupDirectory := target.value / "site"
-// ThisBuild / ubidoc / linkSolver := (link => s"../../$link")
+ThisBuild / ubidoc / linkSolver := (link => s"../../$link")
 
 ThisBuild / developers := List(
   Developer(
