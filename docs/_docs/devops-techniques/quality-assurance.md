@@ -14,7 +14,7 @@ across the entire code base, helping the team to have a uniform code style.
 
 The tool is available via an [sbt plugin](https://github.com/scalameta/sbt-scalafmt)
 that provides several tasks to format the code or check if the code is formatted properly.
-Specifically, the `scalaftmCheckAll` task is used in CI/CD to check if the pushed code is formatted
+Specifically, the `scalafmtCheckAll` task is used in CI/CD to check if the pushed code is formatted
 properly; in the case of unformatted code, the workflow fails to prevent the merging of unformatted
 code.
 
@@ -36,7 +36,7 @@ For more details about the rules we used, please take a look at the
 
 ## Wartremover
 
-[Wartremover](https://www.wartremover.org/), as stated in its site, helps scala developers
+[Wartremover](https://www.wartremover.org/), as stated in its site, helps Scala developers
 write safe and correct software by removing some of the language’s nastier features.
 
 Initially, we agreed on using all the built-in warts; however, during the development, we
@@ -61,9 +61,9 @@ problematic code.
 
 Regarding code coverage, it was initially decided to use
 [Scoverage](https://github.com/scoverage/scalac-scoverage-plugin).
-However, for Scala 3 it is still not fully compatible: the use of Scala 3.2.0-RC1 or higher is
-mandatory.
-We tried using  Scala 3.2.0-RC2; however, Scoverage kept crashing badly, apparently due to its
+However, it is still not fully compatible with Scala 3 yet: the use of Scala 3.2.0-RC1 or higher is
+required.
+We tried using  Scala 3.2.0-RC2; however, Scoverage kept crashing, apparently due to its
 current lack of support for macros.
 
 For convenience, we fell back to JaCoCo, which despite not being designed to operate directly with
