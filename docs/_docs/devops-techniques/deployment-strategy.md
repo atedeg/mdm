@@ -4,12 +4,14 @@ layout: static-site-main
 ---
 
 # Deployment Strategy
+
 A good deployment strategy is crucial for the success of a project.
 We decided to adopt a continuous release strategy: this implied having a robust test suite,
 an adequate DVCS workflow and tools to automate the releases.
 
 ## Adopted DVCS workflow
-The DVCS workflow we adopted is quite similar to `git-flow` but with substantial changes:
+
+The DVCS workflow we adopted is quite similar to `git-flow` but with some changes:
 we use the `feature` branch as intended, with each feature well-isolated and defined.
 Moreover, we used a `beta` branch to publish a non-stable version of the software; this can be
 quite handy as it generates pre-releases that can be beta-tested before releasing a stable version.
@@ -62,7 +64,9 @@ gitGraph
 ```
 
 ## Tools to automate the release
+
 ### Conventional Commits
+
 We decide to adopt [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) as the
 convention for commit messages.
 It's a lightweight convention on top of commit messages which provides a simple set of rules for
@@ -92,6 +96,7 @@ For more information see the
 > reflecting all the gradle plugin's functionalities.
 
 ### Semantic release
+
 Assigning versions to code can be a controversial activity.
 People often assign versions based on intuition, wrong assumptions or, even worse, randomly.
 In this regard, the [SemVer](https://semver.org/) standard is fundamental to have some shared
@@ -115,7 +120,7 @@ Strictly following the SemVer specification, there is no longer room for human i
 assigning version numbers that are determined automatically and can reliably and consistently
 communicate the impact of changes to consumers.
 This tool, in addition to automatically determining the version to be assigned, can generate
-(and update) the `CHANGELOG` file reporting in an organized manner all the changes made in the
+(and update) the `CHANGELOG` file, reporting in an organized manner all the changes made in the
 various versions; it also interacts nicely with GitHub issues and PRs by creating comments concerning the
 releases made.
 
@@ -124,6 +129,7 @@ solely on project development without worrying about these easy-to-automate task
 minimizing the possibility of errors.
 
 ### The final release workflow
+
 Our workflow concerning semantic release is organized in the following steps:
 
 1. The [`commit-analyzer`](https://github.com/semantic-release/commit-analyzer) plugin analyzes the
@@ -132,7 +138,7 @@ Our workflow concerning semantic release is organized in the following steps:
 2. The [`release-notes-generator`](https://github.com/semantic-release/release-notes-generator)
    plugin generates the changelog with the changes since the last tag
 3. The [`changelog`](https://github.com/semantic-release/changelog) plugin updates the
-   `CHANGELOG.md` file in the repo with the changelog generated at the step above
+   `CHANGELOG` file in the repo with the changelog generated at the step above
 4. With the [`exec`](https://github.com/semantic-release/exec) plugin we specify the commands needed
    to publish all the artefacts and the
    documentation site
@@ -140,11 +146,11 @@ Our workflow concerning semantic release is organized in the following steps:
      [_Maven Central_](https://search.maven.org/search?q=dev.atedeg.mdm)
    - The second command generates the documentation site
    - The third command publishes the `Dockerfile` of each subproject to
-     [Docker Hub](https://hub.docker.com/)
-5. The [`git`](https://github.com/semantic-release/git) plugin pushes the updated `CHANGELOG.md`
+     [Docker Hub](https://hub.docker.com/search?q=atedeg)
+5. The [`git`](https://github.com/semantic-release/git) plugin pushes the updated `CHANGELOG`
    into the repo
 6. The [`github`](https://github.com/semantic-release/github) plugin generates the release and
-   comments the issues closed since the last tag
+   comments the PRs and issues closed since the last tag
 
 For the full workflow specification take a look at the file
 [`.releaserc.yml`](https://github.com/atedeg/mdm/blob/main/.releaserc.yml).
