@@ -42,7 +42,8 @@ final case class Client(code: ClientID)
 final case class ClientID(id: UUID)
 
 /**
- * A promotion for a [[Client client]], with an expiry date, containing promotion lines for some products.
+ * A promotion for a [[Client client]], with an expiry date, containing
+ * [[PromotionLine promotion lines]] for some [[Product products]].
  */
 final case class Promotion(client: Client, expiryDate: LocalDateTime, lines: NonEmptyList[PromotionLine])
 
@@ -51,7 +52,8 @@ final case class Promotion(client: Client, expiryDate: LocalDateTime, lines: Non
  */
 enum PromotionLine(val product: Product):
   /**
-   * This promotion line specifies the discounted product and how much to discount it by.
+   * This promotion line specifies the discounted [[Product product]] and
+   * [[DiscountPercentage how much to discount it by]].
    *
    * Every order line which contains the product is discounted by the specified amount.
    *
@@ -61,7 +63,8 @@ enum PromotionLine(val product: Product):
   case Fixed(override val product: Product, discount: DiscountPercentage) extends PromotionLine(product)
 
   /**
-   * This promotion line specifies the discounted product, the threshold and how much to discount it by.
+   * This promotion line specifies the discounted [[Product product]],
+   * the [[ThresholdQuantity threshold]] and [[DiscountPercentage how much to discount it by]].
    *
    * Only the products above the threshold are discounted; the other ones are at full price.
    *

@@ -39,7 +39,7 @@ enum Production:
   case InProgress(ID: ProductionID, productInProduction: Product, unitsInProduction: NumberOfUnits)
 
   /**
-   * A [[Production production]] that ended, it has a [[BatchID lot number]] and specifies the [[Product product]]
+   * A [[Production production]] that ended, it has a [[BatchID batch ID]] and specifies the [[Product product]]
    * that was produced and in the [[NumberOfUnits units]] produced.
    */
   case Ended(ID: ProductionID, batchID: BatchID, producedProduct: Product, producedUnits: NumberOfUnits)
