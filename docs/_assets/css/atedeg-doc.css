@@ -293,6 +293,7 @@ header {
 
 img#clean-arch {
     content: var(--clean-arch);
+    padding: 0;
 }
 
 img#event-storming {
