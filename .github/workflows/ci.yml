@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3.4.1
         with:
           distribution: 'temurin'
-          java-version: '17.0.3'
+          java-version: '17.0.4'
           cache: 'sbt'
 
       - name: Wartremover checks
@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-java@v3.4.1
         with:
           distribution: 'temurin'
-          java-version: '17.0.3'
+          java-version: '17.0.4'
           cache: 'sbt'
 
       - name: Scalafix checks
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-java@v3.4.1
         with:
           distribution: 'temurin'
-          java-version: '17.0.3'
+          java-version: '17.0.4'
           cache: 'sbt'
 
       - name: Scalafix checks
@@ -71,7 +71,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        java: ['17.0.3']
+        java: ['17.0.4']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch
@@ -99,7 +99,7 @@ jobs:
           echo "::set-output name=scala-version::$SCALA_VERSION" 
 
       - name: Publish coverage report
-        if: ${{ matrix.os }} == 'ubuntu-22.04' && ${{ matrix.java-version }} == '17.0.3' # Find a better solution instead hardcoded versions
+        if: ${{ matrix.os }} == 'ubuntu-22.04' && ${{ matrix.java-version }} == '17.0.4' # Find a better solution instead hardcoded versions
         uses: codecov/codecov-action@v3.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -119,7 +119,7 @@ jobs:
         uses: actions/setup-java@v3.4.1
         with:
           distribution: 'temurin'
-          java-version: '17.0.3'
+          java-version: '17.0.4'
           cache: 'sbt' 
 
       - name: Build docsite
@@ -153,7 +153,7 @@ jobs:
       - name: Release
         uses: atedeg/scala-release@v1.0.3
         with:
-          java-version: "17.0.3"
+          java-version: "17.0.4"
           pgp-secret: ${{ secrets.PGP_SECRET }}
           pgp-passphrase: ${{ secrets.PGP_PASSPHRASE }}
           sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
