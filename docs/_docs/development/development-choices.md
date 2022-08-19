@@ -4,12 +4,15 @@ layout: static-site-main
 ---
 
 # Development choices
-As described in the ["architecture" section](...) we decided to adopt an hexagonal architecture for our microservices.
-In this section we are going to describe some of the more relevant choices we made when implementing this architecture,
-both from core domain and application layer perspective.
+
+In this section we are going to describe some of the more relevant choices we made when implementing the
+clean architecture described in the previous chapter, both from core domain and application layer
+perspective.
 
 ## Core Domain
+
 ### Domain Modelling Approach
+
 While we were furthering our knowledge to better approach the development of the project we stumbled
 upon a very interesting [talk](https://www.youtube.com/watch?v=2JB1_e5wZmU) by Scott Wlaschin and
 later read the book [_"Domain Modelling Made Functional"_](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/).
@@ -24,8 +27,9 @@ with the domain experts to get precious feedback we could easily use to rework o
 language on the spot.
 
 ### Action modelling through monads
+
 All core domain actions take advantage of a _monadic encoding of side effects,_ ranging from failure
-with an exception, to emitting events to reading an immutable global state.
+with an exception, to emitting events, to reading an immutable global state.
 
 Using monads to model side effects proved useful in three distinct ways:
 
@@ -34,11 +38,11 @@ Using monads to model side effects proved useful in three distinct ways:
   Moreover, these functions expose the side effects they can perform in their type signature making
   it _impossible for the programmer to forget to handle them_
 - By reifying side effects as data we were able to _easily test_ the core behaviour of our system
-- This approach is a _good fit to implement the hexagonal architecture:_ all the core logic is pure
+- This approach is a _good fit to implement the clean architecture:_ all the core logic is pure
   and does not perform any kind of IO
   ([_dependency rejection_](https://blog.ploeh.dk/2017/01/27/from-dependency-injection-to-dependency-rejection/))
   while all necessary dependencies are injected as simple parameters or in the reader monad.
-  Following this discipline makes a hexagonal architecture emerge quite naturally
+  Following this discipline makes a clean architecture emerge quite naturally
 
 > A code example from our codebase:
 >
@@ -60,12 +64,14 @@ Using monads to model side effects proved useful in three distinct ways:
 > sequence of small actions to obtain more complex behaviour.
 
 ### Make illegal states unrepresentable
+
 Before starting the development of the project we also decided to fully embrace the
 _"make illegal states unrepresentable"_ philosophy while leveraging the features the Scala's
 type system could offer.
 First of all, according to the DDD principles, all domain elements are modelled using appropriate
 data structures to wrap primitive types.
-We also used Scala 3's ADTs to model effectively the domain's concepts and constraints:
+We also used [Scala 3's ADTs](https://docs.scala-lang.org/scala3/book/types-adts-gadts.html)
+to model effectively the domain's concepts and constraints:
 
 ```scala
 // A batch of cheese that can either be aging or ready for quality assurance
@@ -134,6 +140,7 @@ The main advantages we obtained from this approach were:
 ## Application Layer
 
 ### DTOs
+
 The DTOs play a fundamental role in interacting with external microservices and the persistence layer.
 However, the code to convert a DTO to a domain model object and vice-versa is often trivial and follows a
 simple pattern that lends itself to being automatically generated via meta-programming.
@@ -159,8 +166,8 @@ consider the following example:
 > final case class ProductToProduceDTO(product: ProductDTO, units: Int)
 > ```
 >
-> The DTOs closely mirror the case class structure but only use easy-to-serialize data like primitive types,
-> simple collection types or other DTOs.
+> The DTOs closely mirror the case class structure but only use easy-to-serialize primitive types,
+> simple collections or other DTOs.
 > The encoding/decoding code would simply encode/decode each individual field recursively using the
 > appropriate `DTO` instances. The code would repeat in the exact same way for each domain case class:
 >
@@ -182,15 +189,16 @@ consider the following example:
 > 3's meta programming capabilities:
 >
 > ```scala
-> given DTO[DomainCaseClass, DTOCaseClass] = interCaseClassDTO
+> given DTO[DomainCaseClass, DTOCaseClass] = productTypeDTO
 > ```
 
 ### HTTP API
+
 Some bounded contexts required implementing an HTTP API, we decided to leverage
 the [tapir](https://tapir.softwaremill.com/en/latest/) library.
 It provided many useful features:
 
-- It integrates nicely with the [`cats`](https://typelevel.org/cats/) library
+- It integrates nicely with the [cats](https://typelevel.org/cats/) library
   allowing us to keep writing monadic code using the `IO` monad
 - It makes it possible to declaratively describe an endpoint and its associated
   route in a type-safe way
