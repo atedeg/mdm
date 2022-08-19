@@ -10,8 +10,8 @@ layout: static-site-main
   `MilkPlanning` and `ProductionPlanning` are downstream *core domains* so it's necessary to insert an *Anti-Corruption Layer* between them and `ClientOrders`.
   Moreover, `ClientOrders` is going to be a *generic* bounded context, as reported in the Core Domain Chart.
 - `MilkPlanning [D, ACL]  <- [U] Restocking`  
-  `MilkPlanning` asks to `Restocking` the remaining quantity of milk and informs `Restocking` to place an order for the required amount of milk.
-  In addition it asks to `Restocking` the quantity of milk used in the previous year.
+  `MilkPlanning` asks `Restocking` the remaining quantity of milk and informs `Restocking` to place an order for the required amount of milk.
+  In addition it asks `Restocking` the quantity of milk used in the previous year.
   `MilkPlanning` is a downstream core domain since `Restocking` provides a service to it and the latter is going to be a generic bounded context, as
   reported in the Core Domain Chart. For all these reasons `MilkPlanning` has an Anti-Corruption Layer on its side.
 - `ClientOrders [D, CF] <- [U] Pricing`  
@@ -40,11 +40,11 @@ layout: static-site-main
   Since `MilkPlanning` is a downstream core bounded context, and Anti-Corruption Layer is required.
 
 There is a *Shared Kernel* among the bounded contexts which contains the definitions for **product**, **cheese type** and **ingredient**.
-This choice was taken as the two aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
+This choice was taken as the three aforementioned concepts are crucial for the cheese factory and a change in any of the definitions must be reflected in all
 bounded contexts handling these concepts.
 In fact, adding a new kind of product involves a series of important domain changes that must be reflected in the code of different bounded contexts:
 the production, ordering, labeling and stocking processes would need a rehaul to take into account the new kind of product.
 By sharing this information among different bounded contexts it is guaranteed that, whenever a change happens to any of these concepts, all the domains
-will maintain an up-to-date vision of these concepts.
+will maintain an up-to-date vision.
 
 <img id="context-map" alt="Context map" src="#"/>
