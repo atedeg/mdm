@@ -20,7 +20,7 @@ This sparked a keen interest in the topic and convinced us to carry out the proj
 fully functional approach.
 
 All domain concepts are modelled using bare-bone enums and case classes; every action dealing with
-these entities is either defined as simple functions or as extension methods.
+these entities is either defined as a simple function or as an extension method.
 This allowed us to have _self-contained, clutter-free_ and _simple_ files containing all the
 definitions of the main domain concepts; this way, we were able to skim through these files along
 with the domain experts to get precious feedback we could easily use to rework our ubiquitous
