@@ -4,23 +4,25 @@ layout: static-site-main
 ---
 
 # Continuous Integration and Delivery
+
 In this section we analyze the setup of the CI/CD, in particular the workflows used in the pipeline implementation.
 
-The pipeline is structured as follows: the first stage is the `build` stage, which is responsible for building the project and running the tests.
-The second stage is the `deploy` stage, which is responsible for deploying the artifacts like jars and docker images.
-The `deploy` job is executed only if the `build` job is successful.
-The `build` job further consists of multiple steps: the quality assurance in which `wartremover`, `scalafix` and `scalafmt` are executed; the test of
-the project; the coverage report generation and the build of the documentation site.
-The `deploy` job is executed only if the `build` job is successful and the workflow runs on the `main` branch and is not a pull request.
-This job is intended to release the jars to Maven Central and build, for each project, a docker image to push to the Docker Hub; to achieve this,
-a _GitHub Action_ was made. This GitHub Action configures a Java/Scala environment,
-setup `semantic-release` if enabled, and then runs the commands to make a release. For further information about the `scala-release` action, please
-visit the [action page's repository](https://github.com/atedeg/scala-release).
+The pipeline is structured in the following jobs:
 
-The documentation site is published in another workflow, which is triggered when the `Build Test and deploy` workflow is completed.
-This workflow is responsible for building the documentation site and publishing it to the `gh-pages` branch.
-The fact that the publication of the site is on a different workflow is because we want to publish it by assigning the correct
-project version, and we do not want to publish it only against a project release but also following changes to the project documentation.
+- The `build` job which is responsible for building the project and running the tests. It is composed
+  of different steps:
+
+  - `quality assurance` in which `wartremover`, `scalafix` and `scalafmt` are executed
+  - `test` in which all the tests are executed and the coverage report is generated
+  - `build site` in which the documentation site is built
+
+- The `deploy` job which is responsible for deploying the artifacts like jars and docker images.
+  It only runs if the `build` job is successful and the workflow is running on the `main` branch and
+  not in a pull request
+
+The documentation site is published in another workflow, which is triggered when the previous one is
+completed. This workflow is responsible for building the documentation site and publishing it to the
+`gh-pages` branch.
 This behavior can be achieved by defining a dependency between the two workflows, as shown in the following snippet:
 
 ```yaml
@@ -31,8 +33,10 @@ on:
       - completed
 ```
 
-In this way after the `Build test and deploy` workflow is completed, the `Publish site` workflow is triggered and the site is published using
-the last git tag as the project version.
+In this way after the `Build test and deploy` workflow is completed, the `Publish site` workflow is triggered and the site is published using the last git tag as the project version.
+
+The site publication is in a different workflow because we want to publish it by assigning the correct
+project version, and we want to be able to update and publish it independently from the release of new versions of the developed software.
 
 The following diagram shows the pipeline structure:
 
@@ -51,6 +55,17 @@ flowchart LR
 ```
 
 ## Pipeline optimizations
+
+In order to cut down on our GitHub Action minutes usage we parallelized different steps that could be
+performed independently.
+The resulting pipeline has 5 independent jobs: the three quality assurance commands we described earlier
+(`scalafmt`, `scalafix`, `wartremover`) are no longer executed sequentially; the remaining two jobs
+are responsible for the unit testing and site build.
+
+With this new pipeline we managed to almost halve the CI times.
+
+The following diagram shows the structure of the new pipeline:
+
 ```mermaid
 flowchart LR
   subgraph AA[Build Test and Deploy]
@@ -76,3 +91,12 @@ flowchart LR
 
   AA --> BB
 ```
+
+## The `scala-release` action
+
+We realized that the release process was almost always identical in many different projects we developed.
+That is why we decided to refactor those steps into a configurable action.
+It configures a Java/Scala environment, sets up `semantic-release` if enabled, and then runs the commands
+to make a release that can also be customized via a property.
+For further information about the `scala-release` action,
+visit the [action page's repository](https://github.com/atedeg/scala-release).
