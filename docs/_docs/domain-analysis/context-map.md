@@ -4,14 +4,15 @@ layout: static-site-main
 ---
 
 # Context Map
+
 - `MilkPlanning [D, ACL] <- [U] ClientOrders` and `ProductionPlanning [D, ACL] <- [U] ClientOrders`  
   `ClientOrders` sends a message to `MilkPlanning` and `ProductionPlanning` to inform a new order was received.
   `MilkPlanning` and `ProductionPlanning` are downstream *core domains* so it's necessary to insert an *Anti-Corruption Layer* between them and `ClientOrders`.
   Moreover, `ClientOrders` is going to be a *generic* bounded context, as reported in the Core Domain Chart.
 - `MilkPlanning [D, ACL]  <- [U] Restocking`  
   `MilkPlanning` asks to `Restocking` the remaining quantity of milk and informs `Restocking` to place an order for the required amount of milk.
-  In addition it asks to `Restocking` the quantity of milk used in the previous year. 
-  `MilkPlanning` is a downstream core domain since `Restocking` provides a service to it and the latter is going to be a generic bounded context, as 
+  In addition it asks to `Restocking` the quantity of milk used in the previous year.
+  `MilkPlanning` is a downstream core domain since `Restocking` provides a service to it and the latter is going to be a generic bounded context, as
   reported in the Core Domain Chart. For all these reasons `MilkPlanning` has an Anti-Corruption Layer on its side.
 - `ClientOrders [D, CF] <- [U] Pricing`  
   `Pricing` computes for `ClientOrders` the price of each order line.
@@ -46,4 +47,4 @@ the production, ordering, labeling and stocking processes would need a rehaul to
 By sharing this information among different bounded contexts it is guaranteed that, whenever a change happens to any of these concepts, all the domains
 will maintain an up-to-date vision of these concepts.
 
-![Context Map](images/contextMap.svg)
+<img id="context-map" alt="Context map" src="#"/>
