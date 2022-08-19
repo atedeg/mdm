@@ -11,7 +11,7 @@ To determine the ingredients to use for a production the dairyman uses a
 recipe book where, for each type of cheese, there is a recipe.
 A recipe specifies the quintals of each ingredient needed to produce a quintal of the given type of
 cheese.
-> _e.g._ The recipe for a quintal of ricotta requires 1.5 quintals of milk
+> _e.g._ The recipe for a quintal of ricotta requires 1.5 quintals of milk,
 > a tenth of quintal of rennet and a tenth of quintal of salt
 
 Once the appropriate recipe is chosen the production can start by retrieving the
