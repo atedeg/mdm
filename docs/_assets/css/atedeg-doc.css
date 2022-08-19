@@ -278,14 +278,14 @@ header {
 }
 
 :root {
-    --clean-arch: url(../images/cleanArchitecture.svg);
+    --clean-arch: url(../images/clean-architecture-light.svg);
     --event-storming: url(../images/eventStorming.svg);
     --core-domain-chart: url(../images/core-domain-chart-light.svg);
     --context-map: url(../images/context-map-light.svg);
 }
 
 :root.theme-dark {
-    --clean-arch: url(../images/cleanArchitecture_dark.svg);
+    --clean-arch: url(../images/clean-architecture-dark.svg);
     --event-storming: url(../images/eventStorming_dark.svg);
     --core-domain-chart: url(../images/core-domain-chart-dark.svg);
     --context-map: url(../images/context-map-dark.svg);
