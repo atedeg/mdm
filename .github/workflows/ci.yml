@@ -21,7 +21,7 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.4.1
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17.0.3'
           cache: 'sbt'
 
@@ -40,7 +40,7 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.4.1
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17.0.3'
           cache: 'sbt'
 
@@ -59,7 +59,7 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.4.1
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17.0.3'
           cache: 'sbt'
 
@@ -82,7 +82,7 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.4.1
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
           cache: 'sbt'
 
@@ -118,7 +118,7 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.4.1
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17.0.3'
           cache: 'sbt' 
 
