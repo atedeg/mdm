@@ -310,3 +310,7 @@ img#core-domain-chart {
 img#context-map {
     content: var(--context-map);
 }
+
+.mermaid.text-center>svg {
+    width: 100%;
+}
