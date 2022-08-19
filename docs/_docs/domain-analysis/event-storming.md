@@ -6,6 +6,7 @@ layout: static-site-main
 # Event Storming
 
 ## Motivations
+
 Given the complexity of the domain, it was decided to use [Event Storming](https://www.eventstorming.com)
 to become familiar with the terminologies and workflows typical of the domain.
 The adoption of this activity was also justified by having real domain experts available to explain us the
@@ -14,6 +15,7 @@ In addition, using this approach it was possible to bring together managers from
 who collaborated to correctly define the dynamics and problems concerning their communications.
 
 ## The Process
+
 We first held an Event Storming session with three domain experts working in the Mambelli cheese factory:
 Raffaella, the owner and responsible for the planning; Gianluca, the responsible for the correct
 handling of client orders; and Mattia, a cheese maker, responsible for the production of the cheese.
@@ -36,6 +38,7 @@ phases of development when we had to define more precisely the ubiquitous langua
 bounded contexts.
 
 ## Subdomains
+
 These are the subdomains that emerged from the Event Storming process:
 
 - **Production Planning**: creates the daily production plan
@@ -59,7 +62,8 @@ The following considerations were made:
   considered as *supporting subdomains*
 
 We gathered these pieces of information and compiled the following core domain chart:
-![Core domain chart](images/core-domain-chart.png)
+
+<img id="core-domain-chart" alt="Core Domain Chart" src="#"/>
 
 As for the **Client Orders**, **Restocking** and **Pricing** subdomains, they are considered to be *supporting*
 for the moment since it would be unfeasible to buy a full-fledged SAP-like system.
