@@ -202,7 +202,7 @@ It provided many useful features:
   allowing us to keep writing monadic code using the `IO` monad
 - It makes it possible to declaratively describe an endpoint and its associated
   route in a type-safe way
-- It automatically generates the [OpenAPI](https://openapi.it/) specification
+- It automatically generates the [OpenAPI](https://www.openapis.org/) specification
   and enables a [Swagger](https://swagger.io/) endpoint
 
 After providing a declarative description of the API, implementing the server is as
