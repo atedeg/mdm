@@ -4,10 +4,11 @@ layout: static-site-main
 ---
 
 # Table of Contents
+
 1. [Event Storming](event-storming.md)
 2. [Context Map](context-map.md)
 3. [User Stories](user-stories.md)
-4. [Bounded Contexts](bounded-contexts)
+4. [Bounded Contexts](bounded-contexts/index.md)
     1. [Milk Planning](bounded-contexts/milk-planning.md)
     2. [Production Planning](bounded-contexts/production-planning.md)
     3. [Production](bounded-contexts/production.md)
