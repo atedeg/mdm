@@ -75,7 +75,7 @@ val commonSettings = Seq(
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.0.5",
     "org.typelevel" %% "log4cats-core" % "2.4.0",
     "org.typelevel" %% "log4cats-slf4j" % "2.4.0",
-    "org.slf4j" % "slf4j-api" % "1.7.36",
+    "org.slf4j" % "slf4j-api" % "2.0.0",
     "org.slf4j" % "slf4j-simple" % "1.7.36",
   ),
 )
