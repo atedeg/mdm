@@ -1,0 +1,84 @@
+\documentclass{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber,sorting=none]{biblatex}
+\usepackage[english]{babel}
+\renewcommand{\contentsname}{Indice}
+\linespread{1.2}
+
+\addbibresource{bibliography.bib}
+
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{alltt, fancyvrb}
+\usepackage{wrapfig}
+\usepackage[italian]{cleveref}
+\usepackage{mdframed}
+
+\usepackage{longtable}
+\usepackage{xr}
+
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\definecolor{mygray}{rgb}{0.8,0.8,0.8}
+\lstset{%
+	basicstyle=\ttfamily,
+	breaklines = true,
+	backgroundcolor=\color{mygray},
+}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{mygray}{rgb}{0.8,0.8,0.8}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	numbers=left,
+	numbersep=5pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\usepackage{multirow, hhline}
+\usepackage{array,booktabs}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\title{Pervasive Computing project \\ MDM Digital Twins}
+\author{Nicolas Farabegoli\\
+Linda Vitali}
+\date{October 2022}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+\input{sections/introduction.tex}
+\input{sections/architecture.tex}
+
+\end{document}
