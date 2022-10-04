@@ -14,8 +14,7 @@
 
 # MDM - Mambelli Domain Model
 
-This is the final project for the [LSS exam](https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2021/412677); it uses a DDD approach to model the domain of the [Mambelli](https://www.mambelli.com/it/) cheese factory.  
-The project's documentation can be found [here](https://atedeg.dev/mdm/_docs/index.html).
+This is the final project for the [Pervasive Computing course](https://www.unibo.it/en/teaching/course-unit-catalogue/course-unit/2022/412647);
 
 ## License
 
