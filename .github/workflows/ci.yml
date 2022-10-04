@@ -21,9 +21,9 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.5.0
         with:
-          distribution: 'temurin'
-          java-version: '17.0.4'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17.0.4"
+          cache: "sbt"
 
       - name: Wartremover checks
         run: sbt wartremoverInspect
@@ -40,9 +40,9 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.5.0
         with:
-          distribution: 'temurin'
-          java-version: '17.0.4'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17.0.4"
+          cache: "sbt"
 
       - name: Scalafix checks
         run: sbt 'scalafixAll --check'
@@ -59,9 +59,9 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.5.0
         with:
-          distribution: 'temurin'
-          java-version: '17.0.4'
-          cache: 'sbt'
+          distribution: "temurin"
+          java-version: "17.0.4"
+          cache: "sbt"
 
       - name: Scalafix checks
         run: sbt scalafmtCheckAll
@@ -71,7 +71,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        java: ['17.0.4']
+        java: ["17.0.4"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch
@@ -82,80 +82,45 @@ jobs:
       - name: Setup Scala
         uses: actions/setup-java@v3.5.0
         with:
-          distribution: 'temurin'
+          distribution: "temurin"
           java-version: ${{ matrix.java }}
-          cache: 'sbt'
+          cache: "sbt"
 
       - name: Scalatest
         run: sbt test
+  latex:
+    name: Compile latex source
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Generate coverage report
-        run: sbt jacocoAggregate
+      - name: Build report
+        uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: report
+          root_file: mdm-dt.tex
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
 
-      - name: Get scala version
-        id: get-scala-version
+      - name: Create tag for the current release
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: DanySK/semver-autotag-action@0.1.0
+
+      - name: Release report
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          export SCALA_VERSION=`sbt --no-colors --error 'set aggregate := false; print scalaVersion'`
-          echo "::set-output name=scala-version::$SCALA_VERSION" 
-
-      - name: Publish coverage report
-        if: ${{ matrix.os }} == 'ubuntu-22.04' && ${{ matrix.java-version }} == '17.0.4' # Find a better solution instead hardcoded versions
-        uses: codecov/codecov-action@v3.1.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./target/scala-${{steps.get-scala-version.outputs.scala-version}}/jacoco/report/aggregate/jacoco.xml
-          verbose: true
-
-  docsite:
-    name: Build documentation site
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout current branch
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Scala
-        uses: actions/setup-java@v3.5.0
-        with:
-          distribution: 'temurin'
-          java-version: '17.0.4'
-          cache: 'sbt' 
-
-      - name: Build docsite
-        run: sbt ubidocGenerate
-
-  publish:
-    name: Publish
-    needs: [wartremover, scalafix, scalafmt, tests, docsite]
-    runs-on: ubuntu-22.04
-    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha' || github.ref == 'refs/heads/beta')
-    steps:
-      - name: Setup atedeg-bot
-        id: atedeg-bot
-        uses: tibdex/github-app-token@v1.6.0
-        with:
-          app_id: ${{ secrets.ATEDEG_BOT_APP_ID }}
-          private_key: ${{ secrets.ATEDEG_BOT_PRIVATE_KEY }}
-
-      - name: Checkout current branch
-        uses: actions/checkout@v3
-        with:
-          token: ${{ steps.atedeg-bot.outputs.token }}
-          fetch-depth: 0
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2.0.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Release
-        uses: atedeg/scala-release@v1.0.3
-        with:
-          java-version: "17.0.4"
-          pgp-secret: ${{ secrets.PGP_SECRET }}
-          pgp-passphrase: ${{ secrets.PGP_PASSPHRASE }}
-          sonatype-username: ${{ secrets.SONATYPE_USERNAME }}
-          sonatype-password: ${{ secrets.SONATYPE_PASSWORD }}
-          github-token: ${{ steps.atedeg-bot.outputs.token }}
+          if [[ -z ${GITHUB_TOKEN} ]]; then
+            echo "No token found... unable to deploy"
+            false
+          else
+            TAG=$(git describe --tags --exact-match HEAD)
+            hub release create -m "$(git tag -l --format='%(contents)' "$TAG")" "$TAG" || true
+            for file in `ls report/*.pdf`
+            do
+              echo "Release of $file"
+              gh release upload "$TAG" $file --clobber
+            done
+          fi
