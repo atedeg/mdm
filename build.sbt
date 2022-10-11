@@ -1,4 +1,4 @@
-val scala3Version = "3.1.3"
+val scala3Version = "3.2.0"
 val scalaTestVersion = "3.2.13"
 
 ThisBuild / scalaVersion := scala3Version
@@ -71,7 +71,7 @@ val commonSettings = Seq(
     "io.circe" %% "circe-generic" % "0.14.2",
     "io.circe" %% "circe-parser" % "0.14.2",
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.0.6",
-    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.1.0",
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.0.6",
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.0.6",
     "org.typelevel" %% "log4cats-core" % "2.4.0",
     "org.typelevel" %% "log4cats-slf4j" % "2.4.0",
@@ -112,10 +112,10 @@ lazy val root = project
       "-doc-root-content",
       "docs/api.md",
     ),
-    jacocoAggregateReportSettings := JacocoReportSettings(
-      title = "mdm coverage report",
-      formats = Seq(JacocoReportFormats.XML),
-    ),
+    // jacocoAggregateReportSettings := JacocoReportSettings(
+    //   title = "mdm coverage report",
+    //   formats = Seq(JacocoReportFormats.XML),
+    // ),
     publish / skip := true,
   )
   .aggregate(
