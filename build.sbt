@@ -67,7 +67,7 @@ val commonSettings = Seq(
     "org.http4s" %% "http4s-circe" % "0.23.15",
     "org.http4s" %% "http4s-dsl" % "0.23.15",
     "io.circe" %% "circe-generic" % "0.14.2",
-    "io.circe" %% "circe-core" % "0.14.2",
+    "io.circe" %% "circe-core" % "0.14.10",
     "io.circe" %% "circe-generic" % "0.14.2",
     "io.circe" %% "circe-parser" % "0.14.2",
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.0.6",
